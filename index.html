@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Layout with Header</title>
+    <link
+      rel="stylesheet"
+      media="(prefers-color-scheme:light)"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css"
+    />
+    <link
+      rel="stylesheet"
+      media="(prefers-color-scheme:dark)"
+      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/dark.css"
+      onload="document.documentElement.classList.add('sl-theme-dark');"
+    />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"></script>
+    <link rel="stylesheet" href="style.css"> <!-- Assuming modern-normalize is in here -->
+
+    <style>
+        #toc-container a.active {
+  font-weight: bold;
+  color: dodgerblue;
+}
+
+    </style>
+</head>
+<body style="height: 100%; margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #1a1a1a; color: #e0e0e0; font-size: 16px;"> <!-- Added base font-size for rem calculation reference -->
+
+    <!-- Main Full Page Container -->
+    <div style="display: flex; flex-direction: row; width: 100%; height: 100vh;">
+
+        <!-- Column 1 (Full height sidebar on the left) -->
+        <div style="flex-basis: 16rem; /* Approx 256px if 1rem = 16px, scales with root font */
+                    flex-grow: 0;
+                    flex-shrink: 0;
+                    padding: 1.25rem; /* 20px */
+                    border-right: 1px solid #363636;
+                    background-color: #202020;
+                    overflow-y: auto; /* Allow sidebar to scroll if content exceeds height */">
+            Column 1 Content
+        </div>
+
+        <!-- Right Pane (takes remaining width, stacks Header and Content Area vertically) -->
+        <div style="flex-grow: 1;
+                    display: flex;
+                    flex-direction: column;
+                    overflow: hidden;">
+
+            <!-- Header -->
+            <div style="height: 4rem; /* Approx 64px, scales */
+                        flex-shrink: 0;
+                        padding: 0 1.5rem; /* 24px */
+                        border-bottom: 1px solid #363636;
+                        background-color: #252529;
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;">
+
+
+            </div>
+
+            <!-- Content Area (for Column 2 and Column 3) -->
+            <div style="flex-grow: 1;
+                        display: flex;
+                        flex-direction: row;
+                        overflow: hidden; /* Important: contain children's overflow */">
+
+                <!-- Column 2 (Main content area) -->
+                <div id="content-area" style="flex-grow: 3;
+                            flex-basis: 0;
+                            padding: 1.5rem; /* 24px */
+                            border-right: 1px solid #363636;
+                            overflow-y: auto;">
+    <h2>Introduction</h2>
+    <p>Some intro text</p>
+    <h2>Features</h2>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    
+    <h2>Installation</h2>
+    <p>...</p>
+    <h2>Usage</h2>
+    <p>...</p>
+
+                </div>
+
+                <!-- Column 3 (Smaller side content) -->
+                <div id="toc-container" style="flex-grow: 1;
+                            flex-basis: 0;
+                            padding: 1.5rem; /* 24px */
+                            overflow-y: auto;">
+                        
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          const tocContainer = document.getElementById("toc-container");
+          const content = document.getElementById("content-area");
+          const headings = content.querySelectorAll("h2, h3");
+        
+          // Generate ToC
+          headings.forEach((heading) => {
+            const id = heading.id || heading.textContent.trim().toLowerCase().replace(/\s+/g, "-");
+            heading.id = id;
+        
+            const link = document.createElement("a");
+            link.href = `#${id}`;
+            link.textContent = heading.textContent;
+            link.style.display = "block";
+            link.style.marginLeft = heading.tagName === "H3" ? "1rem" : "0"; // indent subheadings
+            link.style.color = "#aaa";
+            link.style.textDecoration = "none";
+            link.setAttribute("data-scrollspy", "");
+        
+            tocContainer.appendChild(link);
+          });
+        
+          // Smooth scroll
+          tocContainer.addEventListener("click", (e) => {
+            if (e.target.tagName === "A") {
+              e.preventDefault();
+              const targetId = e.target.getAttribute("href").slice(1);
+              const target = document.getElementById(targetId);
+              if (target) {
+                target.scrollIntoView({ behavior: "smooth", block: "start" });
+              }
+            }
+          });
+        
+          // ScrollSpy
+          const tocLinks = tocContainer.querySelectorAll("[data-scrollspy]");
+        
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                const id = entry.target.id;
+                tocLinks.forEach(link => link.classList.remove("active"));
+                const activeLink = tocContainer.querySelector(`a[href="#${id}"]`);
+                if (activeLink) activeLink.classList.add("active");
+              }
+            });
+          }, {
+            root: document.querySelector('#content-area'),
+            rootMargin: "0px 0px -80% 0px",
+            threshold: 0.1,
+          });
+        
+          headings.forEach(heading => observer.observe(heading));
+        });
+        </script>
+        
+</body>
+</html>
