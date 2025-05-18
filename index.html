@@ -65,6 +65,19 @@
 --color-dropdown-trigger-hover-text: var(--color-header-nav-link-text-hover);
 --color-dropdown-trigger-hover-bg: var(--color-header-nav-link-bg-hover);
 --color-dropdown-trigger-active-bg: var(--color-header-nav-link-bg-hover); /* When dropdown is open */
+    --color-header-nav-link-text-active: var(--color-text-toc-link-active);
+
+    /* --- NEW: Scrollbar Colors for TOC - Dark Theme --- */
+    --toc-scrollbar-track-bg: hsl(240, 6%, 17%);    /* A bit lighter than TOC bg (#202020 is ~11% lightness) */
+    --toc-scrollbar-thumb-bg: hsl(240, 6%, 40%);    /* A noticeable but dark grey */
+    --toc-scrollbar-thumb-hover-bg: hsl(240, 6%, 50%); /* Slightly lighter for hover */
+
+
+
+    --main-scrollbar-track-bg: hsl(240, 6%, 17%);
+    --main-scrollbar-thumb-bg: hsl(240, 6%, 40%);
+    --main-scrollbar-thumb-hover-bg: hsl(240, 6%, 50%);
+
 }
 
 
@@ -128,6 +141,20 @@
 --color-dropdown-trigger-hover-text: var(--color-header-nav-link-text-hover);
 --color-dropdown-trigger-hover-bg: var(--color-header-nav-link-bg-hover);
 --color-dropdown-trigger-active-bg: var(--color-header-nav-link-bg-hover);
+--color-header-nav-link-text-active: var(--color-text-toc-link-active);
+
+/* --- NEW: Scrollbar Colors for TOC - Light Theme --- */
+--toc-scrollbar-track-bg: hsl(210, 15%, 94%);    /* Slightly darker than TOC bg (#e9e9e9 is ~91% lightness) */
+--toc-scrollbar-thumb-bg: hsl(210, 12%, 75%);    /* A noticeable but light grey */
+--toc-scrollbar-thumb-hover-bg: hsl(210, 12%, 65%); /* Slightly darker for hover */
+
+
+--main-scrollbar-track-bg: hsl(210, 15%, 94%);
+    --main-scrollbar-thumb-bg: hsl(210, 12%, 75%);
+    --main-scrollbar-thumb-hover-bg: hsl(210, 12%, 65%);
+
+
+
 }
 
 /* ... (rest of your existing CSS) ... */
@@ -137,6 +164,7 @@
     .header-dropdown-trigger:focus-visible { /* Focus-visible is for keyboard navigation */
         background-color: var(--color-dropdown-trigger-hover-bg);
         color: var(--color-dropdown-trigger-hover-text);
+        
     }
     
     .header-dropdown-trigger .dropdown-arrow-icon {
@@ -253,7 +281,40 @@ html{
         display: flex;
         flex-direction: column;
         overflow: hidden;
+        overflow-y: auto; /* <<< KEY: This makes this wrapper scrollable */
+    height: 100vh; /* <<< KEY: Ensure it has a defined height to enable scrolling within it */
+    scrollbar-width: thin;
+    scrollbar-color: var(--main-scrollbar-thumb-bg) var(--main-scrollbar-track-bg); /* Use your existing variables */
+
         }
+
+        .main-area-wrapper::-webkit-scrollbar {
+    width: 10px; /* Increased from 8px to make more room for the gap */
+}
+
+.main-area-wrapper::-webkit-scrollbar-track {
+    background: var(--main-scrollbar-track-bg);
+}
+
+.main-area-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--main-scrollbar-thumb-bg);
+    border-radius: 10px; /* Or your preferred radius, e.g., 6px for consistency */
+    /* This border IS the "gap". Its color is the track's background. */
+    border: 3px solid var(--main-scrollbar-track-bg); /* Increased from 2px */
+}
+
+.main-area-wrapper::-webkit-scrollbar-thumb:hover {
+    background-color: var(--main-scrollbar-thumb-hover-bg);
+}
+
+/* Ensure content-toc-row and its children can expand naturally */
+.content-toc-row {
+    flex-grow: 1; /* Allows content-area and toc-container to fill space */
+    display: flex;
+    flex-direction: row;
+    /* REMOVE: overflow: hidden; if it was here, to allow vertical expansion */
+}
+
 
         .app-header {
   height: 4rem;
@@ -266,6 +327,10 @@ html{
   /* REMOVE or change: justify-content: space-between; */
   /* It defaults to flex-start, which is what we want for the main items initially */
   transition: background-color 0.3s ease, border-color 0.3s ease;
+
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .app-header > div:not(.header-actions) {
@@ -274,51 +339,76 @@ html{
 
 
 
-.content-toc-row {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: row;
-        overflow: hidden;
-        }
+
 
         #content-area {
         flex-grow: 3;
         flex-basis: 0;
         padding: 1.5rem;
-        overflow-y: auto;
-        scrollbar-width: none; /* Firefox */
         }
-        #content-area::-webkit-scrollbar {
-        width: 0px; /* Chrome, Safari */
-        background: transparent;
-        }
+    #content-area::-webkit-scrollbar {
+    width: 8px; /* Or your preferred width */
+}
 
-        #toc-container {
-        flex-grow: 1;
-        flex-basis: 0;
-        padding: 1.5rem;
-        overflow-y: auto;
-        position: relative;
-        }
 
-        #toc-links {
-        position: relative;
-        padding-left: 1rem;
-        border-left: 2px solid var(--color-border-toc-line);
-        display: flex;
-        flex-direction: column;
-        transition: border-color 0.3s ease;
-        }
 
-        #toc-links a {
-        display: block;
-        padding: 0.3rem 0 0.3rem 1rem;
-        color: var(--color-text-toc-link);
-        text-decoration: none;
-        transition: color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
-        }
+#toc-container {
+    flex-grow: 1;
+    flex-basis: 0;
+    padding: 1.5rem;
+    overflow-y: auto; /* This will now work for #toc-links */
+    overflow-x: hidden;
+    height: 100vh;
+    position: relative;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--toc-scrollbar-track-bg); /* For Firefox */
+    position: sticky;
+    top: 0;                     /* stick to top of viewport */
 
-        #toc-links a:hover {
+}
+
+#toc-container::-webkit-scrollbar {
+    width: 10px; /* Increased from 8px */
+}
+
+#toc-container::-webkit-scrollbar-track {
+    background: var(--toc-scrollbar-track-bg);
+}
+
+#toc-container::-webkit-scrollbar-thumb {
+    background-color: var(--toc-scrollbar-thumb-bg);
+    border-radius: 10px; /* Or your preferred radius, e.g., 6px */
+    /* This border IS the "gap". */
+    border: 3px solid var(--toc-scrollbar-track-bg); /* Increased from 2px */
+}
+
+#toc-container::-webkit-scrollbar-thumb:hover {
+    background-color: var(--toc-scrollbar-thumb-hover-bg);
+}
+
+
+#toc-links {
+    padding-left: 1rem; /* This padding is fine */
+    border-left: 2px solid var(--color-border-toc-line); /* Border is fine */
+    display: flex; /* Not strictly necessary if children are display:block, but fine */
+    flex-direction: column; /* Not strictly necessary, but fine */
+    transition: border-color 0.3s ease;
+    /* The links themselves will now scroll within #toc-container */
+}
+
+#toc-links a {
+    line-height: 2rem;
+    font-size: 0.875rem;
+    display: block;
+    padding: 0.3rem 0 0.3rem 1rem;
+    color: var(--color-text-toc-link);
+    text-decoration: none;
+    white-space: normal;
+}
+
+/* ... (rest of your CSS) ... */
+
+#toc-links a:hover {
         color: var(--color-text-toc-link-hover);
         }
 
@@ -357,15 +447,20 @@ html{
         align-items: center;
         justify-content: center;
         line-height: 0;
+
+
     }
+    
+    
 
     .theme-toggle-button:hover,
     .theme-toggle-button:focus-visible {
         background-color: var(--color-search-trigger-hover-bg); /* Same as search trigger hover for consistency */
         color: var(--color-text-body); /* Make icon more prominent on hover/focus */
         /* border-color: var(--color-search-border); /* Optional: add border back on hover if desired */
-        outline: none; /* Remove default outline if bg change is enough for focus */
+        background: transparent;
     }
+    
 
     /* If you want a very subtle outline for focus-visible on top of the background change: */
     /*
@@ -742,8 +837,9 @@ a.icon-button:hover,
 a.icon-button:focus-visible {
   background-color: var(--color-search-trigger-hover-bg);
   color: var(--color-text-body); /* Changes color on hover/focus */
-  outline: none;
   text-decoration: none !important; /* Ensure no underscore on hover/focus */
+  background: transparent;
+  
 }
 
 /* Explicitly style visited state for <a> tag to prevent purple/blue */
@@ -892,7 +988,7 @@ a.icon-button:visited {
                     <!-- START: Version Dropdown -->
                     <div class="header-dropdown-container" id="versionDropdownContainer">
                         <button class="header-dropdown-trigger" id="versionDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="versionDropdownMenu">
-                            <span>2.0.0-alpha.5</span>
+                            <span >2.0.0-alpha.5</span>
                             <svg class="dropdown-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><<polyline points="9 18 15 12 9 6"></polyline>                                ></svg>
                         </button>
                         <div class="header-dropdown-menu" id="versionDropdownMenu" role="menu" aria-labelledby="versionDropdownTrigger">
@@ -927,109 +1023,172 @@ a.icon-button:visited {
             </div>
         </div>
         <div class="content-toc-row">
-        <div id="content-area" tabindex="0">
-            <h2 id="introduction">Introduction</h2>
-            <p>Some intro text for the introduction section. This is where you would introduce the topic of the page.</p>
-            <p>More details can follow, explaining the purpose and overview.</p>
+            <div id="content-area" tabindex="0">
+                <h2 id="introduction">Introduction</h2>
+                <p>Welcome to this comprehensive guide. This section provides an overview of the entire document, its purpose, and what you can expect to learn. We will cover various topics in detail, ensuring a clear understanding for all readers.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    
+                <h2 id="getting-started">Getting Started</h2>
+                <p>This section will walk you through the initial setup and prerequisites. Before diving into the core features, it's important to have your environment configured correctly. We'll cover software installation and basic configuration steps.</p>
+                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.</p>
+                <p>Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi.</p>
+    
+                <h2 id="core-concepts">Core Concepts</h2>
+                <p>Understanding the core concepts is crucial for effective use. This part delves into the fundamental principles and ideas that underpin the system. We will explore definitions, key terminologies, and their relationships.</p>
+                <p>Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue.</p>
+                <p>Eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. Phasellus ultrices nulla quis nibh. Quisque a lectus.</p>
+    
+                <h2 id="feature-alpha">Feature Alpha</h2>
+                <p>Feature Alpha provides capabilities for X, Y, and Z. It is designed to enhance productivity and streamline workflows related to data processing. This section explains its architecture and benefits.</p>
+                <p>Donec consectetuer ligula vulputate sem tristique cursus. Nam nulla quam, gravida non, commodo a, sodales sit amet, nisi. Pellentesque fermentum dolor. Aliquam quam lectus, facilisis auctor, ultrices ut, elementum vulputate, nunc.</p>
+                <p>Sed adipiscing ornare risus. Morbi est est, blandit sit amet, sagittis vel, euismod vel, velit. Pellentesque egestas sem. Suspendisse commodo ullamcorper magna.</p>
+    
+                <h2 id="feature-beta">Feature Beta</h2>
+                <p>Building upon Alpha, Feature Beta introduces advanced functionalities. It focuses on scalability and integration with other services. Here, we will cover its advanced configuration options and use cases.</p>
+                <p>Curabitur bibendum justo non orci. Integer pellentesque quam vel velit. Duis pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+                <p>Nam liberate potestatem assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
+    
+                <h2 id="advanced-configuration">Advanced Configuration</h2>
+                <p>For users requiring more control, the advanced configuration options offer granular adjustments. This section is for experienced users who need to tailor the system to specific, complex requirements.</p>
+                <p>Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
+                <p>Accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur.</p>
+    
+                <h2 id="api-reference">API Reference</h2>
+                <p>The API Reference provides detailed documentation for all available endpoints and methods. Developers can use this information to integrate the system with other applications or build custom tools.</p>
+                <p>Aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+                <p>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.</p>
+    
+                <h2 id="troubleshooting">Troubleshooting</h2>
+                <p>Encountering issues? This section lists common problems and their solutions. It also provides guidance on how to diagnose and report new issues effectively. Please consult this section before seeking further support.</p>
+                <p>Nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
+    
+                <h2 id="security-guidelines">Security Guidelines</h2>
+                <p>Security is paramount. These guidelines outline best practices for securing your installation and data. It covers aspects like access control, data encryption, and regular security audits.</p>
+                <p>Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi.</p>
+                <p>Optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis.</p>
+    
+                <h2 id="performance-tuning">Performance Tuning</h2>
+                <p>Learn how to optimize performance for various workloads. This section covers techniques for identifying bottlenecks and applying configurations to improve speed and efficiency.</p>
+                <p>Aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias.</p>
+                <p>Consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+    
+                <h2 id="backup-restore">Backup and Restore</h2>
+                <p>Data integrity is crucial. This section details procedures for backing up your data and restoring it in case of system failure or data loss. Regular backups are highly recommended.</p>
+                <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
+                <p>Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+    
+                <h2 id="migration-guide">Migration Guide</h2>
+                <p>Upgrading from a previous version? This guide provides step-by-step instructions for migrating your existing data and configurations to the latest version smoothly.</p>
+                <p>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis.</p>
+                <p>Suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.</p>
+    
+                <h2 id="contributing">Contributing</h2>
+                <p>Interested in contributing to the project? This section outlines how you can get involved, from reporting bugs and suggesting features to submitting code contributions. Your help is appreciated!</p>
+                <p>Vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.</p>
+                <p>Corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+    
+                <h2 id="license-information">License Information</h2>
+                <p>This software is distributed under the XYZ License. This section provides the full text of the license and details about any third-party components and their respective licenses.</p>
+                <p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>
+                <p>Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae.</p>
+    
+                <h2 id="appendix-a">Appendix A: Glossary</h2>
+                <p>A list of terms and definitions used throughout this documentation. This can be a helpful reference for understanding specific jargon or technical terms.</p>
+                <p>Sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+    
+                <h2 id="appendix-b">Appendix B: Further Reading</h2>
+                <p>For those who wish to explore related topics further, this appendix lists recommended books, articles, and online resources. These can provide deeper insights or alternative perspectives.</p>
+                <p>Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
+                <h2 id="section-example-1">Example Section 1</h2>
+            <p>Placeholder content for example section 1 to ensure it's a target.</p>
+            <h2 id="section-example-2">Example Section 2</h2>
+            <p>Placeholder content for example section 2.</p>
+            <h2 id="section-example-3">Example Section 3</h2>
+            <p>Placeholder content for example section 3.</p>
+            <h2 id="section-example-4">Example Section 4</h2>
+            <p>Placeholder content for example section 4.</p>
+            <h2 id="section-example-5">Example Section 5</h2>
+            <p>Placeholder content for example section 5. This is the very last piece of main content.</p>
 
-            <h2 id="features">Features</h2>
-            <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et
-            iusto reprehenderit deserunt, eligendi sapiente exercitationem
-            mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur
-            provident, non placeat praesentium ab dolores!
-            </p>
-            <p>
-            Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-            Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-            </p>
-            <p>
-            Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
-            Quisque sit amet est et sapien ullamcorper pharetra.
-            </p>
-            <p>
-            Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum,
-            elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
-            </p>
-            <p>
-            Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus,
-            tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat.
-            </p>
 
-            <h2 id="installation">Installation</h2>
-            <p>
-            As you can see, I'm still alive. In order to install this, you need to follow these steps carefully.
-            This section details the process of setting up the project or library.
-            </p>
-            <p>
-            First, ensure you have all prerequisites. Then, clone the repository.
-            Finally, run the installation script. `npm install my-package` or similar commands would go here.
-            </p>
-
-            <h2 id="usage">Usage</h2>
-            <p>
-            This section describes how to use the installed software or library.
-            Provide code examples and explain common use cases.
-            </p>
-            <p>
-            For example, to use a function: `myFunction(param1, param2);`
-            Ensure to explain what the parameters do and what the expected output is.
-            </p>
-
-            <div class="page-footer-container">
-            <div class="page-meta-row">
-                <a href="#" class="edit-page-link">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/>
-                </svg>Edit this page on GitHub
-                </a>
-                <span class="last-updated-text">Last updated: 1/7/25, 2:24 AM</span>
-            </div>
-            <hr class="footer-divider-line">
-            <div class="page-navigation-boxes">
-                <div class="nav-box previous-page-box">
-                <span class="nav-box-label">Previous page</span>
-                <a href="#" class="nav-box-link">What is VitePress?</a>
+                <!-- Page Footer Container (KEEP YOUR EXISTING ONE) -->
+                <div class="page-footer-container">
+                    <div class="page-meta-row">
+                        <a href="#" class="edit-page-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/>
+                        </svg>Edit this page on GitHub
+                        </a>
+                        <span class="last-updated-text">Last updated: 1/7/25, 2:24 AM</span>
+                    </div>
+                    <hr class="footer-divider-line">
+                    <div class="page-navigation-boxes">
+                        <div class="nav-box previous-page-box">
+                        <span class="nav-box-label">Previous page</span>
+                        <a href="#" class="nav-box-link">What is VitePress?</a>
+                        </div>
+                        <div class="nav-box next-page-box">
+                        <span class="nav-box-label">Next page</span>
+                        <a href="#" class="nav-box-link">Routing</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="nav-box next-page-box">
-                <span class="nav-box-label">Next page</span>
-                <a href="#" class="nav-box-link">Routing</a>
-                </div>
             </div>
-            </div>
-
-        </div>
-
         <div id="toc-container">
             <nav id="toc-links">
-            <a href="#introduction">Introduction</a>
-            <a href="#features">Features</a>
-            <a href="#installation">Installation</a>
-            <a href="#usage">Usage</a>
+                <a href="#introduction">Introduction</a>
+                <a href="#getting-started">Getting Started</a>
+                <a href="#core-concepts">Core Concepts</a>
+                <a href="#feature-alpha">Feature Alpha</a>
+                <a href="#feature-beta">Feature Beta</a>
+                <a href="#advanced-configuration">Advanced Configuration</a>
+                <a href="#api-reference">API Reference</a>
+                <a href="#troubleshooting">Troubleshooting</a>
+                <a href="#security-guidelines">Security Guidelines</a>
+                <a href="#performance-tuning">Performance Tuning</a>
+                <a href="#backup-restore">Backup and Restore</a>
+                <a href="#migration-guide">Migration Guide</a>
+                <a href="#contributing">Contributing</a>
+                <a href="#license-information">License Information</a>
+                <a href="#appendix-a">Appendix A: Glossary</a>
+                <a href="#appendix-b">Appendix B: Further Reading</a>
+                <!-- Add a few more to really test ToC scroll -->
+                <a href="#section-example-1">Example Section 1</a>
+                <a href="#section-example-2">Example Section 2</a>
+                <a href="#section-example-3">Example Section 3</a>
+                <a href="#section-example-4">Example Section 4</a>
+                <a href="#section-example-5">Example Section 5</a>
             </nav>
+
         </div>
-        </div>
+            </div>
     </div>
 
+    
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', () => {
         const contentArea = document.getElementById('content-area');
         const tocLinksContainer = document.getElementById('toc-links');
         const tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
         const themeToggleButton = document.getElementById('themeToggle');
         const htmlElement = document.documentElement;
+        const tocContainerElement = document.getElementById('toc-container'); // ADDED
 
         const THEME_KEY = 'user-preferred-theme';
 
         function applyTheme(theme) {
             if (theme === 'light') {
-            htmlElement.classList.add('light-theme');
-            htmlElement.classList.remove('dark-theme'); // Good practice to explicitly manage both
-            themeToggleButton.setAttribute('aria-label', 'Switch to Dark Theme');
-            } else { // 'dark' or default
-            htmlElement.classList.remove('light-theme');
-            htmlElement.classList.add('dark-theme'); // Good practice to explicitly manage both
-            themeToggleButton.setAttribute('aria-label', 'Switch to Light Theme');
+                htmlElement.classList.add('light-theme');
+                htmlElement.classList.remove('dark-theme');
+                themeToggleButton.setAttribute('aria-label', 'Switch to Dark Theme');
+            } else {
+                htmlElement.classList.remove('light-theme');
+                htmlElement.classList.add('dark-theme');
+                themeToggleButton.setAttribute('aria-label', 'Switch to Light Theme');
             }
         }
         function saveThemePreference(theme) {
@@ -1052,6 +1211,7 @@ a.icon-button:visited {
 
         applyTheme(getInitialTheme());
 
+
         const sections = {};
         tocLinks.forEach(link => {
             const sectionId = link.getAttribute('href').substring(1);
@@ -1060,178 +1220,181 @@ a.icon-button:visited {
         });
 
         const scrollOffset = 20;
+        const mainScroller = document.querySelector('.main-area-wrapper');
 
         function updateActiveLink() {
+            if (!mainScroller) return;
+
             let currentSectionId = null;
-            const contentScrollTop = contentArea.scrollTop;
+            const contentScrollTop = mainScroller.scrollTop;
             const sectionIds = Object.keys(sections);
 
             for (let i = sectionIds.length - 1; i >= 0; i--) {
-            const id = sectionIds[i];
-            const sectionElement = sections[id];
-            if (sectionElement.offsetTop - scrollOffset <= contentScrollTop) {
-                currentSectionId = id;
-                break;
-            }
+                const id = sectionIds[i];
+                const sectionElement = sections[id];
+                if (sectionElement) {
+                    if (sectionElement.offsetTop - scrollOffset <= contentScrollTop) {
+                        currentSectionId = id;
+                        break;
+                    }
+                }
             }
             
-            if (contentScrollTop < (sections[sectionIds[0]]?.offsetTop || 0) - scrollOffset && sectionIds.length > 0) {
-                if (contentScrollTop < scrollOffset && sectionIds.length > 0) {
-                    currentSectionId = sectionIds[0];
-                } else {
-                    currentSectionId = null;
+            if (currentSectionId === null && sectionIds.length > 0) {
+                const firstSection = sections[sectionIds[0]];
+                if (firstSection && contentScrollTop < (firstSection.offsetTop - scrollOffset)) {
+                    if (contentScrollTop < scrollOffset) {
+                        currentSectionId = sectionIds[0];
+                    }
+                } else if (firstSection && contentScrollTop < firstSection.offsetTop) {
+                     currentSectionId = sectionIds[0];
                 }
             }
 
-            if (contentArea.scrollHeight - contentArea.scrollTop <= contentArea.clientHeight + 5 && sectionIds.length > 0) {
+            if (sectionIds.length > 0 && (mainScroller.scrollHeight - mainScroller.scrollTop <= mainScroller.clientHeight + 5)) {
                 currentSectionId = sectionIds[sectionIds.length - 1];
             }
 
+            let activeLinkElement = null; // MODIFIED/ADDED
+
             tocLinks.forEach(link => {
-            link.classList.remove('active');
-            if (link.getAttribute('href') === `#${currentSectionId}`) {
-                link.classList.add('active');
-            }
+                link.classList.remove('active');
+                if (link.getAttribute('href') === `#${currentSectionId}`) {
+                    link.classList.add('active');
+                    activeLinkElement = link; // MODIFIED/ADDED
+                }
             });
+
+            // --- NEW: Scroll ToC to keep active link in view ---
+            if (activeLinkElement && tocContainerElement) {
+                if (tocContainerElement.scrollHeight > tocContainerElement.clientHeight) {
+                    const linkTop = activeLinkElement.offsetTop;
+                    const linkHeight = activeLinkElement.offsetHeight;
+                    const linkBottom = linkTop + linkHeight;
+
+                    const tocScrollTop = tocContainerElement.scrollTop;
+                    const tocClientHeight = tocContainerElement.clientHeight;
+                    const scrollPadding = 30; 
+
+                    if (linkTop < tocScrollTop + scrollPadding) {
+                        tocContainerElement.scrollTo({
+                            top: Math.max(0, linkTop - scrollPadding),
+                            behavior: 'smooth'
+                        });
+                    } else if (linkBottom > tocScrollTop + tocClientHeight - scrollPadding) {
+                        tocContainerElement.scrollTo({
+                            top: Math.min(
+                                linkBottom - tocClientHeight + scrollPadding,
+                                tocContainerElement.scrollHeight - tocClientHeight
+                            ),
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            }
+            // --- END NEW ---
         }
 
         tocLinksContainer.addEventListener('click', (e) => {
             if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
-            e.preventDefault();
-            const targetId = e.target.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            if (targetElement) {
-                contentArea.scrollTo({
-                    top: targetElement.offsetTop,
-                    behavior: 'smooth'
-                });
-            }
+                e.preventDefault();
+                const targetId = e.target.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement && mainScroller) {
+                    mainScroller.scrollTo({
+                        top: targetElement.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
             }
         });
 
-        if (contentArea) {
-            contentArea.addEventListener('scroll', updateActiveLink);
+        if (mainScroller) {
+            mainScroller.addEventListener('scroll', updateActiveLink);
             updateActiveLink();
         }
+
+        // ... (Search functionality JavaScript REMAINS THE SAME BELOW THIS LINE) ...
         const searchTriggerButton = document.getElementById('searchTrigger');
-    const searchOverlay = document.getElementById('searchOverlay');
-    const searchModal = document.getElementById('searchModal');
-    const searchInput = document.getElementById('searchInput');
-    const searchCloseButton = document.getElementById('searchCloseButton');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const searchModal = document.getElementById('searchModal');
+        const searchInput = document.getElementById('searchInput');
+        const searchCloseButton = document.getElementById('searchCloseButton');
 
-    let isSearchActive = false;
-    let lastFocusedElement; // To restore focus later
+        let isSearchActive = false;
+        let lastFocusedElement; 
 
-    function isEditingContent(element) {
-        // Helper to check if the event target is an input, textarea, or contenteditable
-        // This prevents '/' from opening search when typing in other fields.
-        const tagName = element.tagName;
-        return tagName === 'INPUT' || 
-            tagName === 'TEXTAREA' || 
-            element.isContentEditable ||
-            element.closest('input, textarea, [contenteditable="true"], [contenteditable=""]')
-            ;
-    }
-
-    function openSearch() {
-        if (isSearchActive) return;
-
-        lastFocusedElement = document.activeElement; // Store current focus (e.g., the trigger button)
-
-        // searchOverlay.style.display = 'flex'; 
-        // This line is not strictly needed if .search-overlay CSS already has display:flex,
-        // which it does in the provided solution. It's mainly for opacity/visibility transitions.
-
-        // Use requestAnimationFrame to ensure class addition happens after any pending style changes
-        // and aligns with the browser's rendering cycle for smoother transition start.
-        requestAnimationFrame(() => {
-        searchOverlay.classList.add('active'); // This triggers overlay fade-in.
-                                                // The modal itself has a transition-delay.
-
-        // The .search-modal has a `transition-delay: 0.05s` (50ms) in the CSS.
-        // We need to wait for this delay to pass, plus a tiny bit for the modal to
-        // actually start appearing and its contents (like the input) to become focusable.
-        setTimeout(() => {
-            searchInput.value = ''; // Clear previous input
-            searchInput.focus();    // Focus the search input
-
-            // You can add a check here for debugging if focus issues persist:
-            // if (document.activeElement !== searchInput) {
-            //   console.warn("Search input focus might have failed. Active element is:", document.activeElement);
-            // }
-        }, 60); // 50ms (modal's transition-delay) + 10ms (small buffer for animation to start rendering)
-        });
-        
-        document.body.style.overflow = 'hidden'; // Prevent body scrolling
-        isSearchActive = true;
-    }
-
-    function closeSearch() {
-        if (!isSearchActive) return;
-
-        searchOverlay.classList.remove('active');
-        searchInput.blur(); // Remove focus from input
-        document.body.style.overflow = ''; // Restore body scrolling
-        
-        // --- MODIFIED PART ---
-        // Explicitly focus the search trigger button after closing,
-        // so it gets the :focus-visible highlight.
-        if (searchTriggerButton) {
-        searchTriggerButton.focus({ preventScroll: true }); 
+        function isEditingContent(element) {
+            const tagName = element.tagName;
+            return tagName === 'INPUT' || 
+                tagName === 'TEXTAREA' || 
+                element.isContentEditable ||
+                element.closest('input, textarea, [contenteditable="true"], [contenteditable=""]')
+                ;
         }
-        // --- END OF MODIFIED PART ---
-        
-        isSearchActive = false;
-    }
+
+        function openSearch() {
+            if (isSearchActive) return;
+            lastFocusedElement = document.activeElement; 
+            requestAnimationFrame(() => {
+                searchOverlay.classList.add('active'); 
+                setTimeout(() => {
+                    searchInput.value = ''; 
+                    searchInput.focus();    
+                }, 60); 
+            });
+            document.body.style.overflow = 'hidden'; 
+            isSearchActive = true;
+        }
+
+        function closeSearch() {
+            if (!isSearchActive) return;
+            searchOverlay.classList.remove('active');
+            searchInput.blur(); 
+            document.body.style.overflow = ''; 
+            if (searchTriggerButton) {
+                searchTriggerButton.focus({ preventScroll: true }); 
+            }
+            isSearchActive = false;
+        }
         function toggleSearch() {
-        if (isSearchActive) {
-        closeSearch();
-        } else {
-        openSearch();
+            if (isSearchActive) {
+                closeSearch();
+            } else {
+                openSearch();
+            }
         }
-    }
 
-    // Event Listeners for Search
-    if (searchTriggerButton) {
-        searchTriggerButton.addEventListener('click', openSearch);
-    }
-    if (searchCloseButton) {
-        searchCloseButton.addEventListener('click', closeSearch);
-    }
-
-    // Close search when clicking on the overlay backdrop
-    if (searchOverlay) {
-        searchOverlay.addEventListener('click', (event) => {
-        if (event.target === searchOverlay) { // Clicked on the overlay itself, not the modal
-            closeSearch();
+        if (searchTriggerButton) {
+            searchTriggerButton.addEventListener('click', openSearch);
         }
+        if (searchCloseButton) {
+            searchCloseButton.addEventListener('click', closeSearch);
+        }
+
+        if (searchOverlay) {
+            searchOverlay.addEventListener('click', (event) => {
+                if (event.target === searchOverlay) { 
+                    closeSearch();
+                }
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === '/' && !isSearchActive && !isEditingContent(event.target)) {
+                event.preventDefault();
+                openSearch();
+            }
+            if (event.key === 'k' && (event.ctrlKey || event.metaKey)) {
+                event.preventDefault();
+                toggleSearch();
+            }
+            if (event.key === 'Escape' && isSearchActive) {
+                event.preventDefault();
+                closeSearch();
+            }
         });
-    }
-
-    // Keyboard Shortcuts
-    document.addEventListener('keydown', (event) => {
-        // Open with '/'
-        if (event.key === '/' && !isSearchActive && !isEditingContent(event.target)) {
-        event.preventDefault();
-        openSearch();
-        }
-
-        // Toggle with Ctrl+K (or Cmd+K on Mac)
-        if (event.key === 'k' && (event.ctrlKey || event.metaKey)) {
-        event.preventDefault();
-        toggleSearch();
-        }
-
-        // Close with Escape
-        if (event.key === 'Escape' && isSearchActive) {
-        event.preventDefault();
-        closeSearch();
-        }
-    });
-
-
-        });
-    </script>
+    });   </script>
     <!-- Search Modal Overlay -->
     <div id="searchOverlay" class="search-overlay">
         <div id="searchModal" class="search-modal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle">
