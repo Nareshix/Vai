@@ -44,7 +44,6 @@
     --color-search-kbd-bg: var(--color-bg-sidebar);
     --color-search-kbd-text: var(--color-text-body);
     --color-search-kbd-border: var(--color-border-sidebar);
-    --color-search-kbd-border: var(--color-border-sidebar);
 
 /* --- NEW: Header Navigation Link Colors - Dark Theme --- */
 --color-header-nav-link-text: var(--color-text-toc-link); /* Default color for header nav links */
@@ -118,7 +117,6 @@
     --color-search-kbd-bg: var(--color-bg-sidebar);
     --color-search-kbd-text: var(--color-text-body);
     --color-search-kbd-border: var(--color-border-sidebar);
-    --color-search-kbd-border: var(--color-border-sidebar);
 
 /* --- NEW: Header Navigation Link Colors - Light Theme (can reuse dark if appropriate) --- */
 /* These will correctly use the light theme's --color-text-toc-link, etc. */
@@ -180,35 +178,14 @@
         stroke: var(--color-dropdown-trigger-hover-text);
     }
     
-    .header-dropdown-menu {
-        position: absolute;
-        top: calc(100% + 0.5rem); 
-        right: 0; 
-        background-color: var(--color-dropdown-bg);
-        border-radius: 8px;
-        box-shadow: var(--color-dropdown-shadow);
-        padding: 0.5rem;
-        min-width: 180px;
-        z-index: 1000;
-        list-style: none;
-        margin: 0;
-
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-10px);
-        transition: opacity 0.15s ease-out, /* Quicker transition for hover */
-                    transform 0.15s ease-out,
-                    visibility 0s linear 0.15s; 
-        pointer-events: none; /* Important: Prevent menu from capturing mouse events when hidden */
-    }
-
     /* --- THIS IS THE KEY CHANGE FOR HOVER --- */
     .header-dropdown-container:hover .header-dropdown-menu,
     .header-dropdown-trigger:focus-within + .header-dropdown-menu, /* Show on trigger focus for keyboard */
     .header-dropdown-menu:hover /* Keep open if mouse moves onto the menu itself */ {
         opacity: 1;
         visibility: visible;
-        transform: translateY(0);
+        transform: translateX(-50%) translateY(0); /* <<< MODIFY: Center horizontally when visible */
+
         transition-delay: 0s;
         pointer-events: auto; /* Allow interaction when visible */
     }
@@ -356,20 +333,22 @@ html{
     flex-grow: 1;
     flex-basis: 0;
     padding: 1.5rem;
-    overflow-y: auto; /* This will now work for #toc-links */
+    overflow-y: auto;      /* Must be 'auto' or 'scroll' to enable scrolling */
     overflow-x: hidden;
-    height: 100vh;
-    position: relative;
-    scrollbar-width: thin; /* For Firefox */
-    scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--toc-scrollbar-track-bg); /* For Firefox */
+    height: calc(100vh - 4rem); /* Assumes header is 4rem high. Adjust if different. */
     position: sticky;
-    top: 0;                     /* stick to top of viewport */
+    top: 4rem;             /* Stick 4rem from the top of .main-area-wrapper */
 
+    /* --- SCROLLBAR HIDING FOR FIREFOX --- */
+    scrollbar-width: none;  /* For Firefox: hides the scrollbar completely */
 }
 
+/* --- SCROLLBAR HIDING FOR WEBKIT BROWSERS --- */
 #toc-container::-webkit-scrollbar {
-    width: 10px; /* Increased from 8px */
+    width: 0px;             /* Make the scrollbar have no width */
+    background: transparent; /* Optional: just in case */
 }
+
 
 #toc-container::-webkit-scrollbar-track {
     background: var(--toc-scrollbar-track-bg);
@@ -388,34 +367,48 @@ html{
 
 
 #toc-links {
-    padding-left: 1rem; /* This padding is fine */
-    border-left: 2px solid var(--color-border-toc-line); /* Border is fine */
-    display: flex; /* Not strictly necessary if children are display:block, but fine */
-    flex-direction: column; /* Not strictly necessary, but fine */
+    position: relative; /* CRITICAL for marker positioning */
+    border-left: 2px solid var(--color-border-toc-line); /* The faint guide line */
+    display: flex;
+    flex-direction: column;
     transition: border-color 0.3s ease;
-    /* The links themselves will now scroll within #toc-container */
+    /* NO padding-left on #toc-links itself */
 }
 
 #toc-links a {
-    line-height: 2rem;
-    font-size: 0.875rem;
     display: block;
-    padding: 0.3rem 0 0.3rem 1rem;
+    padding: 0.3rem 0 0.3rem 1rem; /* This 1rem creates the space between the guide/marker and the text */
     color: var(--color-text-toc-link);
     text-decoration: none;
+    margin-bottom: 0.35rem;
     white-space: normal;
+    font-size: 0.9rem;
+    position: relative; /* Good practice */
 }
 
-/* ... (rest of your CSS) ... */
+#toc-links a.active {
+    font-weight: bold;
+    color: var(--color-text-toc-link-active) !important;
+    /* It will inherit the padding-left: 1rem; from the general 'a' rule, which is what we want */
+}
 
+#toc-active-marker {
+    position: absolute;
+    top: 0; /* JavaScript will update this */
+    left: -2px; /* <<< THIS IS THE KEY CHANGE */
+                /* Moves the marker 2px to the left, covering the parent's border-left */
+    width: 2px; /* Match the width of #toc-links's border-left */
+    height: 0; /* JavaScript will update this */
+    background-color: var(--color-text-toc-link-active); /* Active color */
+    border-radius: 1px; /* Optional: for slightly rounded ends */
+    opacity: 0; /* Start hidden */
+    transition: top 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+}
 #toc-links a:hover {
         color: var(--color-text-toc-link-hover);
         }
 
-        #toc-links a.active {
-        font-weight: bold;
-        color: var(--color-text-toc-link-active) !important;
-        }
+
 
         #content-area h2 {
         margin-top: 2rem;
@@ -617,11 +610,6 @@ html{
     .header-nav-link.active {
         color: var(--color-header-nav-link-text-active);
     }
-        /* Style for an "active" or current page link (you'd add the .active class with JS) */
-        .header-nav-link.active {
-          color: var(--color-header-nav-link-text-active);
-          /* Optional: font-weight: 700; or a different background */
-        }
 
         /* Ensure visited links don't turn purple/blue by default browser styles */
         .header-nav-link:visited {
@@ -856,9 +844,11 @@ a.icon-button:visited {
 }
 
 .header-dropdown-container {
-        position: relative;
-        display: inline-block;
-    }
+    position: relative;
+    display: inline-block; /* or inline-flex if that's what you use */
+    padding-bottom: 0.5rem; /* Matches the '0.5rem' gap from 'top: calc(100% + 0.5rem);' on the menu */
+    margin-bottom: -0.5rem; /* Optional: Counteracts the padding if it pushes other elements down */
+}
 
     .header-dropdown-trigger {
         display: inline-flex;
@@ -899,25 +889,29 @@ a.icon-button:visited {
     }
     
     .header-dropdown-menu {
-        position: absolute;
-        top: calc(100% + 0.5rem); /* Position below the trigger with a small gap */
-        right: 0; /* Align to the right of the container */
-        background-color: var(--color-dropdown-bg);
-        border-radius: 8px;
-        box-shadow: var(--color-dropdown-shadow);
-        padding: 0.5rem;
-        min-width: 180px; /* Adjust as needed */
-        z-index: 1000; /* Ensure it's above other content */
-        list-style: none;
-        margin: 0;
+    position: absolute;
+    top: 100%; /* Position below the trigger with a small gap */
+    /* REMOVE: right: 0; */
+    left: 50%;              /* <<< ADD: Position the left edge of the menu at the center of the container */
+    transform: translateX(-50%) translateY(-10px); /* <<< MODIFY: Pull menu left by half its own width, keep existing Y transform */
+                                                /* If the menu is visible (on hover), transform will be translateX(-50%) translateY(0) */
+    background-color: var(--color-dropdown-bg);
+    border-radius: 8px;
+    box-shadow: var(--color-dropdown-shadow);
+    padding: 0.5rem;
+    min-width: 180px; /* Adjust as needed */
+    z-index: 1000;
+    list-style: none;
+    margin: 0;
 
-        opacity: 0;
-        visibility: hidden;
-        transform: translateY(-10px);
-        transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
-                    visibility 0s linear 0.2s;
-    }
+    opacity: 0;
+    visibility: hidden;
+    /* The Y transform is part of the open/close animation */
+    transition: opacity 0.15s ease-out,
+                transform 0.15s ease-out, /* Ensure transform is part of the transition */
+                visibility 0s linear 0.15s;
+    pointer-events: none;
+}
 
     .header-dropdown-container.active .header-dropdown-menu {
         opacity: 1;
@@ -1089,7 +1083,7 @@ a.icon-button:visited {
                 <p>Vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.</p>
                 <p>Corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
     
-                <h2 id="license-information">License Information</h2>
+                <h2 id="license-information" style="padding-left: 1rem;">License Information</h2>
                 <p>This software is distributed under the XYZ License. This section provides the full text of the license and details about any third-party components and their respective licenses.</p>
                 <p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>
                 <p>Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae.</p>
@@ -1140,7 +1134,9 @@ a.icon-button:visited {
             </div>
         <div id="toc-container">
             <nav id="toc-links">
-                <a href="#introduction">Introduction</a>
+                <div id="toc-active-marker"></div> <!-- <<< ADD THIS DIV - EXACTLY AS SHOWN -->
+
+                <a href="#introduction"> <span style="padding-left: 1rem;">Introduction</span></a>
                 <a href="#getting-started">Getting Started</a>
                 <a href="#core-concepts">Core Concepts</a>
                 <a href="#feature-alpha">Feature Alpha</a>
@@ -1153,7 +1149,7 @@ a.icon-button:visited {
                 <a href="#backup-restore">Backup and Restore</a>
                 <a href="#migration-guide">Migration Guide</a>
                 <a href="#contributing">Contributing</a>
-                <a href="#license-information">License Information</a>
+                <a href="#license-information" style="padding-left: 1rem;">License Information</a>
                 <a href="#appendix-a">Appendix A: Glossary</a>
                 <a href="#appendix-b">Appendix B: Further Reading</a>
                 <!-- Add a few more to really test ToC scroll -->
@@ -1169,28 +1165,55 @@ a.icon-button:visited {
     </div>
 
     
-    <script>
+     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const contentArea = document.getElementById('content-area');
-        const tocLinksContainer = document.getElementById('toc-links');
-        const tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
-        const themeToggleButton = document.getElementById('themeToggle');
+        // --- Element References ---
         const htmlElement = document.documentElement;
-        const tocContainerElement = document.getElementById('toc-container'); // ADDED
+        const mainScroller = document.querySelector('.main-area-wrapper');
 
+        // Theme Toggle
+        const themeToggleButton = document.getElementById('themeToggle');
+
+        // Table of Contents (ToC)
+        const tocContainerElement = document.getElementById('toc-container');
+        const tocLinksContainer = document.getElementById('toc-links'); // This is <nav id="toc-links">
+        const tocActiveMarker = document.getElementById('toc-active-marker');
+        let tocLinks = []; // Initialize as empty, will be populated
+        if (tocLinksContainer) {
+            tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
+        }
+
+        // Search
+        const searchTriggerButton = document.getElementById('searchTrigger');
+        const searchOverlay = document.getElementById('searchOverlay');
+        const searchModal = document.getElementById('searchModal');
+        const searchInput = document.getElementById('searchInput');
+        const searchCloseButton = document.getElementById('searchCloseButton');
+
+        // --- State Variables ---
         const THEME_KEY = 'user-preferred-theme';
+        const sections = {};
+        const scrollOffset = 20; // For ToC active link detection
+        let isSearchActive = false;
+        // let lastFocusedElement; // For search, if needed for more complex focus restore
 
+        // --- 1. Theme Functionality ---
         function applyTheme(theme) {
             if (theme === 'light') {
                 htmlElement.classList.add('light-theme');
                 htmlElement.classList.remove('dark-theme');
-                themeToggleButton.setAttribute('aria-label', 'Switch to Dark Theme');
+                if (themeToggleButton) {
+                    themeToggleButton.setAttribute('aria-label', 'Switch to Dark Theme');
+                }
             } else {
                 htmlElement.classList.remove('light-theme');
                 htmlElement.classList.add('dark-theme');
-                themeToggleButton.setAttribute('aria-label', 'Switch to Light Theme');
+                if (themeToggleButton) {
+                    themeToggleButton.setAttribute('aria-label', 'Switch to Light Theme');
+                }
             }
         }
+
         function saveThemePreference(theme) {
             localStorage.setItem(THEME_KEY, theme);
         }
@@ -1199,164 +1222,176 @@ a.icon-button:visited {
             const savedTheme = localStorage.getItem(THEME_KEY);
             if (savedTheme) return savedTheme;
             if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-            return 'dark';
+            return 'dark'; // Default to dark
         }
 
-        themeToggleButton.addEventListener('click', () => {
-            let currentTheme = htmlElement.classList.contains('light-theme') ? 'light' : 'dark';
-            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            applyTheme(newTheme);
-            saveThemePreference(newTheme);
-        });
+        if (themeToggleButton) {
+            themeToggleButton.addEventListener('click', () => {
+                let currentTheme = htmlElement.classList.contains('light-theme') ? 'light' : 'dark';
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                applyTheme(newTheme);
+                saveThemePreference(newTheme);
+            });
+        }
+        applyTheme(getInitialTheme()); // Apply theme on load
 
-        applyTheme(getInitialTheme());
+        // --- 2. Table of Contents (Scroll Spy & Active Marker) ---
+        if (tocLinks.length > 0) {
+            tocLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    const sectionId = href.substring(1);
+                    const sectionElement = document.getElementById(sectionId);
+                    if (sectionElement) {
+                        sections[sectionId] = sectionElement;
+                    }
+                }
+            });
+        }
 
-
-        const sections = {};
-        tocLinks.forEach(link => {
-            const sectionId = link.getAttribute('href').substring(1);
-            const sectionElement = document.getElementById(sectionId);
-            if (sectionElement) sections[sectionId] = sectionElement;
-        });
-
-        const scrollOffset = 20;
-        const mainScroller = document.querySelector('.main-area-wrapper');
-
-        function updateActiveLink() {
-            if (!mainScroller) return;
+        function updateActiveLinkAndMarker() {
+            if (!mainScroller || tocLinks.length === 0) return;
 
             let currentSectionId = null;
             const contentScrollTop = mainScroller.scrollTop;
             const sectionIds = Object.keys(sections);
 
+            // Determine current section based on scroll position
             for (let i = sectionIds.length - 1; i >= 0; i--) {
                 const id = sectionIds[i];
                 const sectionElement = sections[id];
-                if (sectionElement) {
-                    if (sectionElement.offsetTop - scrollOffset <= contentScrollTop) {
-                        currentSectionId = id;
-                        break;
-                    }
-                }
-            }
-            
-            if (currentSectionId === null && sectionIds.length > 0) {
-                const firstSection = sections[sectionIds[0]];
-                if (firstSection && contentScrollTop < (firstSection.offsetTop - scrollOffset)) {
-                    if (contentScrollTop < scrollOffset) {
-                        currentSectionId = sectionIds[0];
-                    }
-                } else if (firstSection && contentScrollTop < firstSection.offsetTop) {
-                     currentSectionId = sectionIds[0];
+                if (sectionElement && (sectionElement.offsetTop - scrollOffset <= contentScrollTop)) {
+                    currentSectionId = id;
+                    break;
                 }
             }
 
-            if (sectionIds.length > 0 && (mainScroller.scrollHeight - mainScroller.scrollTop <= mainScroller.clientHeight + 5)) {
+            // If scrolled to the very top, or above the first "calculated" active section
+            if (currentSectionId === null && sectionIds.length > 0) {
+                const firstSection = sections[sectionIds[0]];
+                if (firstSection) {
+                    if (contentScrollTop < scrollOffset || contentScrollTop < (firstSection.offsetTop - scrollOffset)) {
+                        currentSectionId = sectionIds[0];
+                    }
+                }
+            }
+
+            // If scrolled to the very bottom
+            if (sectionIds.length > 0 && (mainScroller.scrollHeight - mainScroller.scrollTop <= mainScroller.clientHeight + 5)) { // +5 for a small buffer
                 currentSectionId = sectionIds[sectionIds.length - 1];
             }
 
-            let activeLinkElement = null; // MODIFIED/ADDED
-
+            let activeLinkElement = null;
             tocLinks.forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('href') === `#${currentSectionId}`) {
                     link.classList.add('active');
-                    activeLinkElement = link; // MODIFIED/ADDED
+                    activeLinkElement = link;
                 }
             });
 
-            // --- NEW: Scroll ToC to keep active link in view ---
-            if (activeLinkElement && tocContainerElement) {
-                if (tocContainerElement.scrollHeight > tocContainerElement.clientHeight) {
-                    const linkTop = activeLinkElement.offsetTop;
-                    const linkHeight = activeLinkElement.offsetHeight;
-                    const linkBottom = linkTop + linkHeight;
+            // Scroll ToC container to keep active link in view
+            if (activeLinkElement && tocContainerElement && tocContainerElement.scrollHeight > tocContainerElement.clientHeight) {
+                const linkTopInToc = activeLinkElement.offsetTop; // Relative to #toc-links
+                const linkHeight = activeLinkElement.offsetHeight;
+                const linkBottomInToc = linkTopInToc + linkHeight;
+                const tocScrollTop = tocContainerElement.scrollTop;
+                const tocClientHeight = tocContainerElement.clientHeight;
+                const scrollPadding = 30;
 
-                    const tocScrollTop = tocContainerElement.scrollTop;
-                    const tocClientHeight = tocContainerElement.clientHeight;
-                    const scrollPadding = 30; 
-
-                    if (linkTop < tocScrollTop + scrollPadding) {
-                        tocContainerElement.scrollTo({
-                            top: Math.max(0, linkTop - scrollPadding),
-                            behavior: 'smooth'
-                        });
-                    } else if (linkBottom > tocScrollTop + tocClientHeight - scrollPadding) {
-                        tocContainerElement.scrollTo({
-                            top: Math.min(
-                                linkBottom - tocClientHeight + scrollPadding,
-                                tocContainerElement.scrollHeight - tocClientHeight
-                            ),
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            }
-            // --- END NEW ---
-        }
-
-        tocLinksContainer.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
-                e.preventDefault();
-                const targetId = e.target.getAttribute('href').substring(1);
-                const targetElement = document.getElementById(targetId);
-                if (targetElement && mainScroller) {
-                    mainScroller.scrollTo({
-                        top: targetElement.offsetTop,
+                if (linkTopInToc < tocScrollTop + scrollPadding) {
+                    tocContainerElement.scrollTo({
+                        top: Math.max(0, linkTopInToc - scrollPadding),
+                        behavior: 'smooth'
+                    });
+                } else if (linkBottomInToc > tocScrollTop + tocClientHeight - scrollPadding) {
+                    tocContainerElement.scrollTo({
+                        top: Math.min(
+                            linkBottomInToc - tocClientHeight + scrollPadding,
+                            tocContainerElement.scrollHeight - tocClientHeight
+                        ),
                         behavior: 'smooth'
                     });
                 }
             }
-        });
 
-        if (mainScroller) {
-            mainScroller.addEventListener('scroll', updateActiveLink);
-            updateActiveLink();
+            // Update the active ToC marker
+            if (tocActiveMarker) {
+                if (activeLinkElement) {
+                    const markerTop = activeLinkElement.offsetTop;
+                    const markerHeight = activeLinkElement.offsetHeight;
+                    tocActiveMarker.style.top = `${markerTop}px`;
+                    tocActiveMarker.style.height = `${markerHeight}px`;
+                    tocActiveMarker.style.opacity = '1';
+                } else {
+                    tocActiveMarker.style.opacity = '0';
+                    // tocActiveMarker.style.height = '0px'; // Optional: shrink if no active link
+                }
+            }
         }
 
-        // ... (Search functionality JavaScript REMAINS THE SAME BELOW THIS LINE) ...
-        const searchTriggerButton = document.getElementById('searchTrigger');
-        const searchOverlay = document.getElementById('searchOverlay');
-        const searchModal = document.getElementById('searchModal');
-        const searchInput = document.getElementById('searchInput');
-        const searchCloseButton = document.getElementById('searchCloseButton');
+        if (tocLinksContainer) {
+            tocLinksContainer.addEventListener('click', (e) => {
+                const target = e.target.closest('a'); // Handle clicks on <a> or its children
+                if (target && target.getAttribute('href')?.startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = target.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement && mainScroller) {
+                        mainScroller.scrollTo({
+                            top: targetElement.offsetTop,
+                            behavior: 'smooth'
+                        });
+                    }
+                }
+            });
+        }
 
-        let isSearchActive = false;
-        let lastFocusedElement; 
+        if (mainScroller && tocLinks.length > 0) {
+            mainScroller.addEventListener('scroll', updateActiveLinkAndMarker);
+            updateActiveLinkAndMarker(); // Initial call on page load
+        }
 
+        // --- 3. Search Functionality ---
         function isEditingContent(element) {
+            if (!element) return false;
             const tagName = element.tagName;
-            return tagName === 'INPUT' || 
-                tagName === 'TEXTAREA' || 
-                element.isContentEditable ||
-                element.closest('input, textarea, [contenteditable="true"], [contenteditable=""]')
-                ;
+            return tagName === 'INPUT' ||
+                   tagName === 'TEXTAREA' ||
+                   element.isContentEditable ||
+                   element.closest('input, textarea, [contenteditable="true"], [contenteditable=""]');
         }
 
         function openSearch() {
-            if (isSearchActive) return;
-            lastFocusedElement = document.activeElement; 
+            if (isSearchActive || !searchOverlay || !searchInput) return;
+            // lastFocusedElement = document.activeElement; // Store focus
             requestAnimationFrame(() => {
-                searchOverlay.classList.add('active'); 
-                setTimeout(() => {
-                    searchInput.value = ''; 
-                    searchInput.focus();    
-                }, 60); 
+                searchOverlay.classList.add('active');
+                setTimeout(() => { // Allow overlay to transition
+                    searchInput.value = '';
+                    searchInput.focus();
+                }, 60); // Slightly more than typical frame for safety
             });
-            document.body.style.overflow = 'hidden'; 
+            document.body.style.overflow = 'hidden'; // Prevent body scroll
             isSearchActive = true;
         }
 
         function closeSearch() {
-            if (!isSearchActive) return;
+            if (!isSearchActive || !searchOverlay) return;
             searchOverlay.classList.remove('active');
-            searchInput.blur(); 
-            document.body.style.overflow = ''; 
+            if(searchInput) searchInput.blur();
+            document.body.style.overflow = ''; // Restore body scroll
+
+            // Restore focus to trigger button or previously focused element
+            // if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+            //     lastFocusedElement.focus({ preventScroll: true });
+            // } else
             if (searchTriggerButton) {
-                searchTriggerButton.focus({ preventScroll: true }); 
+                searchTriggerButton.focus({ preventScroll: true });
             }
             isSearchActive = false;
         }
+
         function toggleSearch() {
             if (isSearchActive) {
                 closeSearch();
@@ -1371,31 +1406,35 @@ a.icon-button:visited {
         if (searchCloseButton) {
             searchCloseButton.addEventListener('click', closeSearch);
         }
-
         if (searchOverlay) {
             searchOverlay.addEventListener('click', (event) => {
-                if (event.target === searchOverlay) { 
+                // Close if clicked on the overlay itself, not its children (modal)
+                if (event.target === searchOverlay) {
                     closeSearch();
                 }
             });
         }
 
         document.addEventListener('keydown', (event) => {
-            if (event.key === '/' && !isSearchActive && !isEditingContent(event.target)) {
+            // Open search with '/'
+            if (event.key === '/' && !isSearchActive && !isEditingContent(document.activeElement)) {
                 event.preventDefault();
                 openSearch();
             }
+            // Toggle search with Ctrl/Cmd + K
             if (event.key === 'k' && (event.ctrlKey || event.metaKey)) {
                 event.preventDefault();
                 toggleSearch();
             }
+            // Close search with Escape
             if (event.key === 'Escape' && isSearchActive) {
                 event.preventDefault();
                 closeSearch();
             }
         });
-    });   </script>
-    <!-- Search Modal Overlay -->
+
+    });
+    </script>   <!-- Search Modal Overlay -->
     <div id="searchOverlay" class="search-overlay">
         <div id="searchModal" class="search-modal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle">
         <div class="search-input-container">
