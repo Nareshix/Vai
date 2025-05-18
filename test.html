@@ -1,316 +1,53 @@
 <!DOCTYPE html>
-<html lang="en" style="height: 100%;">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Responsive Layout with Header + Custom ScrollSpy</title>
-
+  <meta charset="UTF-8">
+  <title>Simple Collapsible</title>
   <style>
-    /* Basic Reset & Global Styles */
-    html {
-      box-sizing: border-box;
-      height: 100%;
-    }
-    *, *:before, *:after {
-      box-sizing: inherit;
-    }
     body {
-      height: 100%;
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        Roboto, Helvetica, Arial, sans-serif;
-      background-color: #1a1a1a;
-      color: #e0e0e0;
-      font-size: 16px;
-      display: flex; /* For the main two-column layout */
-      flex-direction: row;
-      width: 100%;
+      font-family: sans-serif;
+      padding: 2rem;
+      background: #111;
+      color: #eee;
     }
 
-    /* --- Layout Structure --- */
-
-    /* Column 1: Left Sidebar */
-    .left-sidebar {
-      flex-basis: 16rem;
-      flex-grow: 0;
-      flex-shrink: 0;
-      padding: 1.25rem;
-      border-right: 1px solid #363636;
-      background-color: #202020;
-      overflow-y: auto;
+    .collapsible-button {
+      background: #222;
+      color: #fff;
+      padding: 0.5rem 1rem;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      border-radius: 6px;
     }
 
-    /* Column 2: Main Area (Header + Content/TOC) */
-    .main-area-wrapper {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden; /* Crucial for nested scroll containers */
+    .collapsible-content {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #333;
+      border-radius: 6px;
+      display: none; /* Hidden by default */
     }
 
-    /* Header within Main Area */
-    .app-header {
-      height: 4rem;
-      flex-shrink: 0;
-      padding: 0 1.5rem;
-      border-bottom: 1px solid #363636;
-      background-color: #252529;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .collapsible-content.show {
+      display: block;
     }
-
-    /* Content and TOC Row within Main Area */
-    .content-toc-row {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: row;
-      overflow: hidden; /* Crucial for nested scroll containers */
-    }
-
-    /* Content Area */
-    #content-area {
-      flex-grow: 3; /* Takes 3 parts of the available space */
-      flex-basis: 0;  /* Allows flex-grow to work proportionally */
-      padding: 1.5rem;
-      overflow-y: auto;
-      /* Optional scrollbar styles */
-      scrollbar-width: none; /* Firefox */
-    }
-    #content-area::-webkit-scrollbar {
-      width: 0px; /* Chrome, Safari */
-      background: transparent;
-    }
-
-    /* TOC Container */
-    #toc-container {
-      flex-grow: 1; /* Takes 1 part of the available space */
-      flex-basis: 0;  /* Allows flex-grow to work proportionally */
-      padding: 1.5rem;
-      overflow-y: auto;
-      position: relative; /* For positioning the vertical line correctly */
-    }
-
-    /* --- TOC Specific Styles --- */
-    #toc-links { /* This is the <nav> element */
-      position: relative;
-      padding-left: 1rem; /* Space for the links from the border */
-      border-left: 2px solid #555;
-      display: flex;
-      flex-direction: column; /* Stack links vertically */
-    }
-
-    #toc-links a {
-      display: block; /* Make links take full width for better click area */
-      padding: 0.3rem 0 0.3rem 1rem; /* Top/bottom padding, left padding from border */
-      color: #aaa;
-      text-decoration: none;
-      transition: color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
-    }
-
-    #toc-links a:hover {
-      color: #ccc;
-    }
-
-    #toc-links a.active {
-      font-weight: bold;
-      color: dodgerblue !important; /* Use !important to override general link color if needed */
-    }
-
-    /* --- Content Elements --- */
-    #content-area h2 {
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      padding-top: 1rem; /* For scrollspy offset, helps when navigating */
-    }
-    #content-area h2:first-of-type {
-        margin-top: 0;
-        padding-top: 0;
-    }
-    #content-area p {
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
-
   </style>
 </head>
 <body>
-  <!-- Column 1: Left Sidebar -->
-  <div class="left-sidebar">
-    Column 1 Content
-  </div>
 
-  <!-- Column 2: Main Area Wrapper -->
-  <div class="main-area-wrapper">
-    <!-- Header -->
-    <div class="app-header">
-      <div>Page Title / Logo</div>
-      <div>User Menu</div>
-    </div>
+  <button class="collapsible-button" onclick="toggleCollapse()">Toggle Content</button>
 
-    <!-- Content and TOC Row -->
-    <div class="content-toc-row">
-      <!-- Content Area with Custom ScrollSpy -->
-      <div
-        id="content-area"
-        tabindex="0" 
-      >
-        <h2 id="introduction">Introduction</h2>
-        <p>Some intro text for the introduction section. This is where you would introduce the topic of the page.</p>
-        <p>More details can follow, explaining the purpose and overview.</p>
-
-        <h2 id="features">Features</h2>
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et
-          iusto reprehenderit deserunt, eligendi sapiente exercitationem
-          mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur
-          provident, non placeat praesentium ab dolores!
-        </p>
-        <p>
-          Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-          Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-        </p>
-        <p>
-          Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
-          Quisque sit amet est et sapien ullamcorper pharetra.
-        </p>
-        <p>
-          Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum,
-          elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
-        </p>
-        <p>
-          Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus,
-          tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat.
-        </p>
-
-        <h2 id="installation">Installation</h2>
-        <p>
-          As you can see, I'm still alive. In order to install this, you need to follow these steps carefully.
-          This section details the process of setting up the project or library.
-        </p>
-        <p>
-          First, ensure you have all prerequisites. Then, clone the repository.
-          Finally, run the installation script. `npm install my-package` or similar commands would go here.
-        </p>
-
-        <h2 id="usage">Usage</h2>
-        <p>
-          This section describes how to use the installed software or library.
-          Provide code examples and explain common use cases.
-        </p>
-        <p>
-          For example, to use a function: `myFunction(param1, param2);`
-          Ensure to explain what the parameters do and what the expected output is.
-        </p>
-        <p style="height: 300px;">Adding some extra space to ensure scrolling is needed for the last item.</p>
-      </div>
-
-      <!-- TOC Container -->
-      <div id="toc-container">
-        <nav id="toc-links">
-          <a href="#introduction">Introduction</a>
-          <a href="#features">Features</a>
-          <a href="#installation">Installation</a>
-          <a href="#usage">Usage</a>
-        </nav>
-      </div>
-    </div>
+  <div class="collapsible-content" id="collapsible">
+    <p>This is the hidden content. Click again to collapse.</p>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const contentArea = document.getElementById('content-area');
-      const tocLinksContainer = document.getElementById('toc-links');
-      const tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
-      
-      // Map section IDs to their elements for quick lookup
-      const sections = {};
-      tocLinks.forEach(link => {
-        const sectionId = link.getAttribute('href').substring(1);
-        const sectionElement = document.getElementById(sectionId);
-        if (sectionElement) {
-          sections[sectionId] = sectionElement;
-        }
-      });
-
-      // Offset to adjust when a section is considered "active"
-      // This can be tuned, e.g., to account for a sticky header height if one existed
-      // or just to make the activation point feel right.
-      // The 1rem padding-top on h2 also helps with this.
-      const scrollOffset = 20; 
-
-      // Function to update active TOC link
-      function updateActiveLink() {
-        let currentSectionId = null;
-        const contentScrollTop = contentArea.scrollTop;
-
-        // Iterate through sections to find the current one
-        // We check from bottom to top to correctly identify the section
-        // if multiple are partially in view. The "highest" one on screen wins.
-        const sectionIds = Object.keys(sections);
-
-        for (let i = sectionIds.length - 1; i >= 0; i--) {
-          const id = sectionIds[i];
-          const sectionElement = sections[id];
-          // sectionElement.offsetTop is relative to contentArea
-          if (sectionElement.offsetTop - scrollOffset <= contentScrollTop) {
-            currentSectionId = id;
-            break;
-          }
-        }
-        
-        // If scrolled to the very top, and first section isn't at the very top
-        // make the first section active if it's close enough, or none if far.
-        if (contentScrollTop < (sections[sectionIds[0]]?.offsetTop || 0) - scrollOffset && sectionIds.length > 0) {
-             // If we are above the first section by more than offset, no section is active
-             // currentSectionId = null; // Or activate the first one
-             if (contentScrollTop < scrollOffset && sectionIds.length > 0) { // Very top of the scroll
-                 currentSectionId = sectionIds[0];
-             } else {
-                 currentSectionId = null;
-             }
-        }
-
-
-        // If scrolled to the absolute bottom of the content area
-        if (contentArea.scrollHeight - contentArea.scrollTop <= contentArea.clientHeight + 5 && sectionIds.length > 0) { // +5 for a small buffer
-            currentSectionId = sectionIds[sectionIds.length - 1];
-        }
-
-
-        tocLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${currentSectionId}`) {
-            link.classList.add('active');
-          }
-        });
-      }
-
-      // Smooth scrolling on TOC links
-      tocLinksContainer.addEventListener('click', (e) => {
-        if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
-          e.preventDefault();
-          const targetId = e.target.getAttribute('href').substring(1);
-          const targetElement = document.getElementById(targetId);
-          if (targetElement) {
-            // targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            // Since scrollIntoView on targetElement refers to window scroll,
-            // and we are scrolling inside #content-area, we do it manually.
-            contentArea.scrollTo({
-                top: targetElement.offsetTop, // offsetTop is relative to #content-area
-                behavior: 'smooth'
-            });
-          }
-        }
-      });
-
-      // Listen for scroll events on the content area
-      if (contentArea) {
-        contentArea.addEventListener('scroll', updateActiveLink);
-        // Initial call to set active link on page load
-        updateActiveLink();
-      }
-    });
+    function toggleCollapse() {
+      const content = document.getElementById('collapsible');
+      content.classList.toggle('show');
+    }
   </script>
+
 </body>
 </html>
