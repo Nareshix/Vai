@@ -1,488 +1,1255 @@
-<!DOCTYPE html>
-<html lang="en" style="height: 100%;"> 
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Responsive Layout with Theme Toggle</title>
+    <!DOCTYPE html>
+    <html lang="en" style="height: 100%;"> 
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Responsive Layout with Theme Toggle</title>
 
-  <style>
-    :root {
-      /* Dark */
-      --color-bg-body: #1a1a1a;
-      --color-text-body: #e0e0e0;
-      --color-bg-sidebar: #202020;
-      --color-border-sidebar: #363636;
-      --color-bg-header: #252529;
-      --color-border-header: #363636;
-      --color-border-toc-line: #555;
-      --color-text-toc-link: #aaa;
-      --color-text-toc-link-hover: #ccc;
-      --color-text-toc-link-active: dodgerblue;
-      --color-button-bg: #444;
-      --color-button-text: #e0e0e0;
-      --color-button-border: #555;
+    <style>
+        :root {
+        /* Dark */
+        --color-bg-body: #1a1a1a;
+        --color-text-body: #e0e0e0;
+        --color-bg-sidebar: #202020;
+        --color-border-sidebar: #363636;
+        --color-bg-header: #252529;
+        --color-border-header: #363636;
+        --color-border-toc-line: #555;
+        --color-text-toc-link: #aaa;
+        --color-text-toc-link-hover: #ccc;
+        --color-text-toc-link-active: dodgerblue;
+        --color-button-bg: #444;
+        --color-button-text: #e0e0e0;
+        --color-button-border: #555;
+        
 
-      /* Footer specific colors - Dark Theme */
-      --color-footer-link: hsl(240, 100%, 81%); /* #a3a3ff */
-      --color-footer-meta-text: hsl(240, 10%, 60%); /* #9494a3 */
-      --color-footer-divider: hsl(240, 10%, 27%); /* #404045 */
-      --color-footer-nav-box-border: hsl(240, 10%, 30%); /* #484852 */
-      --color-footer-nav-box-bg: transparent;
-      /* --- NEW HOVER STATE COLORS FOR NAV BOX --- */
-      --color-footer-nav-box-border-hover: hsl(240, 10%, 50%); /* Brighter border, e.g., #757585 */
-      --color-footer-nav-box-bg-hover: hsl(240, 10%, 20%);    /* Subtle background fill, e.g., #2e2e33 */
+        /* Footer specific colors - Dark Theme */
+        --color-footer-link: hsl(240, 100%, 81%); /* #a3a3ff */
+        --color-footer-meta-text: hsl(240, 10%, 60%); /* #9494a3 */
+        --color-footer-divider: hsl(240, 10%, 27%); /* #404045 */
+        --color-footer-nav-box-border: hsl(240, 10%, 30%); /* #484852 */
+        --color-footer-nav-box-bg: transparent;
+        /* --- NEW HOVER STATE COLORS FOR NAV BOX --- */
+        --color-footer-nav-box-border-hover: hsl(240, 10%, 50%); /* Brighter border, e.g., #757585 */
+        --color-footer-nav-box-bg-hover: hsl(240, 10%, 20%);    /* Subtle background fill, e.g., #2e2e33 */
+        --color-search-overlay-bg: rgba(10, 10, 10, 0.75); /* Darker overlay for dark theme */
+    --color-search-modal-bg: #2f2f33; /* Slightly offset from header for depth */
+    --color-search-text: var(--color-text-body);
+    --color-search-placeholder-text: var(--color-text-toc-link);
+    --color-search-border: #4a4a4f;
+    --color-search-icon: var(--color-text-toc-link);
+    --color-search-trigger-hover-bg: #38383c;
+    --color-search-shortcut-bg: rgba(255,255,255,0.08);
+    --color-search-shortcut-border: var(--color-border-sidebar);
+    --color-search-shortcut-text: var(--color-text-toc-link);
+    --color-search-kbd-bg: var(--color-bg-sidebar);
+    --color-search-kbd-text: var(--color-text-body);
+    --color-search-kbd-border: var(--color-border-sidebar);
+    --color-search-kbd-border: var(--color-border-sidebar);
+
+/* --- NEW: Header Navigation Link Colors - Dark Theme --- */
+--color-header-nav-link-text: var(--color-text-toc-link); /* Default color for header nav links */
+--color-header-nav-link-text-hover: var(--color-text-body); /* Brighter on hover */
+--color-header-nav-link-bg-hover: var(--color-search-trigger-hover-bg); /* Consistent hover bg */
+--color-header-nav-link-text-active: var(--color-text-toc-link-active); /* For active/current page link */
+--color-header-nav-link-hover-text-blue: var(--color-text-toc-link-active); /* dodgerblue */
+
+/* --- NEW: Dropdown Specific Colors - Dark Theme --- */
+--color-dropdown-bg: var(--color-search-modal-bg); /* e.g., #2f2f33 */
+--color-dropdown-shadow: 0 4px 12px rgba(0,0,0,0.4), 0 0 0 1px var(--color-border-sidebar); /* Shadow similar to search modal */
+--color-dropdown-item-text: var(--color-text-body);
+--color-dropdown-item-text-hover: var(--color-text-body); /* Text color might not change, bg does */
+--color-dropdown-item-bg-hover: var(--color-search-trigger-hover-bg); /* e.g., #38383c */
+--color-dropdown-item-icon: var(--color-text-toc-link);
+--color-dropdown-trigger-text: var(--color-header-nav-link-text);
+--color-dropdown-trigger-arrow: var(--color-header-nav-link-text);
+--color-dropdown-trigger-hover-text: var(--color-header-nav-link-text-hover);
+--color-dropdown-trigger-hover-bg: var(--color-header-nav-link-bg-hover);
+--color-dropdown-trigger-active-bg: var(--color-header-nav-link-bg-hover); /* When dropdown is open */
+}
+
+
+
+
+        html.light-theme { /* light-theme */
+        --color-bg-body: #f4f4f4;
+        --color-text-body: #333333;
+        --color-bg-sidebar: #e9e9e9;
+        --color-border-sidebar: #cccccc;
+        --color-bg-header: #e0e0e0;
+        --color-border-header: #cccccc;
+        --color-border-toc-line: #bbbbbb;
+        --color-text-toc-link: #555555;
+        --color-text-toc-link-hover: #222222;
+        --color-button-bg: #e0e0e0;
+        --color-button-text: #333;
+        --color-button-border: #ccc;
+        
+        --color-footer-link: hsl(210, 70%, 50%); 
+        --color-footer-meta-text: hsl(220, 10%, 45%); 
+        --color-footer-divider: hsl(210, 20%, 88%); 
+        --color-footer-nav-box-border: hsl(210, 20%, 85%); 
+        --color-footer-nav-box-bg: transparent;
+        
+        --color-footer-nav-box-border-hover: hsl(210, 20%, 70%);
+        --color-footer-nav-box-bg-hover: hsl(210, 20%, 94%);   
+        --color-search-overlay-bg: rgba(60, 60, 70, 0.4); /* Semi-transparent dark overlay for light theme provides contrast */
+    --color-search-modal-bg: #ffffff;
+    --color-search-text: var(--color-text-body);
+    --color-search-placeholder-text: var(--color-text-toc-link);
+    --color-search-border: #dce1e7;
+    --color-search-icon: var(--color-text-toc-link);
+    --color-search-trigger-hover-bg: #d8d8de;
+    --color-search-shortcut-bg: rgba(0,0,0,0.04);
+    --color-search-shortcut-border: var(--color-border-sidebar);
+    --color-search-shortcut-text: var(--color-text-toc-link);
+    --color-search-kbd-bg: var(--color-bg-sidebar);
+    --color-search-kbd-text: var(--color-text-body);
+    --color-search-kbd-border: var(--color-border-sidebar);
+    --color-search-kbd-border: var(--color-border-sidebar);
+
+/* --- NEW: Header Navigation Link Colors - Light Theme (can reuse dark if appropriate) --- */
+/* These will correctly use the light theme's --color-text-toc-link, etc. */
+--color-header-nav-link-text: var(--color-text-toc-link);
+--color-header-nav-link-text-hover: var(--color-text-body);
+--color-header-nav-link-bg-hover: var(--color-search-trigger-hover-bg);
+--color-header-nav-link-text-active: var(--color-text-toc-link-active);
+
+--color-header-nav-link-hover-text-blue: var(--color-text-toc-link-active);
+
+/* --- NEW: Dropdown Specific Colors - Light Theme --- */
+--color-dropdown-bg: var(--color-search-modal-bg); /* e.g., #ffffff */
+--color-dropdown-shadow: 0 4px 12px rgba(0,0,0,0.1), 0 0 0 1px var(--color-border-sidebar);
+--color-dropdown-item-text: var(--color-text-body);
+--color-dropdown-item-text-hover: var(--color-text-body);
+--color-dropdown-item-bg-hover: var(--color-search-trigger-hover-bg); /* e.g., #d8d8de */
+--color-dropdown-item-icon: var(--color-text-toc-link);
+--color-dropdown-trigger-text: var(--color-header-nav-link-text);
+--color-dropdown-trigger-arrow: var(--color-header-nav-link-text);
+--color-dropdown-trigger-hover-text: var(--color-header-nav-link-text-hover);
+--color-dropdown-trigger-hover-bg: var(--color-header-nav-link-bg-hover);
+--color-dropdown-trigger-active-bg: var(--color-header-nav-link-bg-hover);
+}
+
+/* ... (rest of your existing CSS) ... */
+
+/* MODIFIED: Header Navigation Link Hover Effect */
+.header-dropdown-trigger:hover,
+    .header-dropdown-trigger:focus-visible { /* Focus-visible is for keyboard navigation */
+        background-color: var(--color-dropdown-trigger-hover-bg);
+        color: var(--color-dropdown-trigger-hover-text);
     }
-
-    html.light-theme { /* light-theme */
-      --color-bg-body: #f4f4f4;
-      --color-text-body: #333333;
-      --color-bg-sidebar: #e9e9e9;
-      --color-border-sidebar: #cccccc;
-      --color-bg-header: #e0e0e0;
-      --color-border-header: #cccccc;
-      --color-border-toc-line: #bbbbbb;
-      --color-text-toc-link: #555555;
-      --color-text-toc-link-hover: #222222;
-      --color-button-bg: #e0e0e0;
-      --color-button-text: #333;
-      --color-button-border: #ccc;
     
-      --color-footer-link: hsl(210, 70%, 50%); 
-      --color-footer-meta-text: hsl(220, 10%, 45%); 
-      --color-footer-divider: hsl(210, 20%, 88%); 
-      --color-footer-nav-box-border: hsl(210, 20%, 85%); 
-      --color-footer-nav-box-bg: transparent;
-      
-      --color-footer-nav-box-border-hover: hsl(210, 20%, 70%);
-      --color-footer-nav-box-bg-hover: hsl(210, 20%, 94%);   
-    }
-    html{
-      box-sizing: border-box;
-      height: 100%;
-    }
-    *, *:before, *:after {
-      box-sizing: inherit;
-    }
-    body {
-      height: 100%;
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--color-bg-body);
-      color: var(--color-text-body);
-      font-size: 16px;
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-      transition: background-color 0.3s ease, color 0.3s ease;
+    .header-dropdown-trigger .dropdown-arrow-icon {
+        margin-left: 0.35rem;
+        stroke: var(--color-dropdown-trigger-arrow);
+        transition: transform 0.2s ease-out;
+        width: 1em;
+        height: 1em;
     }
 
-    .left-sidebar {
-      flex-basis: 16rem;
-      flex-grow: 0;
-      flex-shrink: 0;
-      padding: 1.25rem;
-      border-right: 1px solid var(--color-border-sidebar);
-      background-color: var(--color-bg-sidebar);
-      overflow-y: auto;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
+    .header-dropdown-container:hover .header-dropdown-trigger .dropdown-arrow-icon {
+        transform: rotate(90deg); /* Change to 90 degrees */
+        stroke: var(--color-dropdown-trigger-hover-text);
+    }
+    
+    .header-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 0.5rem); 
+        right: 0; 
+        background-color: var(--color-dropdown-bg);
+        border-radius: 8px;
+        box-shadow: var(--color-dropdown-shadow);
+        padding: 0.5rem;
+        min-width: 180px;
+        z-index: 1000;
+        list-style: none;
+        margin: 0;
+
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: opacity 0.15s ease-out, /* Quicker transition for hover */
+                    transform 0.15s ease-out,
+                    visibility 0s linear 0.15s; 
+        pointer-events: none; /* Important: Prevent menu from capturing mouse events when hidden */
     }
 
-    .main-area-wrapper {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .app-header {
-      height: 4rem;
-      flex-shrink: 0;
-      padding: 0 1.5rem;
-      border-bottom: 1px solid var(--color-border-header);
-      background-color: var(--color-bg-header);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      transition: background-color 0.3s ease, border-color 0.3s ease;
-    }
-
-    .content-toc-row {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: row;
-      overflow: hidden;
-    }
-
-    #content-area {
-      flex-grow: 3;
-      flex-basis: 0;
-      padding: 1.5rem;
-      overflow-y: auto;
-      scrollbar-width: none; /* Firefox */
-    }
-    #content-area::-webkit-scrollbar {
-      width: 0px; /* Chrome, Safari */
-      background: transparent;
-    }
-
-    #toc-container {
-      flex-grow: 1;
-      flex-basis: 0;
-      padding: 1.5rem;
-      overflow-y: auto;
-      position: relative;
-    }
-
-    #toc-links {
-      position: relative;
-      padding-left: 1rem;
-      border-left: 2px solid var(--color-border-toc-line);
-      display: flex;
-      flex-direction: column;
-      transition: border-color 0.3s ease;
-    }
-
-    #toc-links a {
-      display: block;
-      padding: 0.3rem 0 0.3rem 1rem;
-      color: var(--color-text-toc-link);
-      text-decoration: none;
-      transition: color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
-    }
-
-    #toc-links a:hover {
-      color: var(--color-text-toc-link-hover);
-    }
-
-    #toc-links a.active {
-      font-weight: bold;
-      color: var(--color-text-toc-link-active) !important;
-    }
-
-    #content-area h2 {
-      margin-top: 2rem;
-      margin-bottom: 1rem;
-      padding-top: 5rem;
-      color: var(--color-text-body);
-    }
-    #content-area h2:first-of-type {
-        margin-top: 0;
+    /* --- THIS IS THE KEY CHANGE FOR HOVER --- */
+    .header-dropdown-container:hover .header-dropdown-menu,
+    .header-dropdown-trigger:focus-within + .header-dropdown-menu, /* Show on trigger focus for keyboard */
+    .header-dropdown-menu:hover /* Keep open if mouse moves onto the menu itself */ {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition-delay: 0s;
+        pointer-events: auto; /* Allow interaction when visible */
     }
 
 
-    #content-area p {
-      line-height: 1.6;
-      margin-bottom: 1rem;
-      color: var(--color-text-body);
-    }
-
-    .theme-toggle-button {
-        padding: 0.5rem 1rem;
-        background-color: var(--color-button-bg);
-        color: var(--color-button-text);
-        border: 1px solid var(--color-button-border);
-        border-radius: 4px;
-        cursor: pointer;
+    .header-dropdown-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.6rem 0.75rem;
+        color: var(--color-dropdown-item-text);
+        text-decoration: none;
+        border-radius: 6px;
         font-size: 0.9rem;
-        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-    }
-    .theme-toggle-button:hover {
-        opacity: 0.8;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        white-space: nowrap;
     }
 
-    .page-footer-container {
-      margin-top: 4rem;
-      padding-top: 1rem; 
+    .header-dropdown-item:hover,
+    .header-dropdown-item:focus-visible {
+        background-color: var(--color-dropdown-item-bg-hover);
+        color: var(--color-dropdown-item-text-hover);
+        outline: none;
     }
 
-    .page-meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1rem;
-      font-size: 0.875rem; 
+    .header-dropdown-item .external-link-icon {
+        margin-left: 0.75rem;
+        stroke: var(--color-dropdown-item-icon);
+        opacity: 0.7;
+    }
+    .header-dropdown-item:hover .external-link-icon,
+    .header-dropdown-item:focus-visible .external-link-icon {
+        opacity: 1;
     }
 
-    .edit-page-link {
-      color: var(--color-footer-link);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      transition: color 0.2s ease;
-    }
-    .edit-page-link:hover {
-      text-decoration: underline;
-    }
-    .edit-page-link svg {
-      width: 1.1em;
-      height: 1.1em;
-      margin-right: 0.4em; 
-      vertical-align: middle;
-    }
-
-    .last-updated-text {
-      color: var(--color-footer-meta-text);
-      transition: color 0.3s ease;
-    }
-
-    .footer-divider-line {
-      border: none;
-      border-top: 1px solid var(--color-footer-divider);
-      margin-top: 1rem;
-      margin-bottom: 1.5rem;
-      transition: border-color 0.3s ease;
-    }
-
-    .page-navigation-boxes {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .nav-box {
-      flex: 1;
-      padding: 1rem;
-      border: 1px solid var(--color-footer-nav-box-border);
-      border-radius: 8px;
-      background-color: var(--color-footer-nav-box-bg);
-      transition: border-color 0.2s ease, background-color 0.2s ease;
-      cursor: pointer; 
-    }
-    .nav-box:hover {
-      border-color: var(--color-footer-link);
-    }
-
-    .nav-box-label {
-      display: block;
-      font-size: 0.875rem; 
-      color: var(--color-footer-meta-text);
-      margin-bottom: 0.25rem;
-      transition: color 0.3s ease; 
-    }
-
-    .nav-box-link {
-      display: block;
-      font-size: 1rem; 
-      color: var(--color-footer-link);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s ease;
-    }
-
-
-    .next-page-box {
-      text-align: right;
-    }
-    .next-page-box .nav-box-label,
-    .next-page-box .nav-box-link {
-        text-align: right;
-    }
-    .previous-page-box .nav-box-label,
-    .previous-page-box .nav-box-link {
-        text-align: left;
-    }
-  </style>
-</head>
-<body>
-  <div class="left-sidebar">
-    Column 1 Content
-  </div>
-
-  <div class="main-area-wrapper">
-    <div class="app-header">
-      <div>Page Title / Logo</div>
-      <button id="themeToggle" class="theme-toggle-button">Toggle Theme</button>
-    </div>
-
-    <div class="content-toc-row">
-      <div id="content-area" tabindex="0">
-        <h2 id="introduction">Introduction</h2>
-        <p>Some intro text for the introduction section. This is where you would introduce the topic of the page.</p>
-        <p>More details can follow, explaining the purpose and overview.</p>
-
-        <h2 id="features">Features</h2>
-        <p>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et
-          iusto reprehenderit deserunt, eligendi sapiente exercitationem
-          mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur
-          provident, non placeat praesentium ab dolores!
-        </p>
-        <p>
-          Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-          Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
-        </p>
-        <p>
-          Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
-          Quisque sit amet est et sapien ullamcorper pharetra.
-        </p>
-        <p>
-          Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum,
-          elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
-        </p>
-        <p>
-          Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus,
-          tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat.
-        </p>
-
-        <h2 id="installation">Installation</h2>
-        <p>
-          As you can see, I'm still alive. In order to install this, you need to follow these steps carefully.
-          This section details the process of setting up the project or library.
-        </p>
-        <p>
-          First, ensure you have all prerequisites. Then, clone the repository.
-          Finally, run the installation script. `npm install my-package` or similar commands would go here.
-        </p>
-
-        <h2 id="usage">Usage</h2>
-        <p>
-          This section describes how to use the installed software or library.
-          Provide code examples and explain common use cases.
-        </p>
-        <p>
-          For example, to use a function: `myFunction(param1, param2);`
-          Ensure to explain what the parameters do and what the expected output is.
-        </p>
-
-        <div class="page-footer-container">
-          <div class="page-meta-row">
-            <a href="#" class="edit-page-link">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/>
-              </svg>Edit this page on GitHub
-            </a>
-            <span class="last-updated-text">Last updated: 1/7/25, 2:24 AM</span>
-          </div>
-          <hr class="footer-divider-line">
-          <div class="page-navigation-boxes">
-            <div class="nav-box previous-page-box">
-              <span class="nav-box-label">Previous page</span>
-              <a href="#" class="nav-box-link">What is VitePress?</a>
-            </div>
-            <div class="nav-box next-page-box">
-              <span class="nav-box-label">Next page</span>
-              <a href="#" class="nav-box-link">Routing</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div id="toc-container">
-        <nav id="toc-links">
-          <a href="#introduction">Introduction</a>
-          <a href="#features">Features</a>
-          <a href="#installation">Installation</a>
-          <a href="#usage">Usage</a>
-        </nav>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const contentArea = document.getElementById('content-area');
-      const tocLinksContainer = document.getElementById('toc-links');
-      const tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
-      const themeToggleButton = document.getElementById('themeToggle');
-      const htmlElement = document.documentElement;
-
-      const THEME_KEY = 'user-preferred-theme';
-
-      function applyTheme(theme) {
-        if (theme === 'light') {
-          htmlElement.classList.add('light-theme');
-          htmlElement.classList.remove('dark-theme');
-          themeToggleButton.textContent = 'Switch to Dark Theme';
-        } else {
-          htmlElement.classList.remove('light-theme');
-          htmlElement.classList.add('dark-theme');
-          themeToggleButton.textContent = 'Switch to Light Theme';
+html{
+        box-sizing: border-box;
+        height: 100%;
         }
-      }
+        *, *:before, *:after {
+        box-sizing: inherit;
+        }
+        body {
+        height: 100%;
+        margin: 0;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+            Roboto, Helvetica, Arial, sans-serif;
+        background-color: var(--color-bg-body);
+        color: var(--color-text-body);
+        font-size: 16px;
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
-      function saveThemePreference(theme) {
-        localStorage.setItem(THEME_KEY, theme);
-      }
+        .left-sidebar {
+        flex-basis: 16rem;
+        flex-grow: 0;
+        flex-shrink: 0;
+        padding: 1.25rem;
+        border-right: 1px solid var(--color-border-sidebar);
+        background-color: var(--color-bg-sidebar);
+        overflow-y: auto;
+        transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
 
-      function getInitialTheme() {
-        const savedTheme = localStorage.getItem(THEME_KEY);
-        if (savedTheme) return savedTheme;
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-        return 'dark';
-      }
+        .main-area-wrapper {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        }
 
-      themeToggleButton.addEventListener('click', () => {
-        let currentTheme = htmlElement.classList.contains('light-theme') ? 'light' : 'dark';
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        applyTheme(newTheme);
-        saveThemePreference(newTheme);
-      });
+        .app-header {
+  height: 4rem;
+  flex-shrink: 0;
+  padding: 0 1.5rem; /* This padding ensures content isn't flush to edges */
+  border-bottom: 1px solid var(--color-border-header);
+  background-color: var(--color-bg-header);
+  display: flex;
+  align-items: center;
+  /* REMOVE or change: justify-content: space-between; */
+  /* It defaults to flex-start, which is what we want for the main items initially */
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
 
-      applyTheme(getInitialTheme());
+.app-header > div:not(.header-actions) {
+  margin-right: 1rem; /* Adjust this value to set the space between "Logo/Title" and "Search" */
+}
 
-      const sections = {};
-      tocLinks.forEach(link => {
-        const sectionId = link.getAttribute('href').substring(1);
-        const sectionElement = document.getElementById(sectionId);
-        if (sectionElement) sections[sectionId] = sectionElement;
-      });
 
-      const scrollOffset = 20;
 
-      function updateActiveLink() {
-        let currentSectionId = null;
-        const contentScrollTop = contentArea.scrollTop;
-        const sectionIds = Object.keys(sections);
+.content-toc-row {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: row;
+        overflow: hidden;
+        }
 
-        for (let i = sectionIds.length - 1; i >= 0; i--) {
-          const id = sectionIds[i];
-          const sectionElement = sections[id];
-          if (sectionElement.offsetTop - scrollOffset <= contentScrollTop) {
-            currentSectionId = id;
-            break;
-          }
+        #content-area {
+        flex-grow: 3;
+        flex-basis: 0;
+        padding: 1.5rem;
+        overflow-y: auto;
+        scrollbar-width: none; /* Firefox */
+        }
+        #content-area::-webkit-scrollbar {
+        width: 0px; /* Chrome, Safari */
+        background: transparent;
+        }
+
+        #toc-container {
+        flex-grow: 1;
+        flex-basis: 0;
+        padding: 1.5rem;
+        overflow-y: auto;
+        position: relative;
+        }
+
+        #toc-links {
+        position: relative;
+        padding-left: 1rem;
+        border-left: 2px solid var(--color-border-toc-line);
+        display: flex;
+        flex-direction: column;
+        transition: border-color 0.3s ease;
+        }
+
+        #toc-links a {
+        display: block;
+        padding: 0.3rem 0 0.3rem 1rem;
+        color: var(--color-text-toc-link);
+        text-decoration: none;
+        transition: color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
+        }
+
+        #toc-links a:hover {
+        color: var(--color-text-toc-link-hover);
+        }
+
+        #toc-links a.active {
+        font-weight: bold;
+        color: var(--color-text-toc-link-active) !important;
+        }
+
+        #content-area h2 {
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        padding-top: 5rem;
+        color: var(--color-text-body);
+        }
+        #content-area h2:first-of-type {
+            margin-top: 0;
+        }
+
+
+        #content-area p {
+        line-height: 1.6;
+        margin-bottom: 1rem;
+        color: var(--color-text-body);
+        }
+
+        .theme-toggle-button {
+        padding: 0.4rem; /* Keep padding for click area and icon spacing */
+        background-color: transparent; /* Make background transparent by default */
+        color: var(--color-text-toc-link); /* Use a more subdued color, like ToC links */
+        border: 1px solid transparent;   /* Make border transparent by default */
+        border-radius: 6px; /* Slightly rounder for a softer look, optional */
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease; /* Smoother, quicker transition */
+        
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        line-height: 0;
+    }
+
+    .theme-toggle-button:hover,
+    .theme-toggle-button:focus-visible {
+        background-color: var(--color-search-trigger-hover-bg); /* Same as search trigger hover for consistency */
+        color: var(--color-text-body); /* Make icon more prominent on hover/focus */
+        /* border-color: var(--color-search-border); /* Optional: add border back on hover if desired */
+        outline: none; /* Remove default outline if bg change is enough for focus */
+    }
+
+    /* If you want a very subtle outline for focus-visible on top of the background change: */
+    /*
+    .theme-toggle-button:focus-visible {
+        outline: 1px solid var(--color-text-toc-link-active);
+        outline-offset: 2px;
+    }
+    */    .theme-toggle-button .theme-icon {
+    display: none; /* Hide both icons by default */
+    }
+
+    /* When dark theme is active (default, or html.dark-theme) */
+    /* Show the MOON icon, because the current theme is dark. */
+    html:not(.light-theme) .theme-toggle-button .theme-icon-moon,
+    html.dark-theme .theme-toggle-button .theme-icon-moon { /* If you also use .dark-theme class */
+    display: inline-flex;
+    }
+
+    /* When light theme is active */
+    /* Show the SUN icon, because the current theme is light. */
+    html.light-theme .theme-toggle-button .theme-icon-sun {
+    display: inline-flex;
+    }
+
+
+        .page-meta-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        font-size: 0.875rem; 
+        }
+
+        .edit-page-link {
+        color: var(--color-footer-link);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        transition: color 0.2s ease;
+        }
+        .edit-page-link:hover {
+        text-decoration: underline;
+        }
+        .edit-page-link svg {
+        width: 1.1em;
+        height: 1.1em;
+        margin-right: 0.4em; 
+        vertical-align: middle;
+        }
+
+        .last-updated-text {
+        color: var(--color-footer-meta-text);
+        transition: color 0.3s ease;
+        }
+
+        .footer-divider-line {
+        border: none;
+        border-top: 1px solid var(--color-footer-divider);
+        margin-top: 1rem;
+        margin-bottom: 1.5rem;
+        transition: border-color 0.3s ease;
+        }
+
+        .page-navigation-boxes {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        }
+
+        .nav-box {
+        flex: 1;
+        padding: 1rem;
+        border: 1px solid var(--color-footer-nav-box-border);
+        border-radius: 8px;
+        background-color: var(--color-footer-nav-box-bg);
+        transition: border-color 0.2s ease, background-color 0.2s ease;
+        cursor: pointer; 
+        }
+        .nav-box:hover {
+    border-color: var(--color-footer-nav-box-border-hover); /* Use defined hover variable */
+    background-color: var(--color-footer-nav-box-bg-hover); /* Use defined hover variable */
+    }
+
+        .nav-box-label {
+        display: block;
+        font-size: 0.875rem; 
+        color: var(--color-footer-meta-text);
+        margin-bottom: 0.25rem;
+        transition: color 0.3s ease; 
+        }
+
+        .nav-box-link {
+        display: block;
+        font-size: 1rem; 
+        color: var(--color-footer-link);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease;
+        }
+
+
+        .next-page-box {
+        text-align: right;
+        }
+        .next-page-box .nav-box-label,
+        .next-page-box .nav-box-link {
+            text-align: right;
+        }
+        .previous-page-box .nav-box-label,
+        .previous-page-box .nav-box-link {
+            text-align: left;
+        }
+        /* Header Actions Wrapper */
+        .header-actions {
+          display: flex;
+          align-items: center;
+          flex-grow: 1; 
+          justify-content: space-between; 
+          gap: 0.75rem;
+        }
+
+        .header-actions-right {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem; /* --- MODIFIED: Added gap for spacing between items --- */
+        }
+
+
+        .header-nav-link {
+          padding: 0.4rem 0.8rem; /* Adjust padding as needed */
+          border-radius: 6px; /* Consistent with other interactive elements */
+          text-decoration: none;
+          color: var(--color-header-nav-link-text);
+          font-weight: 500; /* A common weight for nav items */
+          font-size: 0.9rem; /* Slightly smaller than body text, adjust as needed */
+          line-height: 1.5; /* Ensure consistent line height */
+          transition: color 0.2s ease, background-color 0.2s ease;
+          display: inline-flex;
+          align-items: center;
+          white-space: nowrap; /* Prevent wrapping if text is long */
+        }
+
+        .header-nav-link:hover,
+    .header-nav-link:focus-visible {
+      color: var(--color-header-nav-link-hover-text-blue) !important;
+      background-color: transparent;
+      text-decoration: none; 
+      outline: none;
+    }
+
+
+
+
+    .header-nav-link.active {
+        color: var(--color-header-nav-link-text-active);
+    }
+        /* Style for an "active" or current page link (you'd add the .active class with JS) */
+        .header-nav-link.active {
+          color: var(--color-header-nav-link-text-active);
+          /* Optional: font-weight: 700; or a different background */
+        }
+
+        /* Ensure visited links don't turn purple/blue by default browser styles */
+        .header-nav-link:visited {
+            color: var(--color-header-nav-link-text);
         }
         
-        if (contentScrollTop < (sections[sectionIds[0]]?.offsetTop || 0) - scrollOffset && sectionIds.length > 0) {
-             if (contentScrollTop < scrollOffset && sectionIds.length > 0) {
-                 currentSectionId = sectionIds[0];
-             } else {
-                 currentSectionId = null;
-             }
+
+#themeToggle.theme-toggle-button::before,
+#themeToggle.theme-toggle-button::after {
+  content: '';
+  display: inline-block;
+  width: 1px;
+  height: 1.5rem; /* Adjust height as needed */
+  background-color: var(--color-border-sidebar); /* Separator color */
+  vertical-align: middle; /* Helps with alignment */
+}
+
+/* --- Separator BEFORE the Theme Toggle icon --- */
+#themeToggle.theme-toggle-button::before {
+  /* margin-left: 0.5rem; /* Only if there's an element before this group */
+  margin-right: 0.75rem; /* Space between this first separator and the Theme Toggle icon */
+}
+
+/* --- Separator AFTER Theme Toggle icon (which is BETWEEN Theme Toggle and GitHub) --- */
+#themeToggle.theme-toggle-button::after {
+  margin-left: 0.75rem;  /* Space between Theme Toggle icon and this second separator */
+}
+
+/*
+  Ensure your existing .icon-button and .theme-toggle-button styles
+  don't have conflicting horizontal margins that would disrupt this.
+  The padding on the buttons themselves is for inside the button,
+  the margins on the pseudo-elements are for outside.
+*/
+    /* Search Trigger Button in Header */
+    .search-trigger-button {
+    display: flex;
+    align-items: center;
+    padding: 0.4rem 0.8rem;
+    background-color: transparent; /* Use button bg for consistency or keep transparent */
+    color: var(--color-text-toc-link); /* More subtle than body text */
+    border: 1px solid var(--color-search-shortcut-border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+
+    .search-trigger-button:hover,
+    .search-trigger-button:focus-visible { /* Added :focus-visible */
+    background-color: var(--color-search-trigger-hover-bg);
+    border-color: var(--color-search-border);
+    color: var(--color-text-body);
+    outline: none; /* Optional: Remove default browser outline if this highlight is sufficient */
+    }
+
+    .search-trigger-icon-svg {
+    margin-right: 0.5em;
+    stroke: currentColor; /* Inherits color from button */
+    }
+
+    .search-trigger-text {
+        /* Optional: if you want text like "Search..." */
+        /* display: none; */ /* By default, hide it if you prefer a more compact icon */
+        /* @media (min-width: 768px) { display: inline; } */ /* Show on larger screens */
+    }
+
+    .search-shortcut-hint {
+    margin-left: 0.75rem;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.8em;
+    background-color: var(--color-search-shortcut-bg);
+    border: 1px solid var(--color-search-shortcut-border);
+    color: var(--color-search-shortcut-text);
+    line-height: 1.2;
+    }
+
+
+    /* Search Overlay */
+    .search-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-search-overlay-bg);
+    display: flex; /* Changed from none to flex for direct alignment */
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15vh; /* Position modal from top, gives space to "fall" into */
+    z-index: 10000; /* High z-index */
+
+    opacity: 0;
+    visibility: hidden; /* Hidden by default */
+    /* Smooth transition for opacity, visibility changes instantly based on active class */
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
+    }
+
+    .search-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s; /* Apply visibility change immediately when .active is added */
+    }
+
+    /* Search Modal */
+    .search-modal {
+    background-color: var(--color-search-modal-bg);
+    padding: 1.25rem; /* Slightly less padding than original thought */
+    border-radius: 8px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 0 1px var(--color-search-border); /* Softer shadow + border */
+    width: 90%;
+    max-width: 560px; /* Slightly narrower */
+    
+    /* Animation: Starts slightly scaled down and offset upwards, fades in */
+    opacity: 0;
+    transform: translateY(-25px) scale(0.98);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.05s; /* Modal animation starts slightly after overlay fades in */
+    }
+
+    .search-overlay.active .search-modal {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    }
+
+    .search-input-container {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-search-border);
+    padding-bottom: 0.75rem;
+    margin-bottom: 1rem;
+    }
+
+    .search-modal-icon {
+    color: var(--color-search-icon);
+    margin-right: 0.8rem;
+    flex-shrink: 0;
+    }
+
+    .search-input {
+    flex-grow: 1;
+    font-size: 1.1rem; /* Slightly smaller input text for balance */
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: var(--color-search-text);
+    height: 2.5rem; /* Explicit height for better alignment */
+    }
+
+    .search-input::placeholder {
+    color: var(--color-search-placeholder-text);
+    opacity: 1; /* Ensure placeholder is fully visible */
+    }
+
+    .search-close-button {
+    background: transparent;
+    border: 1px solid transparent; /* Keep space but hide border */
+    color: var(--color-text-toc-link);
+    padding: 0.4rem 0.6rem;
+    font-size: 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 0.75rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    }
+    .search-close-button:hover {
+        background-color: var(--color-search-trigger-hover-bg);
+        color: var(--color-text-body);
+    }
+
+    .search-close-button kbd {
+    background-color: var(--color-search-kbd-bg);
+    border: 1px solid var(--color-search-kbd-border);
+    color: var(--color-search-kbd-text);
+    padding: 0.2rem 0.45rem;
+    border-radius: 4px;
+    font-size: 0.8em;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    display: inline-block; /* Ensure padding and border are respected well */
+    }
+
+    .search-results-container {
+    min-height: 80px; /* Placeholder for results area */
+    /* For actual results: max-height: 50vh; overflow-y: auto; */
+    }
+
+    .search-results-placeholder {
+    color: var(--color-text-toc-link);
+    text-align: center;
+    padding: 1.5rem 0;
+    font-size: 0.9rem;
+    }
+
+    .icon-button, /* General styles if used on <button> */
+a.icon-button   /* Specific styles for <a> tags with this class */ {
+  padding: 0.4rem;
+  background-color: transparent;
+  color: var(--color-text-toc-link); /* THIS SETS THE GREY COLOR */
+  border: 1px solid transparent;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  text-decoration: none !important; /* REMOVES THE UNDERSCORE */
+}
+
+/* Hover and Focus states for the <a> tag */
+a.icon-button:hover,
+a.icon-button:focus-visible {
+  background-color: var(--color-search-trigger-hover-bg);
+  color: var(--color-text-body); /* Changes color on hover/focus */
+  outline: none;
+  text-decoration: none !important; /* Ensure no underscore on hover/focus */
+}
+
+/* Explicitly style visited state for <a> tag to prevent purple/blue */
+a.icon-button:visited {
+  color: var(--color-text-toc-link); /* Keep visited same color as normal */
+  text-decoration: none !important;
+}
+
+/* Style for the SVG inside the icon button */
+.icon-button svg {
+  width: 24px;
+  height: 24px;
+  /* The fill="currentColor" in your SVG path will use the 'color' from a.icon-button */
+}
+
+.header-dropdown-container {
+        position: relative;
+        display: inline-block;
+    }
+
+    .header-dropdown-trigger {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.4rem 0.8rem;
+        border-radius: 6px;
+        background-color: transparent;
+        color: var(--color-dropdown-trigger-text);
+        border: none;
+        font-family: inherit;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer; /* Still good to have a pointer */
+        transition: background-color 0.2s ease, color 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .header-dropdown-trigger:hover,
+    .header-dropdown-trigger:focus-visible {
+        background-color: var(--color-dropdown-trigger-hover-bg);
+        color: var(--color-dropdown-trigger-hover-text);
+    }
+    .header-dropdown-trigger[aria-expanded="true"] {
+        background-color: var(--color-dropdown-trigger-active-bg); /* Keep hover style when open */
+    }
+
+    .header-dropdown-trigger .dropdown-arrow-icon {
+        margin-left: 0.35rem;
+        stroke: var(--color-dropdown-trigger-arrow);
+        transition: transform 0.2s ease-out;
+        width: 1em; /* Adjust size */
+        height: 1em;
+    }
+
+    .header-dropdown-trigger[aria-expanded="true"] .dropdown-arrow-icon {
+        transform: rotate(90deg); /* Change to 90 degrees */
+        stroke: var(--color-dropdown-trigger-hover-text); /* Match text color when open */
+    }
+    
+    .header-dropdown-menu {
+        position: absolute;
+        top: calc(100% + 0.5rem); /* Position below the trigger with a small gap */
+        right: 0; /* Align to the right of the container */
+        background-color: var(--color-dropdown-bg);
+        border-radius: 8px;
+        box-shadow: var(--color-dropdown-shadow);
+        padding: 0.5rem;
+        min-width: 180px; /* Adjust as needed */
+        z-index: 1000; /* Ensure it's above other content */
+        list-style: none;
+        margin: 0;
+
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-10px);
+        transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                    transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), 
+                    visibility 0s linear 0.2s;
+    }
+
+    .header-dropdown-container.active .header-dropdown-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition-delay: 0s;
+    }
+
+    .header-dropdown-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Pushes icon to the right */
+        padding: 0.6rem 0.75rem;
+        color: var(--color-dropdown-item-text);
+        text-decoration: none;
+        border-radius: 6px; /* Rounded corners for items too */
+        font-size: 0.9rem;
+        transition: background-color 0.2s ease, color 0.2s ease;
+        white-space: nowrap;
+    }
+
+    .header-dropdown-item:hover,
+    .header-dropdown-item:focus-visible {
+        background-color: var(--color-dropdown-item-bg-hover);
+        color: var(--color-dropdown-item-text-hover); /* Though might be same as default */
+        outline: none;
+    }
+
+    .header-dropdown-item .external-link-icon {
+        margin-left: 0.75rem;
+        stroke: var(--color-dropdown-item-icon);
+        opacity: 0.7; /* Make it slightly less prominent */
+    }
+    .header-dropdown-item:hover .external-link-icon,
+    .header-dropdown-item:focus-visible .external-link-icon {
+        opacity: 1;
+    }
+
+</style>
+    </head>
+    <body>
+    <div class="left-sidebar">
+        Column 1 Content
+    </div>
+
+
+    <div class="main-area-wrapper">
+        <div class="app-header">
+            <!-- VVV THIS IS THE PART YOU REPLACE/UPDATE VVV -->
+            <div class="header-actions">
+                <!-- Item 1: Search Button -->
+                <button id="searchTrigger" class="search-trigger-button" aria-label="Open search (Press /)">
+                   
+
+                    <svg class="search-trigger-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span class="search-trigger-text">Search...</span>
+                    <!-- <span class="search-shortcut-hint">/</span> -->
+                </button>
+    
+                <!-- Item 2: Container for GitHub and Theme Toggle -->
+                <div class="header-actions-right">
+                    <a href="#guide" class="header-nav-link">Guide</a>
+                    <a href="#reference" class="header-nav-link">Reference</a>
+
+                    <!-- START: Version Dropdown -->
+                    <div class="header-dropdown-container" id="versionDropdownContainer">
+                        <button class="header-dropdown-trigger" id="versionDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="versionDropdownMenu">
+                            <span>2.0.0-alpha.5</span>
+                            <svg class="dropdown-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><<polyline points="9 18 15 12 9 6"></polyline>                                ></svg>
+                        </button>
+                        <div class="header-dropdown-menu" id="versionDropdownMenu" role="menu" aria-labelledby="versionDropdownTrigger">
+                            <a href="#" role="menuitem" class="header-dropdown-item">
+                                <span>Changelog</span>
+                                <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            </a>
+                            <a href="#" role="menuitem" class="header-dropdown-item">
+                                <span>Contributing</span>
+                                <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            </a>
+                            <a href="#" role="menuitem" class="header-dropdown-item">
+                                <span>Another Link</span>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- END: Version Dropdown -->
+                    
+                    <button id="themeToggle" class="theme-toggle-button" aria-label="Toggle theme">
+                        <span class="theme-icon theme-icon-sun">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17q-2.075 0-3.537-1.463T7 12t1.463-3.537T12 7t3.538 1.463T17 12t-1.463 3.538T12 17m-7-4H1v-2h4zm18 0h-4v-2h4zM11 5V1h2v4zm0 18v-4h2v4zM6.4 7.75L3.875 5.325L5.3 3.85l2.4 2.5zm12.3 12.4l-2.425-2.525L17.6 16.25l2.525 2.425zM16.25 6.4l2.425-2.525L20.15 5.3l-2.5 2.4zM3.85 18.7l2.525-2.425L7.75 17.6l-2.425 2.525z"/></svg>
+                        </span>
+                        <span class="theme-icon theme-icon-moon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21q-3.75 0-6.375-2.625T3 12t2.625-6.375T12 3q.35 0 .688.025t.662.075q-1.025.725-1.638 1.888T11.1 7.5q0 2.25 1.575 3.825T16.5 12.9q1.375 0 2.525-.613T20.9 10.65q.05.325.075.662T21 12q0 3.75-2.625 6.375T12 21"/></svg>
+                        </span>
+                    </button>
+                
+                    <a href="YOUR_GITHUB_REPO_LINK_HERE" target="_blank" rel="noopener noreferrer" id="githubLink" class="icon-button" aria-label="View source on GitHub">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="content-toc-row">
+        <div id="content-area" tabindex="0">
+            <h2 id="introduction">Introduction</h2>
+            <p>Some intro text for the introduction section. This is where you would introduce the topic of the page.</p>
+            <p>More details can follow, explaining the purpose and overview.</p>
+
+            <h2 id="features">Features</h2>
+            <p>
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et
+            iusto reprehenderit deserunt, eligendi sapiente exercitationem
+            mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur
+            provident, non placeat praesentium ab dolores!
+            </p>
+            <p>
+            Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+            Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+            </p>
+            <p>
+            Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+            Quisque sit amet est et sapien ullamcorper pharetra.
+            </p>
+            <p>
+            Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum,
+            elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
+            </p>
+            <p>
+            Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus,
+            tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat.
+            </p>
+
+            <h2 id="installation">Installation</h2>
+            <p>
+            As you can see, I'm still alive. In order to install this, you need to follow these steps carefully.
+            This section details the process of setting up the project or library.
+            </p>
+            <p>
+            First, ensure you have all prerequisites. Then, clone the repository.
+            Finally, run the installation script. `npm install my-package` or similar commands would go here.
+            </p>
+
+            <h2 id="usage">Usage</h2>
+            <p>
+            This section describes how to use the installed software or library.
+            Provide code examples and explain common use cases.
+            </p>
+            <p>
+            For example, to use a function: `myFunction(param1, param2);`
+            Ensure to explain what the parameters do and what the expected output is.
+            </p>
+
+            <div class="page-footer-container">
+            <div class="page-meta-row">
+                <a href="#" class="edit-page-link">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/>
+                </svg>Edit this page on GitHub
+                </a>
+                <span class="last-updated-text">Last updated: 1/7/25, 2:24 AM</span>
+            </div>
+            <hr class="footer-divider-line">
+            <div class="page-navigation-boxes">
+                <div class="nav-box previous-page-box">
+                <span class="nav-box-label">Previous page</span>
+                <a href="#" class="nav-box-link">What is VitePress?</a>
+                </div>
+                <div class="nav-box next-page-box">
+                <span class="nav-box-label">Next page</span>
+                <a href="#" class="nav-box-link">Routing</a>
+                </div>
+            </div>
+            </div>
+
+        </div>
+
+        <div id="toc-container">
+            <nav id="toc-links">
+            <a href="#introduction">Introduction</a>
+            <a href="#features">Features</a>
+            <a href="#installation">Installation</a>
+            <a href="#usage">Usage</a>
+            </nav>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+        const contentArea = document.getElementById('content-area');
+        const tocLinksContainer = document.getElementById('toc-links');
+        const tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
+        const themeToggleButton = document.getElementById('themeToggle');
+        const htmlElement = document.documentElement;
+
+        const THEME_KEY = 'user-preferred-theme';
+
+        function applyTheme(theme) {
+            if (theme === 'light') {
+            htmlElement.classList.add('light-theme');
+            htmlElement.classList.remove('dark-theme'); // Good practice to explicitly manage both
+            themeToggleButton.setAttribute('aria-label', 'Switch to Dark Theme');
+            } else { // 'dark' or default
+            htmlElement.classList.remove('light-theme');
+            htmlElement.classList.add('dark-theme'); // Good practice to explicitly manage both
+            themeToggleButton.setAttribute('aria-label', 'Switch to Light Theme');
+            }
+        }
+        function saveThemePreference(theme) {
+            localStorage.setItem(THEME_KEY, theme);
         }
 
-        if (contentArea.scrollHeight - contentArea.scrollTop <= contentArea.clientHeight + 5 && sectionIds.length > 0) {
-            currentSectionId = sectionIds[sectionIds.length - 1];
+        function getInitialTheme() {
+            const savedTheme = localStorage.getItem(THEME_KEY);
+            if (savedTheme) return savedTheme;
+            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+            return 'dark';
         }
 
-        tocLinks.forEach(link => {
-          link.classList.remove('active');
-          if (link.getAttribute('href') === `#${currentSectionId}`) {
-            link.classList.add('active');
-          }
+        themeToggleButton.addEventListener('click', () => {
+            let currentTheme = htmlElement.classList.contains('light-theme') ? 'light' : 'dark';
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            applyTheme(newTheme);
+            saveThemePreference(newTheme);
         });
-      }
 
-      tocLinksContainer.addEventListener('click', (e) => {
-        if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
-          e.preventDefault();
-          const targetId = e.target.getAttribute('href').substring(1);
-          const targetElement = document.getElementById(targetId);
-          if (targetElement) {
-            contentArea.scrollTo({
-                top: targetElement.offsetTop,
-                behavior: 'smooth'
+        applyTheme(getInitialTheme());
+
+        const sections = {};
+        tocLinks.forEach(link => {
+            const sectionId = link.getAttribute('href').substring(1);
+            const sectionElement = document.getElementById(sectionId);
+            if (sectionElement) sections[sectionId] = sectionElement;
+        });
+
+        const scrollOffset = 20;
+
+        function updateActiveLink() {
+            let currentSectionId = null;
+            const contentScrollTop = contentArea.scrollTop;
+            const sectionIds = Object.keys(sections);
+
+            for (let i = sectionIds.length - 1; i >= 0; i--) {
+            const id = sectionIds[i];
+            const sectionElement = sections[id];
+            if (sectionElement.offsetTop - scrollOffset <= contentScrollTop) {
+                currentSectionId = id;
+                break;
+            }
+            }
+            
+            if (contentScrollTop < (sections[sectionIds[0]]?.offsetTop || 0) - scrollOffset && sectionIds.length > 0) {
+                if (contentScrollTop < scrollOffset && sectionIds.length > 0) {
+                    currentSectionId = sectionIds[0];
+                } else {
+                    currentSectionId = null;
+                }
+            }
+
+            if (contentArea.scrollHeight - contentArea.scrollTop <= contentArea.clientHeight + 5 && sectionIds.length > 0) {
+                currentSectionId = sectionIds[sectionIds.length - 1];
+            }
+
+            tocLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentSectionId}`) {
+                link.classList.add('active');
+            }
             });
-          }
         }
-      });
 
-      if (contentArea) {
-        contentArea.addEventListener('scroll', updateActiveLink);
-        updateActiveLink();
-      }
+        tocLinksContainer.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
+            e.preventDefault();
+            const targetId = e.target.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            if (targetElement) {
+                contentArea.scrollTo({
+                    top: targetElement.offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+            }
+        });
+
+        if (contentArea) {
+            contentArea.addEventListener('scroll', updateActiveLink);
+            updateActiveLink();
+        }
+        const searchTriggerButton = document.getElementById('searchTrigger');
+    const searchOverlay = document.getElementById('searchOverlay');
+    const searchModal = document.getElementById('searchModal');
+    const searchInput = document.getElementById('searchInput');
+    const searchCloseButton = document.getElementById('searchCloseButton');
+
+    let isSearchActive = false;
+    let lastFocusedElement; // To restore focus later
+
+    function isEditingContent(element) {
+        // Helper to check if the event target is an input, textarea, or contenteditable
+        // This prevents '/' from opening search when typing in other fields.
+        const tagName = element.tagName;
+        return tagName === 'INPUT' || 
+            tagName === 'TEXTAREA' || 
+            element.isContentEditable ||
+            element.closest('input, textarea, [contenteditable="true"], [contenteditable=""]')
+            ;
+    }
+
+    function openSearch() {
+        if (isSearchActive) return;
+
+        lastFocusedElement = document.activeElement; // Store current focus (e.g., the trigger button)
+
+        // searchOverlay.style.display = 'flex'; 
+        // This line is not strictly needed if .search-overlay CSS already has display:flex,
+        // which it does in the provided solution. It's mainly for opacity/visibility transitions.
+
+        // Use requestAnimationFrame to ensure class addition happens after any pending style changes
+        // and aligns with the browser's rendering cycle for smoother transition start.
+        requestAnimationFrame(() => {
+        searchOverlay.classList.add('active'); // This triggers overlay fade-in.
+                                                // The modal itself has a transition-delay.
+
+        // The .search-modal has a `transition-delay: 0.05s` (50ms) in the CSS.
+        // We need to wait for this delay to pass, plus a tiny bit for the modal to
+        // actually start appearing and its contents (like the input) to become focusable.
+        setTimeout(() => {
+            searchInput.value = ''; // Clear previous input
+            searchInput.focus();    // Focus the search input
+
+            // You can add a check here for debugging if focus issues persist:
+            // if (document.activeElement !== searchInput) {
+            //   console.warn("Search input focus might have failed. Active element is:", document.activeElement);
+            // }
+        }, 60); // 50ms (modal's transition-delay) + 10ms (small buffer for animation to start rendering)
+        });
+        
+        document.body.style.overflow = 'hidden'; // Prevent body scrolling
+        isSearchActive = true;
+    }
+
+    function closeSearch() {
+        if (!isSearchActive) return;
+
+        searchOverlay.classList.remove('active');
+        searchInput.blur(); // Remove focus from input
+        document.body.style.overflow = ''; // Restore body scrolling
+        
+        // --- MODIFIED PART ---
+        // Explicitly focus the search trigger button after closing,
+        // so it gets the :focus-visible highlight.
+        if (searchTriggerButton) {
+        searchTriggerButton.focus({ preventScroll: true }); 
+        }
+        // --- END OF MODIFIED PART ---
+        
+        isSearchActive = false;
+    }
+        function toggleSearch() {
+        if (isSearchActive) {
+        closeSearch();
+        } else {
+        openSearch();
+        }
+    }
+
+    // Event Listeners for Search
+    if (searchTriggerButton) {
+        searchTriggerButton.addEventListener('click', openSearch);
+    }
+    if (searchCloseButton) {
+        searchCloseButton.addEventListener('click', closeSearch);
+    }
+
+    // Close search when clicking on the overlay backdrop
+    if (searchOverlay) {
+        searchOverlay.addEventListener('click', (event) => {
+        if (event.target === searchOverlay) { // Clicked on the overlay itself, not the modal
+            closeSearch();
+        }
+        });
+    }
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (event) => {
+        // Open with '/'
+        if (event.key === '/' && !isSearchActive && !isEditingContent(event.target)) {
+        event.preventDefault();
+        openSearch();
+        }
+
+        // Toggle with Ctrl+K (or Cmd+K on Mac)
+        if (event.key === 'k' && (event.ctrlKey || event.metaKey)) {
+        event.preventDefault();
+        toggleSearch();
+        }
+
+        // Close with Escape
+        if (event.key === 'Escape' && isSearchActive) {
+        event.preventDefault();
+        closeSearch();
+        }
     });
-  </script>
-</body>
-</html>
+
+
+        });
+    </script>
+    <!-- Search Modal Overlay -->
+    <div id="searchOverlay" class="search-overlay">
+        <div id="searchModal" class="search-modal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle">
+        <div class="search-input-container">
+            <svg class="search-modal-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search documentation..." aria-label="Search input">
+            <button id="searchCloseButton" class="search-close-button" aria-label="Close search">
+            <kbd>ESC</kbd>
+            </button>
+        </div>
+        <div id="searchResultsContainer" class="search-results-container">
+            <p class="search-results-placeholder">Start typing to see results.</p>
+            <!-- Actual search results would be populated here by JS -->
+        </div>
+        </div>
+    </div>
+    </body>
+    </html>
