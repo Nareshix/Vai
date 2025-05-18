@@ -160,13 +160,16 @@
 /* MODIFIED: Header Navigation Link Hover Effect */
 .header-dropdown-trigger:hover,
     .header-dropdown-trigger:focus-visible { /* Focus-visible is for keyboard navigation */
-        background-color: var(--color-dropdown-trigger-hover-bg);
-        color: var(--color-dropdown-trigger-hover-text);
+    background-color: transparent; /* MODIFIED: Removes background highlight */
+    color: var(--color-dropdown-trigger-hover-text); /* Keeps text color change (e.g., to brighter) */
         
     }
     
     .header-dropdown-trigger .dropdown-arrow-icon {
         margin-left: 0.35rem;
+        transition: transform 0.2s ease-out, stroke 0.2s ease-out; /* MODIFIED: Added stroke to transition */
+        transform: rotate(90deg); /* ADDED: Makes the default ">" arrow point DOWN "v" */
+
         stroke: var(--color-dropdown-trigger-arrow);
         transition: transform 0.2s ease-out;
         width: 1em;
@@ -174,7 +177,7 @@
     }
 
     .header-dropdown-container:hover .header-dropdown-trigger .dropdown-arrow-icon {
-        transform: rotate(90deg); /* Change to 90 degrees */
+        transform: rotate(-90deg); /* Change to 90 degrees */
         stroke: var(--color-dropdown-trigger-hover-text);
     }
     
@@ -866,11 +869,6 @@ a.icon-button:visited {
         white-space: nowrap;
     }
 
-    .header-dropdown-trigger:hover,
-    .header-dropdown-trigger:focus-visible {
-        background-color: var(--color-dropdown-trigger-hover-bg);
-        color: var(--color-dropdown-trigger-hover-text);
-    }
     .header-dropdown-trigger[aria-expanded="true"] {
         background-color: var(--color-dropdown-trigger-active-bg); /* Keep hover style when open */
     }
@@ -884,10 +882,15 @@ a.icon-button:visited {
     }
 
     .header-dropdown-trigger[aria-expanded="true"] .dropdown-arrow-icon {
-        transform: rotate(90deg); /* Change to 90 degrees */
+        transform: rotate(-90deg); /* Change to 90 degrees */
         stroke: var(--color-dropdown-trigger-hover-text); /* Match text color when open */
     }
     
+    .header-dropdown-trigger:focus-visible .dropdown-arrow-icon {
+    transform: rotate(-90deg); /* Pointing UP */
+    stroke: var(--color-dropdown-trigger-hover-text); /* Match trigger text color on focus */
+}
+
     .header-dropdown-menu {
     position: absolute;
     top: 100%; /* Position below the trigger with a small gap */
