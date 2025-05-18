@@ -1,172 +1,488 @@
 <!DOCTYPE html>
-<html lang="en" style="height: 100%;">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Layout with Header</title>
-    <link
-      rel="stylesheet"
-      media="(prefers-color-scheme:light)"
-      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css"
-    />
-    <link
-      rel="stylesheet"
-      media="(prefers-color-scheme:dark)"
-      href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/dark.css"
-      onload="document.documentElement.classList.add('sl-theme-dark');"
-    />
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"></script>
-    <link rel="stylesheet" href="style.css"> <!-- Assuming modern-normalize is in here -->
+<html lang="en" style="height: 100%;"> 
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Responsive Layout with Theme Toggle</title>
 
-    <style>
-        #toc-container a.active {
-  font-weight: bold;
-  color: dodgerblue;
-}
+  <style>
+    :root {
+      /* Dark */
+      --color-bg-body: #1a1a1a;
+      --color-text-body: #e0e0e0;
+      --color-bg-sidebar: #202020;
+      --color-border-sidebar: #363636;
+      --color-bg-header: #252529;
+      --color-border-header: #363636;
+      --color-border-toc-line: #555;
+      --color-text-toc-link: #aaa;
+      --color-text-toc-link-hover: #ccc;
+      --color-text-toc-link-active: dodgerblue;
+      --color-button-bg: #444;
+      --color-button-text: #e0e0e0;
+      --color-button-border: #555;
 
-    </style>
-</head>
-<body style="height: 100%; margin: 0; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #1a1a1a; color: #e0e0e0; font-size: 16px;"> <!-- Added base font-size for rem calculation reference -->
+      /* Footer specific colors - Dark Theme */
+      --color-footer-link: hsl(240, 100%, 81%); /* #a3a3ff */
+      --color-footer-meta-text: hsl(240, 10%, 60%); /* #9494a3 */
+      --color-footer-divider: hsl(240, 10%, 27%); /* #404045 */
+      --color-footer-nav-box-border: hsl(240, 10%, 30%); /* #484852 */
+      --color-footer-nav-box-bg: transparent;
+      /* --- NEW HOVER STATE COLORS FOR NAV BOX --- */
+      --color-footer-nav-box-border-hover: hsl(240, 10%, 50%); /* Brighter border, e.g., #757585 */
+      --color-footer-nav-box-bg-hover: hsl(240, 10%, 20%);    /* Subtle background fill, e.g., #2e2e33 */
+    }
 
-    <!-- Main Full Page Container -->
-    <div style="display: flex; flex-direction: row; width: 100%; height: 100vh;">
-
-        <!-- Column 1 (Full height sidebar on the left) -->
-        <div style="flex-basis: 16rem; /* Approx 256px if 1rem = 16px, scales with root font */
-                    flex-grow: 0;
-                    flex-shrink: 0;
-                    padding: 1.25rem; /* 20px */
-                    border-right: 1px solid #363636;
-                    background-color: #202020;
-                    overflow-y: auto; /* Allow sidebar to scroll if content exceeds height */">
-            Column 1 Content
-        </div>
-
-        <!-- Right Pane (takes remaining width, stacks Header and Content Area vertically) -->
-        <div style="flex-grow: 1;
-                    display: flex;
-                    flex-direction: column;
-                    overflow: hidden;">
-
-            <!-- Header -->
-            <div style="height: 4rem; /* Approx 64px, scales */
-                        flex-shrink: 0;
-                        padding: 0 1.5rem; /* 24px */
-                        border-bottom: 1px solid #363636;
-                        background-color: #252529;
-                        display: flex;
-                        align-items: center;
-                        justify-content: space-between;">
-
-
-            </div>
-
-            <!-- Content Area (for Column 2 and Column 3) -->
-            <div style="flex-grow: 1;
-                        display: flex;
-                        flex-direction: row;
-                        overflow: hidden; /* Important: contain children's overflow */">
-
-                <!-- Column 2 (Main content area) -->
-                <div id="content-area" style="flex-grow: 3;
-                            flex-basis: 0;
-                            padding: 1.5rem; /* 24px */
-                            border-right: 1px solid #363636;
-                            overflow-y: auto;">
-    <h2>Introduction</h2>
-    <p>Some intro text</p>
-    <h2>Features</h2>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
-    <p> Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et iusto reprehenderit deserunt, eligendi sapiente exercitationem mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur provident, non placeat praesentium ab dolores! </p>
+    html.light-theme { /* light-theme */
+      --color-bg-body: #f4f4f4;
+      --color-text-body: #333333;
+      --color-bg-sidebar: #e9e9e9;
+      --color-border-sidebar: #cccccc;
+      --color-bg-header: #e0e0e0;
+      --color-border-header: #cccccc;
+      --color-border-toc-line: #bbbbbb;
+      --color-text-toc-link: #555555;
+      --color-text-toc-link-hover: #222222;
+      --color-button-bg: #e0e0e0;
+      --color-button-text: #333;
+      --color-button-border: #ccc;
     
-    <h2>Installation</h2>
-    <p>...</p>
-    <h2>Usage</h2>
-    <p>...</p>
+      --color-footer-link: hsl(210, 70%, 50%); 
+      --color-footer-meta-text: hsl(220, 10%, 45%); 
+      --color-footer-divider: hsl(210, 20%, 88%); 
+      --color-footer-nav-box-border: hsl(210, 20%, 85%); 
+      --color-footer-nav-box-bg: transparent;
+      
+      --color-footer-nav-box-border-hover: hsl(210, 20%, 70%);
+      --color-footer-nav-box-bg-hover: hsl(210, 20%, 94%);   
+    }
+    html{
+      box-sizing: border-box;
+      height: 100%;
+    }
+    *, *:before, *:after {
+      box-sizing: inherit;
+    }
+    body {
+      height: 100%;
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--color-bg-body);
+      color: var(--color-text-body);
+      font-size: 16px;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
 
-                </div>
+    .left-sidebar {
+      flex-basis: 16rem;
+      flex-grow: 0;
+      flex-shrink: 0;
+      padding: 1.25rem;
+      border-right: 1px solid var(--color-border-sidebar);
+      background-color: var(--color-bg-sidebar);
+      overflow-y: auto;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
 
-                <!-- Column 3 (Smaller side content) -->
-                <div id="toc-container" style="flex-grow: 1;
-                            flex-basis: 0;
-                            padding: 1.5rem; /* 24px */
-                            overflow-y: auto;">
-                        
-                </div>
-            </div>
-        </div>
+    .main-area-wrapper {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .app-header {
+      height: 4rem;
+      flex-shrink: 0;
+      padding: 0 1.5rem;
+      border-bottom: 1px solid var(--color-border-header);
+      background-color: var(--color-bg-header);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background-color 0.3s ease, border-color 0.3s ease;
+    }
+
+    .content-toc-row {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: row;
+      overflow: hidden;
+    }
+
+    #content-area {
+      flex-grow: 3;
+      flex-basis: 0;
+      padding: 1.5rem;
+      overflow-y: auto;
+      scrollbar-width: none; /* Firefox */
+    }
+    #content-area::-webkit-scrollbar {
+      width: 0px; /* Chrome, Safari */
+      background: transparent;
+    }
+
+    #toc-container {
+      flex-grow: 1;
+      flex-basis: 0;
+      padding: 1.5rem;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    #toc-links {
+      position: relative;
+      padding-left: 1rem;
+      border-left: 2px solid var(--color-border-toc-line);
+      display: flex;
+      flex-direction: column;
+      transition: border-color 0.3s ease;
+    }
+
+    #toc-links a {
+      display: block;
+      padding: 0.3rem 0 0.3rem 1rem;
+      color: var(--color-text-toc-link);
+      text-decoration: none;
+      transition: color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
+    }
+
+    #toc-links a:hover {
+      color: var(--color-text-toc-link-hover);
+    }
+
+    #toc-links a.active {
+      font-weight: bold;
+      color: var(--color-text-toc-link-active) !important;
+    }
+
+    #content-area h2 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding-top: 5rem;
+      color: var(--color-text-body);
+    }
+    #content-area h2:first-of-type {
+        margin-top: 0;
+    }
+
+
+    #content-area p {
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      color: var(--color-text-body);
+    }
+
+    .theme-toggle-button {
+        padding: 0.5rem 1rem;
+        background-color: var(--color-button-bg);
+        color: var(--color-button-text);
+        border: 1px solid var(--color-button-border);
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+    }
+    .theme-toggle-button:hover {
+        opacity: 0.8;
+    }
+
+    .page-footer-container {
+      margin-top: 4rem;
+      padding-top: 1rem; 
+    }
+
+    .page-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.875rem; 
+    }
+
+    .edit-page-link {
+      color: var(--color-footer-link);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: color 0.2s ease;
+    }
+    .edit-page-link:hover {
+      text-decoration: underline;
+    }
+    .edit-page-link svg {
+      width: 1.1em;
+      height: 1.1em;
+      margin-right: 0.4em; 
+      vertical-align: middle;
+    }
+
+    .last-updated-text {
+      color: var(--color-footer-meta-text);
+      transition: color 0.3s ease;
+    }
+
+    .footer-divider-line {
+      border: none;
+      border-top: 1px solid var(--color-footer-divider);
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .page-navigation-boxes {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-box {
+      flex: 1;
+      padding: 1rem;
+      border: 1px solid var(--color-footer-nav-box-border);
+      border-radius: 8px;
+      background-color: var(--color-footer-nav-box-bg);
+      transition: border-color 0.2s ease, background-color 0.2s ease;
+      cursor: pointer; 
+    }
+    .nav-box:hover {
+      border-color: var(--color-footer-link);
+    }
+
+    .nav-box-label {
+      display: block;
+      font-size: 0.875rem; 
+      color: var(--color-footer-meta-text);
+      margin-bottom: 0.25rem;
+      transition: color 0.3s ease; 
+    }
+
+    .nav-box-link {
+      display: block;
+      font-size: 1rem; 
+      color: var(--color-footer-link);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+
+    .next-page-box {
+      text-align: right;
+    }
+    .next-page-box .nav-box-label,
+    .next-page-box .nav-box-link {
+        text-align: right;
+    }
+    .previous-page-box .nav-box-label,
+    .previous-page-box .nav-box-link {
+        text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="left-sidebar">
+    Column 1 Content
+  </div>
+
+  <div class="main-area-wrapper">
+    <div class="app-header">
+      <div>Page Title / Logo</div>
+      <button id="themeToggle" class="theme-toggle-button">Toggle Theme</button>
     </div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-          const tocContainer = document.getElementById("toc-container");
-          const content = document.getElementById("content-area");
-          const headings = content.querySelectorAll("h2, h3");
+    <div class="content-toc-row">
+      <div id="content-area" tabindex="0">
+        <h2 id="introduction">Introduction</h2>
+        <p>Some intro text for the introduction section. This is where you would introduce the topic of the page.</p>
+        <p>More details can follow, explaining the purpose and overview.</p>
+
+        <h2 id="features">Features</h2>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Beatae et
+          iusto reprehenderit deserunt, eligendi sapiente exercitationem
+          mollitia ea vitae culpa nihil. Sapiente corrupti consequuntur
+          provident, non placeat praesentium ab dolores!
+        </p>
+        <p>
+          Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+          Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante.
+        </p>
+        <p>
+          Donec eu libero sit amet quam egestas semper. Aenean ultricies mi vitae est. Mauris placerat eleifend leo.
+          Quisque sit amet est et sapien ullamcorper pharetra.
+        </p>
+        <p>
+          Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi. Aenean fermentum,
+          elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui.
+        </p>
+        <p>
+          Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus,
+          tortor neque egestas augue, eu vulputate magna eros eu erat. Aliquam erat volutpat.
+        </p>
+
+        <h2 id="installation">Installation</h2>
+        <p>
+          As you can see, I'm still alive. In order to install this, you need to follow these steps carefully.
+          This section details the process of setting up the project or library.
+        </p>
+        <p>
+          First, ensure you have all prerequisites. Then, clone the repository.
+          Finally, run the installation script. `npm install my-package` or similar commands would go here.
+        </p>
+
+        <h2 id="usage">Usage</h2>
+        <p>
+          This section describes how to use the installed software or library.
+          Provide code examples and explain common use cases.
+        </p>
+        <p>
+          For example, to use a function: `myFunction(param1, param2);`
+          Ensure to explain what the parameters do and what the expected output is.
+        </p>
+
+        <div class="page-footer-container">
+          <div class="page-meta-row">
+            <a href="#" class="edit-page-link">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/>
+              </svg>Edit this page on GitHub
+            </a>
+            <span class="last-updated-text">Last updated: 1/7/25, 2:24 AM</span>
+          </div>
+          <hr class="footer-divider-line">
+          <div class="page-navigation-boxes">
+            <div class="nav-box previous-page-box">
+              <span class="nav-box-label">Previous page</span>
+              <a href="#" class="nav-box-link">What is VitePress?</a>
+            </div>
+            <div class="nav-box next-page-box">
+              <span class="nav-box-label">Next page</span>
+              <a href="#" class="nav-box-link">Routing</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div id="toc-container">
+        <nav id="toc-links">
+          <a href="#introduction">Introduction</a>
+          <a href="#features">Features</a>
+          <a href="#installation">Installation</a>
+          <a href="#usage">Usage</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const contentArea = document.getElementById('content-area');
+      const tocLinksContainer = document.getElementById('toc-links');
+      const tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
+      const themeToggleButton = document.getElementById('themeToggle');
+      const htmlElement = document.documentElement;
+
+      const THEME_KEY = 'user-preferred-theme';
+
+      function applyTheme(theme) {
+        if (theme === 'light') {
+          htmlElement.classList.add('light-theme');
+          htmlElement.classList.remove('dark-theme');
+          themeToggleButton.textContent = 'Switch to Dark Theme';
+        } else {
+          htmlElement.classList.remove('light-theme');
+          htmlElement.classList.add('dark-theme');
+          themeToggleButton.textContent = 'Switch to Light Theme';
+        }
+      }
+
+      function saveThemePreference(theme) {
+        localStorage.setItem(THEME_KEY, theme);
+      }
+
+      function getInitialTheme() {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        if (savedTheme) return savedTheme;
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
+        return 'dark';
+      }
+
+      themeToggleButton.addEventListener('click', () => {
+        let currentTheme = htmlElement.classList.contains('light-theme') ? 'light' : 'dark';
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        applyTheme(newTheme);
+        saveThemePreference(newTheme);
+      });
+
+      applyTheme(getInitialTheme());
+
+      const sections = {};
+      tocLinks.forEach(link => {
+        const sectionId = link.getAttribute('href').substring(1);
+        const sectionElement = document.getElementById(sectionId);
+        if (sectionElement) sections[sectionId] = sectionElement;
+      });
+
+      const scrollOffset = 20;
+
+      function updateActiveLink() {
+        let currentSectionId = null;
+        const contentScrollTop = contentArea.scrollTop;
+        const sectionIds = Object.keys(sections);
+
+        for (let i = sectionIds.length - 1; i >= 0; i--) {
+          const id = sectionIds[i];
+          const sectionElement = sections[id];
+          if (sectionElement.offsetTop - scrollOffset <= contentScrollTop) {
+            currentSectionId = id;
+            break;
+          }
+        }
         
-          // Generate ToC
-          headings.forEach((heading) => {
-            const id = heading.id || heading.textContent.trim().toLowerCase().replace(/\s+/g, "-");
-            heading.id = id;
-        
-            const link = document.createElement("a");
-            link.href = `#${id}`;
-            link.textContent = heading.textContent;
-            link.style.display = "block";
-            link.style.marginLeft = heading.tagName === "H3" ? "1rem" : "0"; // indent subheadings
-            link.style.color = "#aaa";
-            link.style.textDecoration = "none";
-            link.setAttribute("data-scrollspy", "");
-        
-            tocContainer.appendChild(link);
-          });
-        
-          // Smooth scroll
-          tocContainer.addEventListener("click", (e) => {
-            if (e.target.tagName === "A") {
-              e.preventDefault();
-              const targetId = e.target.getAttribute("href").slice(1);
-              const target = document.getElementById(targetId);
-              if (target) {
-                target.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-            }
-          });
-        
-          // ScrollSpy
-          const tocLinks = tocContainer.querySelectorAll("[data-scrollspy]");
-        
-          const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                const id = entry.target.id;
-                tocLinks.forEach(link => link.classList.remove("active"));
-                const activeLink = tocContainer.querySelector(`a[href="#${id}"]`);
-                if (activeLink) activeLink.classList.add("active");
-              }
-            });
-          }, {
-            root: document.querySelector('#content-area'),
-            rootMargin: "0px 0px -80% 0px",
-            threshold: 0.1,
-          });
-        
-          headings.forEach(heading => observer.observe(heading));
+        if (contentScrollTop < (sections[sectionIds[0]]?.offsetTop || 0) - scrollOffset && sectionIds.length > 0) {
+             if (contentScrollTop < scrollOffset && sectionIds.length > 0) {
+                 currentSectionId = sectionIds[0];
+             } else {
+                 currentSectionId = null;
+             }
+        }
+
+        if (contentArea.scrollHeight - contentArea.scrollTop <= contentArea.clientHeight + 5 && sectionIds.length > 0) {
+            currentSectionId = sectionIds[sectionIds.length - 1];
+        }
+
+        tocLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${currentSectionId}`) {
+            link.classList.add('active');
+          }
         });
-        </script>
-        
+      }
+
+      tocLinksContainer.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
+          e.preventDefault();
+          const targetId = e.target.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            contentArea.scrollTo({
+                top: targetElement.offsetTop,
+                behavior: 'smooth'
+            });
+          }
+        }
+      });
+
+      if (contentArea) {
+        contentArea.addEventListener('scroll', updateActiveLink);
+        updateActiveLink();
+      }
+    });
+  </script>
 </body>
 </html>

@@ -1,9 +1,283 @@
-/**
- * Minified by jsDelivr using clean-css v5.3.2.
- * Original file: /npm/modern-normalize@3.0.1/modern-normalize.css
- *
- * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
- */
-/*! modern-normalize v3.0.1 | MIT License | https://github.com/sindresorhus/modern-normalize */
-*,::after,::before{box-sizing:border-box}html{font-family:system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,'Apple Color Emoji','Segoe UI Emoji';line-height:1.15;-webkit-text-size-adjust:100%;tab-size:4}body{margin:0}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Consolas,'Liberation Mono',Menlo,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{border-color:currentcolor}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}[type=button],[type=reset],[type=submit],button{-webkit-appearance:button}legend{padding:0}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}
-/*# sourceMappingURL=/sm/d2d8cd206fb9f42f071e97460f3ad9c875edb5e7a4b10f900a83cdf8401c53a9.map */
+:root {
+  /* Default Theme: Dark */
+  --color-bg-body: #1a1a1a;
+  --color-text-body: #e0e0e0;
+  --color-bg-sidebar: #202020;
+  --color-border-sidebar: #363636;
+  --color-bg-header: #252529;
+  --color-border-header: #363636;
+  --color-border-toc-line: #555;
+  --color-text-toc-link: #aaa;
+  --color-text-toc-link-hover: #ccc;
+  --color-text-toc-link-active: dodgerblue;
+  --color-button-bg: #444;
+  --color-button-text: #e0e0e0;
+  --color-button-border: #555;
+
+  /* Footer specific colors - Dark Theme */
+  --color-footer-link: hsl(240, 100%, 81%); /* #a3a3ff */
+  --color-footer-meta-text: hsl(240, 10%, 60%); /* #9494a3 */
+  --color-footer-divider: hsl(240, 10%, 27%); /* #404045 */
+  --color-footer-nav-box-border: hsl(240, 10%, 30%); /* #484852 */
+  --color-footer-nav-box-bg: transparent;
+  /* --- NEW HOVER STATE COLORS FOR NAV BOX --- */
+  --color-footer-nav-box-border-hover: hsl(240, 10%, 50%); /* Brighter border, e.g., #757585 */
+  --color-footer-nav-box-bg-hover: hsl(240, 10%, 20%);    /* Subtle background fill, e.g., #2e2e33 */
+}
+
+html.light-theme { /* Or body.light-theme */
+  --color-bg-body: #f4f4f4;
+  --color-text-body: #333333;
+  --color-bg-sidebar: #e9e9e9;
+  --color-border-sidebar: #cccccc;
+  --color-bg-header: #e0e0e0;
+  --color-border-header: #cccccc;
+  --color-border-toc-line: #bbbbbb;
+  --color-text-toc-link: #555555;
+  --color-text-toc-link-hover: #222222;
+  --color-button-bg: #e0e0e0;
+  --color-button-text: #333;
+  --color-button-border: #ccc;
+
+  /* Footer specific colors - Light Theme */
+  --color-footer-link: hsl(210, 70%, 50%); /* #3b82f6 */
+  --color-footer-meta-text: hsl(220, 10%, 45%); /* #6b6e7f */
+  --color-footer-divider: hsl(210, 20%, 88%); /* #dadedf */
+  --color-footer-nav-box-border: hsl(210, 20%, 85%); /* #d3d9de */
+  --color-footer-nav-box-bg: transparent;
+  /* --- NEW HOVER STATE COLORS FOR NAV BOX --- */
+  --color-footer-nav-box-border-hover: hsl(210, 20%, 70%); /* Darker, more prominent border, e.g., #adb5bd */
+  --color-footer-nav-box-bg-hover: hsl(210, 20%, 94%);    /* Subtle background fill, e.g., #eaeff2 */
+}
+/* Basic Reset & Global Styles */
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+  background-color: var(--color-bg-body);
+  color: var(--color-text-body);
+  font-size: 16px;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* --- Layout Structure --- */
+.left-sidebar {
+  flex-basis: 16rem;
+  flex-grow: 0;
+  flex-shrink: 0;
+  padding: 1.25rem;
+  border-right: 1px solid var(--color-border-sidebar);
+  background-color: var(--color-bg-sidebar);
+  overflow-y: auto;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.main-area-wrapper {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.app-header {
+  height: 4rem;
+  flex-shrink: 0;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid var(--color-border-header);
+  background-color: var(--color-bg-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.content-toc-row {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: row;
+  overflow: hidden;
+}
+
+#content-area {
+  flex-grow: 3;
+  flex-basis: 0;
+  padding: 1.5rem;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+}
+#content-area::-webkit-scrollbar {
+  width: 0px; /* Chrome, Safari */
+  background: transparent;
+}
+
+#toc-container {
+  flex-grow: 1;
+  flex-basis: 0;
+  padding: 1.5rem;
+  overflow-y: auto;
+  position: relative;
+}
+
+/* --- TOC Specific Styles --- */
+#toc-links {
+  position: relative;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-border-toc-line);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.3s ease;
+}
+
+#toc-links a {
+  display: block;
+  padding: 0.3rem 0 0.3rem 1rem;
+  color: var(--color-text-toc-link);
+  text-decoration: none;
+  transition: color 0.2s ease-in-out, font-weight 0.2s ease-in-out;
+}
+
+#toc-links a:hover {
+  color: var(--color-text-toc-link-hover);
+}
+
+#toc-links a.active {
+  font-weight: bold;
+  color: var(--color-text-toc-link-active) !important;
+}
+
+/* --- Content Elements --- */
+#content-area h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  padding-top: 5rem;
+  color: var(--color-text-body);
+}
+#content-area h2:first-of-type {
+    margin-top: 0;
+}
+#content-area p {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  color: var(--color-text-body);
+}
+
+/* --- Theme Toggle Button --- */
+.theme-toggle-button {
+    padding: 0.5rem 1rem;
+    background-color: var(--color-button-bg);
+    color: var(--color-button-text);
+    border: 1px solid var(--color-button-border);
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+.theme-toggle-button:hover {
+    opacity: 0.8;
+}
+
+/* --- Page Footer Elements (New Styles) --- */
+.page-footer-container {
+  margin-top: 4rem;
+  padding-top: 1rem; /* Add some padding above the content within the footer container */
+}
+
+.page-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  font-size: 0.875rem; /* 14px */
+}
+
+.edit-page-link {
+  color: var(--color-footer-link);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+.edit-page-link:hover {
+  text-decoration: underline;
+}
+.edit-page-link svg {
+  /* fill is currentColor, should inherit from .edit-page-link */
+  width: 1.1em;
+  height: 1.1em;
+  margin-right: 0.4em; /* Adjusted from inline style for consistency */
+  vertical-align: middle; /* Ensures good alignment with text */
+}
+
+.last-updated-text {
+  color: var(--color-footer-meta-text);
+  transition: color 0.3s ease;
+}
+
+.footer-divider-line {
+  border: none;
+  border-top: 1px solid var(--color-footer-divider);
+  margin-top: 1rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease;
+}
+
+.page-navigation-boxes {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.nav-box {
+  flex: 1;
+  padding: 1rem;
+  border: 1px solid var(--color-footer-nav-box-border);
+  border-radius: 8px;
+  background-color: var(--color-footer-nav-box-bg);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  cursor: pointer; 
+}
+.nav-box:hover {
+  border-color: var(--color-footer-link);
+}
+
+.nav-box-label {
+  display: block;
+  font-size: 0.875rem; /* 14px */
+  color: var(--color-footer-meta-text);
+  margin-bottom: 0.25rem;
+  transition: color 0.3s ease; /* Transition for label text color if it changes with theme */
+}
+
+.nav-box-link {
+  display: block;
+  font-size: 1rem; /* 16px */
+  color: var(--color-footer-link);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease; /* Transition for link text color */
+}
+
+
+/* Alignment for next/previous boxes remains the same */
+.next-page-box {
+  text-align: right;
+}
+.next-page-box .nav-box-label,
+.next-page-box .nav-box-link {
+    text-align: right;
+}
+.previous-page-box .nav-box-label,
+.previous-page-box .nav-box-link {
+    text-align: left;
+}
