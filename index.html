@@ -1,65 +1,66 @@
-    <!DOCTYPE html>
-    <html lang="en" style="height: 100%;"> 
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Responsive Layout with Theme Toggle</title>
+<!DOCTYPE html>
+<html lang="en" style="height: 100%;">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Responsive Layout with Theme Toggle</title>
 
-    <style>
-        :root {
-            --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1); 
+<style>
+    :root {
+        --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1);
 
 
 
-            --color-sidebar-logo-text: var(--color-text-body);
-        --color-sidebar-section-title-text: rgba(224, 224, 224, 0.93); /* Brighter than links */
-        --color-sidebar-link-text: rgba(224, 224, 224, 0.67);
-        --color-sidebar-link-text-hover: var(--color-text-body); /* Brighter on hover */
-        --color-sidebar-link-text-active: var(--color-text-toc-link-active); /* Active color, e.g., dodgerblue */
-        --color-sidebar-link-bg-hover: rgba(255, 255, 255, 0.05); /* Very subtle hover background */
-        --color-sidebar-link-bg-active: transparent;
-        --color-sidebar-divider: var(--color-border-sidebar);
-        --color-sidebar-footer-link-text: var(--color-text-toc-link);
-        --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
-        --color-sidebar-logo-svg: var(--color-text-toc-link-active); /* Color for the SVG logo lines */
+        --color-sidebar-logo-text: var(--color-text-body);
+    --color-sidebar-section-title-text: rgba(224, 224, 224, 0.93); /* Brighter than links */
+    --color-sidebar-link-text: rgba(224, 224, 224, 0.67);
+    --color-sidebar-link-text-hover: var(--color-text-body); /* Brighter on hover */
+    --color-sidebar-link-text-active: var(--color-text-toc-link-active); /* Active color, e.g., dodgerblue */
+    --color-sidebar-link-bg-hover: rgba(255, 255, 255, 0.05); /* Very subtle hover background */
+    --color-sidebar-link-bg-active: transparent;
+    --color-sidebar-divider: var(--color-border-sidebar);
+    --color-sidebar-footer-link-text: var(--color-text-toc-link);
+    --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
+    --color-sidebar-logo-svg: var(--color-text-toc-link-active); /* Color for the SVG logo lines */
 
-        /* Dark */
-        --color-bg-body: #1b1b1f;
-        --color-text-body: #e0e0e0;
-        --color-bg-sidebar: #161618;
-        --color-border-sidebar: #363636;
-        --color-bg-header: #252529;
-        --color-border-header: #363636;
-        --color-border-toc-line: #555;
-        --color-text-toc-link: #aaa;
-        --color-text-toc-link-hover: #ccc;
-        --color-text-toc-link-active: #a8b1ff;
-        --color-button-bg: #444;
-        --color-button-text: #e0e0e0;
-        --color-button-border: #555;
-        
+    /* Dark */
+    --color-bg-body: #1b1b1f;
+    --color-text-body: #e0e0e0;
+    --color-bg-sidebar: #161618;
+    --color-border-sidebar: #363636;
+    --color-bg-header: #252529;
+    --color-border-header: #363636;
+    --color-border-toc-line: #555;
+    --color-text-toc-link: #aaa;
+    --color-text-toc-link-hover: #ccc;
+    --color-text-toc-link-active: #a8b1ff;
+    --color-button-bg: #444;
+    --color-button-text: #e0e0e0;
+    --color-button-border: #555;
 
-        /* Footer specific colors - Dark Theme */
-        --color-footer-link: hsl(240, 100%, 81%); /* #a3a3ff */
-        --color-footer-meta-text: hsl(240, 10%, 60%); /* #9494a3 */
-        --color-footer-divider: hsl(240, 10%, 27%); /* #404045 */
-        --color-footer-nav-box-border: hsl(240, 10%, 30%); /* #484852 */
-        --color-footer-nav-box-bg: transparent;
-        /* --- NEW HOVER STATE COLORS FOR NAV BOX --- */
-        --color-footer-nav-box-border-hover: hsl(240, 10%, 50%); /* Brighter border, e.g., #757585 */
-        --color-footer-nav-box-bg-hover: hsl(240, 10%, 20%);    /* Subtle background fill, e.g., #2e2e33 */
-        --color-search-overlay-bg: rgba(10, 10, 10, 0.75); /* Darker overlay for dark theme */
-    --color-search-modal-bg: #2f2f33; /* Slightly offset from header for depth */
-    --color-search-text: var(--color-text-body);
-    --color-search-placeholder-text: var(--color-text-toc-link);
-    --color-search-border: #4a4a4f;
-    --color-search-icon: var(--color-text-toc-link);
-    --color-search-trigger-hover-bg: #38383c;
-    --color-search-shortcut-bg: rgba(255,255,255,0.08);
-    --color-search-shortcut-border: var(--color-border-sidebar);
-    --color-search-shortcut-text: var(--color-text-toc-link);
-    --color-search-kbd-bg: var(--color-bg-sidebar);
-    --color-search-kbd-text: var(--color-text-body);
-    --color-search-kbd-border: var(--color-border-sidebar);
+
+    /* Footer specific colors - Dark Theme */
+    --color-footer-link: hsl(240, 100%, 81%); /* #a3a3ff */
+    --color-footer-meta-text: hsl(240, 10%, 60%); /* #9494a3 */
+    --color-footer-divider: hsl(240, 10%, 27%); /* #404045 */
+    --color-footer-nav-box-border: hsl(240, 10%, 30%); /* #484852 */
+    --color-footer-nav-box-bg: transparent;
+    /* --- NEW HOVER STATE COLORS FOR NAV BOX --- */
+    --color-footer-nav-box-border-hover: hsl(240, 10%, 50%); /* Brighter border, e.g., #757585 */
+    --color-footer-nav-box-bg-hover: hsl(240, 10%, 20%);    /* Subtle background fill, e.g., #2e2e33 */
+    --color-search-overlay-bg: rgba(10, 10, 10, 0.75); /* Darker overlay for dark theme */
+--color-search-modal-bg: #2f2f33; /* Slightly offset from header for depth */
+--color-search-text: var(--color-text-body);
+--color-search-placeholder-text: var(--color-text-toc-link);
+--color-search-border: #4a4a4f;
+--color-search-icon: var(--color-text-toc-link);
+--color-search-trigger-hover-bg: #38383c;
+--color-search-shortcut-bg: rgba(255,255,255,0.08);
+--color-search-shortcut-border: var(--color-border-sidebar);
+--color-search-shortcut-text: var(--color-text-toc-link);
+--color-search-kbd-bg: var(--color-bg-sidebar);
+--color-search-kbd-text: var(--color-text-body);
+--color-search-kbd-border: var(--color-border-sidebar);
 
 /* --- NEW: Header Navigation Link Colors - Dark Theme --- */
 --color-header-nav-link-text: var(--color-text-toc-link); /* Default color for header nav links */
@@ -80,75 +81,75 @@
 --color-dropdown-trigger-hover-text: var(--color-header-nav-link-text-hover);
 --color-dropdown-trigger-hover-bg: var(--color-header-nav-link-bg-hover);
 --color-dropdown-trigger-active-bg: var(--color-header-nav-link-bg-hover); /* When dropdown is open */
-    --color-header-nav-link-text-active: var(--color-text-toc-link-active);
+--color-header-nav-link-text-active: var(--color-text-toc-link-active);
 
-    /* --- NEW: Scrollbar Colors for TOC - Dark Theme --- */
-    --toc-scrollbar-track-bg: hsl(240, 6%, 17%);    /* A bit lighter than TOC bg (#202020 is ~11% lightness) */
-    --toc-scrollbar-thumb-bg: hsl(240, 6%, 40%);    /* A noticeable but dark grey */
-    --toc-scrollbar-thumb-hover-bg: hsl(240, 6%, 50%); /* Slightly lighter for hover */
+/* --- NEW: Scrollbar Colors for TOC - Dark Theme --- */
+--toc-scrollbar-track-bg: hsl(240, 6%, 17%);    /* A bit lighter than TOC bg (#202020 is ~11% lightness) */
+--toc-scrollbar-thumb-bg: hsl(240, 6%, 40%);    /* A noticeable but dark grey */
+--toc-scrollbar-thumb-hover-bg: hsl(240, 6%, 50%); /* Slightly lighter for hover */
 
 
 
-    --main-scrollbar-track-bg: hsl(240, 6%, 17%);
-    --main-scrollbar-thumb-bg: hsl(240, 6%, 40%);
-    --main-scrollbar-thumb-hover-bg: hsl(240, 6%, 50%);
+--main-scrollbar-track-bg: hsl(240, 6%, 17%);
+--main-scrollbar-thumb-bg: hsl(240, 6%, 40%);
+--main-scrollbar-thumb-hover-bg: hsl(240, 6%, 50%);
 
 }
 
 
 
 
-        html.light-theme { /* light-theme */
+    html.light-theme { /* light-theme */
 
-            --shadow-header-subtle: 0 1px 2px rgba(0, 0, 0, 0.04); /* offset-x | offset-y | blur-radius | color (black with 4% opacity) */
+        --shadow-header-subtle: 0 1px 2px rgba(0, 0, 0, 0.04); /* offset-x | offset-y | blur-radius | color (black with 4% opacity) */
 
 
-            --color-sidebar-logo-text: var(--color-text-body);
-        --color-sidebar-section-title-text: rgba(51, 51, 51, 0.93);
-        --color-sidebar-link-text: rgba(51, 51, 51, 0.67);
-        --color-sidebar-link-text-hover: var(--color-text-body);
-        --color-sidebar-link-text-active: var(--color-text-toc-link-active);
-        --color-sidebar-link-bg-hover: rgba(0, 0, 0, 0.04);
-        --color-sidebar-link-bg-active: transparent;
-        --color-sidebar-divider: var(--color-border-sidebar);
-        --color-sidebar-footer-link-text: var(--color-text-toc-link);
-        --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
-        --color-sidebar-logo-svg: var(--color-text-toc-link-active);
+        --color-sidebar-logo-text: var(--color-text-body);
+    --color-sidebar-section-title-text: rgba(51, 51, 51, 0.93);
+    --color-sidebar-link-text: rgba(51, 51, 51, 0.67);
+    --color-sidebar-link-text-hover: var(--color-text-body);
+    --color-sidebar-link-text-active: var(--color-text-toc-link-active);
+    --color-sidebar-link-bg-hover: rgba(0, 0, 0, 0.04);
+    --color-sidebar-link-bg-active: transparent;
+    --color-sidebar-divider: var(--color-border-sidebar);
+    --color-sidebar-footer-link-text: var(--color-text-toc-link);
+    --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
+    --color-sidebar-logo-svg: var(--color-text-toc-link-active);
 
-        --color-bg-body: #f4f4f4;
-        --color-text-body: #333333;
-        --color-bg-sidebar: #e9e9e9;
-        --color-border-sidebar: #cccccc;
-        --color-bg-header: #e0e0e0;
-        --color-border-header: #cccccc;
-        --color-border-toc-line: #bbbbbb;
-        --color-text-toc-link: #555555;
-        --color-text-toc-link-hover: #222222;
-        --color-button-bg: #e0e0e0;
-        --color-button-text: #333;
-        --color-button-border: #ccc;
-        
-        --color-footer-link: hsl(210, 70%, 50%); 
-        --color-footer-meta-text: hsl(220, 10%, 45%); 
-        --color-footer-divider: hsl(210, 20%, 88%); 
-        --color-footer-nav-box-border: hsl(210, 20%, 85%); 
-        --color-footer-nav-box-bg: transparent;
-        
-        --color-footer-nav-box-border-hover: hsl(210, 20%, 70%);
-        --color-footer-nav-box-bg-hover: hsl(210, 20%, 94%);   
-        --color-search-overlay-bg: rgba(60, 60, 70, 0.4); /* Semi-transparent dark overlay for light theme provides contrast */
-    --color-search-modal-bg: #ffffff;
-    --color-search-text: var(--color-text-body);
-    --color-search-placeholder-text: var(--color-text-toc-link);
-    --color-search-border: #dce1e7;
-    --color-search-icon: var(--color-text-toc-link);
-    --color-search-trigger-hover-bg: #d8d8de;
-    --color-search-shortcut-bg: rgba(0,0,0,0.04);
-    --color-search-shortcut-border: var(--color-border-sidebar);
-    --color-search-shortcut-text: var(--color-text-toc-link);
-    --color-search-kbd-bg: var(--color-bg-sidebar);
-    --color-search-kbd-text: var(--color-text-body);
-    --color-search-kbd-border: var(--color-border-sidebar);
+    --color-bg-body: #f4f4f4;
+    --color-text-body: #333333;
+    --color-bg-sidebar: #e9e9e9;
+    --color-border-sidebar: #cccccc;
+    --color-bg-header: #e0e0e0;
+    --color-border-header: #cccccc;
+    --color-border-toc-line: #bbbbbb;
+    --color-text-toc-link: #555555;
+    --color-text-toc-link-hover: #222222;
+    --color-button-bg: #e0e0e0;
+    --color-button-text: #333;
+    --color-button-border: #ccc;
+
+    --color-footer-link: hsl(210, 70%, 50%);
+    --color-footer-meta-text: hsl(220, 10%, 45%);
+    --color-footer-divider: hsl(210, 20%, 88%);
+    --color-footer-nav-box-border: hsl(210, 20%, 85%);
+    --color-footer-nav-box-bg: transparent;
+
+    --color-footer-nav-box-border-hover: hsl(210, 20%, 70%);
+    --color-footer-nav-box-bg-hover: hsl(210, 20%, 94%);
+    --color-search-overlay-bg: rgba(60, 60, 70, 0.4); /* Semi-transparent dark overlay for light theme provides contrast */
+--color-search-modal-bg: #ffffff;
+--color-search-text: var(--color-text-body);
+--color-search-placeholder-text: var(--color-text-toc-link);
+--color-search-border: #dce1e7;
+--color-search-icon: var(--color-text-toc-link);
+--color-search-trigger-hover-bg: #d8d8de;
+--color-search-shortcut-bg: rgba(0,0,0,0.04);
+--color-search-shortcut-border: var(--color-border-sidebar);
+--color-search-shortcut-text: var(--color-text-toc-link);
+--color-search-kbd-bg: var(--color-bg-sidebar);
+--color-search-kbd-text: var(--color-text-body);
+--color-search-kbd-border: var(--color-border-sidebar);
 
 /* --- NEW: Header Navigation Link Colors - Light Theme (can reuse dark if appropriate) --- */
 /* These will correctly use the light theme's --color-text-toc-link, etc. */
@@ -180,1656 +181,1683 @@
 
 
 --main-scrollbar-track-bg: hsl(210, 15%, 94%);
-    --main-scrollbar-thumb-bg: hsl(210, 12%, 75%);
-    --main-scrollbar-thumb-hover-bg: hsl(210, 12%, 65%);
-
-
-
+--main-scrollbar-thumb-bg: hsl(210, 12%, 75%);
+--main-scrollbar-thumb-hover-bg: hsl(210, 12%, 65%);
 }
 
 /* ... (rest of your existing CSS) ... */
 
-/* MODIFIED: Header Navigation Link Hover Effect */
-.header-dropdown-trigger:hover,
-    .header-dropdown-trigger:focus-visible { /* Focus-visible is for keyboard navigation */
-    background-color: transparent; /* MODIFIED: Removes background highlight */
-    color: var(--color-dropdown-trigger-hover-text); /* Keeps text color change (e.g., to brighter) */
-        
-    }
-    
-    .header-dropdown-trigger .dropdown-arrow-icon {
-        margin-left: 0.35rem;
-        transition: transform 0.2s ease-out, stroke 0.2s ease-out; /* MODIFIED: Added stroke to transition */
-        transform: rotate(90deg); /* ADDED: Makes the default ">" arrow point DOWN "v" */
-
-        stroke: var(--color-dropdown-trigger-arrow);
-        transition: transform 0.2s ease-out;
-        width: 1em;
-        height: 1em;
-    }
-
-    .header-dropdown-container:hover .header-dropdown-trigger .dropdown-arrow-icon {
-        transform: rotate(-90deg); /* Change to 90 degrees */
-
-    }
-    
-    /* --- THIS IS THE KEY CHANGE FOR HOVER --- */
-    .header-dropdown-container:hover .header-dropdown-menu,
-    .header-dropdown-trigger:focus-within + .header-dropdown-menu, /* Show on trigger focus for keyboard */
-    .header-dropdown-menu:hover /* Keep open if mouse moves onto the menu itself */ {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0); /* <<< MODIFY: Center horizontally when visible */
-
-        transition-delay: 0s;
-        pointer-events: auto; /* Allow interaction when visible */
-    }
-
-
-    .header-dropdown-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0.6rem 0.75rem;
-        color: var(--color-dropdown-item-text);
-        text-decoration: none;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        transition: background-color 0.2s ease, color 0.2s ease;
-        white-space: nowrap;
-    }
-
-    .header-dropdown-item:hover,
-    .header-dropdown-item:focus-visible {
-        background-color: var(--color-dropdown-item-bg-hover);
-        color: var(--color-dropdown-item-text-hover);
-        outline: none;
-    }
-
-    .header-dropdown-item .external-link-icon {
-        margin-left: 0.75rem;
-        stroke: var(--color-dropdown-item-icon);
-        opacity: 0.7;
-    }
-    .header-dropdown-item:hover .external-link-icon,
-    .header-dropdown-item:focus-visible .external-link-icon {
-        opacity: 1;
-    }
-
 html{
-        box-sizing: border-box;
-        height: 100%;
-        }
-        *, *:before, *:after {
-        box-sizing: inherit;
-        }
-        body {
-        height: 100%;
-        margin: 0;
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-            Roboto, Helvetica, Arial, sans-serif;
-        background-color: var(--color-bg-body);
-        color: var(--color-text-body);
-        font-size: 16px;
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        transition: background-color 0.3s ease, color 0.3s ease;
-        }
+    box-sizing: border-box;
+    height: 100%;
+    }
+    *, *:before, *:after {
+    box-sizing: inherit;
+    }
+    body {
+    height: 100%;
+    margin: 0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+        Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--color-bg-body);
+    color: var(--color-text-body);
+    font-size: 16px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    }
 
-        .left-sidebar {
-        flex-basis: 16rem;
-        flex-grow: 0;
-        flex-shrink: 0;
-        padding: 1.25rem;
-        border-right: 1px solid var(--color-border-sidebar);
-        background-color: var(--color-bg-sidebar);
-        overflow-y: auto;
-        transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
+    .left-sidebar {
+    flex-basis: 16rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    border-right: 1px solid var(--color-border-sidebar);
+    background-color: var(--color-bg-sidebar);
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease-in-out;
+    overflow: hidden; /* Prevent this from scrolling, sidebar-nav will scroll */
+    padding: 0; /* Remove previous padding, will control internally */
+    display: flex;
+    flex-direction: column;
+    }
 
-        .main-area-wrapper {
-        flex-grow: 1;
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        overflow-y: auto; /* <<< KEY: This makes this wrapper scrollable */
-    height: 100vh; /* <<< KEY: Ensure it has a defined height to enable scrolling within it */
-    scrollbar-width: thin;
-    scrollbar-color: var(--main-scrollbar-thumb-bg) var(--main-scrollbar-track-bg); /* Use your existing variables */
+    .main-area-wrapper {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: auto; /* <<< KEY: This makes this wrapper scrollable */
+height: 100vh; /* <<< KEY: Ensure it has a defined height to enable scrolling within it */
+scrollbar-width: thin;
+scrollbar-color: var(--main-scrollbar-thumb-bg) var(--main-scrollbar-track-bg); /* Use your existing variables */
 
-        }
+    }
 
-        .main-area-wrapper::-webkit-scrollbar {
-    width: 10px; /* Increased from 8px to make more room for the gap */
+    .main-area-wrapper::-webkit-scrollbar {
+width: 10px; /* Increased from 8px to make more room for the gap */
 }
 
 .main-area-wrapper::-webkit-scrollbar-track {
-    background: var(--main-scrollbar-track-bg);
+background: var(--main-scrollbar-track-bg);
 }
 
 .main-area-wrapper::-webkit-scrollbar-thumb {
-    background-color: var(--main-scrollbar-thumb-bg);
-    border-radius: 10px; /* Or your preferred radius, e.g., 6px for consistency */
-    /* This border IS the "gap". Its color is the track's background. */
-    border: 3px solid var(--main-scrollbar-track-bg); /* Increased from 2px */
+background-color: var(--main-scrollbar-thumb-bg);
+border-radius: 10px; /* Or your preferred radius, e.g., 6px for consistency */
+/* This border IS the "gap". Its color is the track's background. */
+border: 3px solid var(--main-scrollbar-track-bg); /* Increased from 2px */
 }
 
 .main-area-wrapper::-webkit-scrollbar-thumb:hover {
-    background-color: var(--main-scrollbar-thumb-hover-bg);
+background-color: var(--main-scrollbar-thumb-hover-bg);
 }
 
 /* Ensure content-toc-row and its children can expand naturally */
 .content-toc-row {
-    flex-grow: 1; /* Allows content-area and toc-container to fill space */
-    display: flex;
-    flex-direction: row;
-    /* REMOVE: overflow: hidden; if it was here, to allow vertical expansion */
+flex-grow: 1; /* Allows content-area and toc-container to fill space */
+display: flex;
+flex-direction: row;
+/* REMOVE: overflow: hidden; if it was here, to allow vertical expansion */
 }
 
 
 .app-header {
-  height: 4rem;
-  flex-shrink: 0;
-  padding: 0 1.5rem;
-  background-color: var(--color-bg-body);       /* Changed in the previous step */
-  border-bottom: 1px solid var(--color-border-header); /* This remains the primary distinguishable line */
-  box-shadow: var(--shadow-header-subtle);      /* ADDED: Applies the new subtle shadow */
-  display: flex;
-  align-items: center;
-  /* MODIFIED: Ensure box-shadow is included in the transition for theme changes */
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-  position: sticky;
-  top: 0;
-  z-index: 2; /* Keep z-index as it might be needed for stacking contexts */
+height: 4rem;
+flex-shrink: 0;
+padding: 0 1rem; /* Adjusted padding for mobile */
+background-color: var(--color-bg-body);       /* Changed in the previous step */
+border-bottom: 1px solid var(--color-border-header); /* This remains the primary distinguishable line */
+box-shadow: var(--shadow-header-subtle);      /* ADDED: Applies the new subtle shadow */
+display: flex;
+align-items: center;
+/* MODIFIED: Ensure box-shadow is included in the transition for theme changes */
+transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+position: sticky;
+top: 0;
+z-index: 990; /* Ensure it's above content but below mobile sidebar/overlay */
 }
-.app-header > div:not(.header-actions) {
-  margin-right: 1rem; /* Adjust this value to set the space between "Logo/Title" and "Search" */
+/* Desktop: Space between logo (if it were a direct child) and header-actions */
+.app-header > div:not(.header-actions):not(.mobile-menu-button) {
+margin-right: 1rem;
 }
 
 
-
-
-
-        #content-area {
-        flex-grow: 3;
-        flex-basis: 0;
-        padding: 1.5rem;
-        }
-    #content-area::-webkit-scrollbar {
-    width: 8px; /* Or your preferred width */
+    #content-area {
+    flex-grow: 3;
+    flex-basis: 0;
+    padding: 1.5rem;
+    }
+#content-area::-webkit-scrollbar {
+width: 8px; /* Or your preferred width */
 }
 
 
 
 #toc-container {
-    flex-grow: 1;
-    flex-basis: 0;
-    padding: 1.5rem;
-    overflow-y: auto;      /* Must be 'auto' or 'scroll' to enable scrolling */
-    overflow-x: hidden;
-    height: calc(100vh - 4rem); /* Assumes header is 4rem high. Adjust if different. */
-    position: sticky;
-    top: 4rem;             /* Stick 4rem from the top of .main-area-wrapper */
+flex-grow: 1;
+flex-basis: 0;
+padding: 1.5rem;
+overflow-y: auto;      /* Must be 'auto' or 'scroll' to enable scrolling */
+overflow-x: hidden;
+height: calc(100vh - 4rem); /* Assumes header is 4rem high. Adjust if different. */
+position: sticky;
+top: 4rem;             /* Stick 4rem from the top of .main-area-wrapper */
 
-    /* --- SCROLLBAR HIDING FOR FIREFOX --- */
-    scrollbar-width: none;  /* For Firefox: hides the scrollbar completely */
+/* --- SCROLLBAR HIDING FOR FIREFOX --- */
+scrollbar-width: none;  /* For Firefox: hides the scrollbar completely */
 }
 
 /* --- SCROLLBAR HIDING FOR WEBKIT BROWSERS --- */
 #toc-container::-webkit-scrollbar {
-    width: 0px;             /* Make the scrollbar have no width */
-    background: transparent; /* Optional: just in case */
+width: 0px;             /* Make the scrollbar have no width */
+background: transparent; /* Optional: just in case */
 }
 
 
 #toc-container::-webkit-scrollbar-track {
-    background: var(--toc-scrollbar-track-bg);
+background: var(--toc-scrollbar-track-bg);
 }
 
 #toc-container::-webkit-scrollbar-thumb {
-    background-color: var(--toc-scrollbar-thumb-bg);
-    border-radius: 10px; /* Or your preferred radius, e.g., 6px */
-    /* This border IS the "gap". */
-    border: 3px solid var(--toc-scrollbar-track-bg); /* Increased from 2px */
+background-color: var(--toc-scrollbar-thumb-bg);
+border-radius: 10px; /* Or your preferred radius, e.g., 6px */
+/* This border IS the "gap". */
+border: 3px solid var(--toc-scrollbar-track-bg); /* Increased from 2px */
 }
 
 #toc-container::-webkit-scrollbar-thumb:hover {
-    background-color: var(--toc-scrollbar-thumb-hover-bg);
+background-color: var(--toc-scrollbar-thumb-hover-bg);
 }
 
 
 #toc-links {
-    position: relative; /* CRITICAL for marker positioning */
-    border-left: 2px solid var(--color-border-toc-line); /* The faint guide line */
-    display: flex;
-    flex-direction: column;
-    transition: border-color 0.3s ease;
-    /* NO padding-left on #toc-links itself */
+position: relative; /* CRITICAL for marker positioning */
+border-left: 2px solid var(--color-border-toc-line); /* The faint guide line */
+display: flex;
+flex-direction: column;
+transition: border-color 0.3s ease;
+/* NO padding-left on #toc-links itself */
 }
 
 #toc-links a {
-    display: block;
-    padding: 0.3rem 0 calc(0.3rem + 0.35rem) 1rem; /* New padding-bottom incorporates old margin */
-    color: var(--color-text-toc-link);
-    text-decoration: none;
-    margin-bottom: 0.35rem;
-    white-space: normal;
-    font-size: 0.9rem;
-    position: relative; /* Good practice */
+display: block;
+padding: 0.3rem 0 calc(0.3rem + 0.35rem) 1rem; /* New padding-bottom incorporates old margin */
+color: var(--color-text-toc-link);
+text-decoration: none;
+margin-bottom: 0.35rem;
+white-space: normal;
+font-size: 0.9rem;
+position: relative; /* Good practice */
 }
 
 #toc-links a.active {
-    color: #dfdfd6;
-    /* It will inherit the padding-left: 1rem; from the general 'a' rule, which is what we want */
+color: var(--color-text-toc-link-active); /* Adjusted for better visibility against default link color */
+/* It will inherit the padding-left: 1rem; from the general 'a' rule, which is what we want */
 }
 
 #toc-active-marker {
-    position: absolute;
-    top: 0; /* JavaScript will update this */
-    left: -2px; /* <<< THIS IS THE KEY CHANGE */
-                /* Moves the marker 2px to the left, covering the parent's border-left */
-    width: 2px; /* Match the width of #toc-links's border-left */
-    height: 0; /* JavaScript will update this */
-    background-color: var(--color-text-toc-link-active); /* Active color */
-    transition: top 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out;
+position: absolute;
+top: 0; /* JavaScript will update this */
+left: -2px; /* <<< THIS IS THE KEY CHANGE */
+            /* Moves the marker 2px to the left, covering the parent's border-left */
+width: 2px; /* Match the width of #toc-links's border-left */
+height: 0; /* JavaScript will update this */
+background-color: var(--color-text-toc-link-active); /* Active color */
+transition: top 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 #toc-links a:hover {
-        color: var(--color-text-toc-link-hover);
-        }
-        #content-area h2 {
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-        padding-top: 5rem;
-        color: var(--color-text-body);
-        }
-        #content-area h2:first-of-type {
-            margin-top: 0;
-        }
-
-
-        #content-area p {
-        line-height: 1.6;
-        margin-bottom: 1rem;
-        color: var(--color-text-body);
-        }
-
-        .theme-toggle-button {
-        padding: 0.4rem; /* Keep padding for click area and icon spacing */
-        background-color: transparent; /* Make background transparent by default */
-        color: var(--color-text-toc-link); /* Use a more subdued color, like ToC links */
-        border: 1px solid transparent;   /* Make border transparent by default */
-        border-radius: 6px; /* Slightly rounder for a softer look, optional */
-        cursor: pointer;
-        transition: background-color 0.2s ease, color 0.2s ease; /* Smoother, quicker transition */
-        
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 0;
-
-
+    color: var(--color-text-toc-link-hover);
     }
-    
-    
-
-    .theme-toggle-button:hover,
-    .theme-toggle-button:focus-visible {
-        background-color: var(--color-search-trigger-hover-bg); /* Same as search trigger hover for consistency */
-        color: var(--color-text-body); /* Make icon more prominent on hover/focus */
-        /* border-color: var(--color-search-border); /* Optional: add border back on hover if desired */
-        background: transparent;
+    #content-area h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-top: 5rem; /* Considers 4rem header + 1rem buffer */
+    color: var(--color-text-body);
     }
-    
-
-    /* If you want a very subtle outline for focus-visible on top of the background change: */
-    /*
-    .theme-toggle-button:focus-visible {
-        outline: 1px solid var(--color-text-toc-link-active);
-        outline-offset: 2px;
-    }
-    */    .theme-toggle-button .theme-icon {
-    display: none; /* Hide both icons by default */
+    #content-area h2:first-of-type {
+        margin-top: 0;
     }
 
-    /* When dark theme is active (default, or html.dark-theme) */
-    /* Show the MOON icon, because the current theme is dark. */
-    html:not(.light-theme) .theme-toggle-button .theme-icon-moon,
-    html.dark-theme .theme-toggle-button .theme-icon-moon { /* If you also use .dark-theme class */
+
+    #content-area p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: var(--color-text-body);
+    }
+
+    .theme-toggle-button {
+    padding: 0.4rem; /* Keep padding for click area and icon spacing */
+    background-color: transparent; /* Make background transparent by default */
+    color: var(--color-text-toc-link); /* Use a more subdued color, like ToC links */
+    border: 1px solid transparent;   /* Make border transparent by default */
+    border-radius: 6px; /* Slightly rounder for a softer look, optional */
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease; /* Smoother, quicker transition */
+
     display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+
+
+}
+
+
+
+.theme-toggle-button:hover,
+.theme-toggle-button:focus-visible {
+    background-color: var(--color-search-trigger-hover-bg); /* Same as search trigger hover for consistency */
+    color: var(--color-text-body); /* Make icon more prominent on hover/focus */
+    /* border-color: var(--color-search-border); /* Optional: add border back on hover if desired */
+    /* background: transparent; /* This was overriding bg color change */
+}
+
+
+/* If you want a very subtle outline for focus-visible on top of the background change: */
+/*
+.theme-toggle-button:focus-visible {
+    outline: 1px solid var(--color-text-toc-link-active);
+    outline-offset: 2px;
+}
+*/    .theme-toggle-button .theme-icon {
+display: none; /* Hide both icons by default */
+}
+
+/* When dark theme is active (default, or html.dark-theme) */
+/* Show the MOON icon, because the current theme is dark. */
+html:not(.light-theme) .theme-toggle-button .theme-icon-moon,
+html.dark-theme .theme-toggle-button .theme-icon-moon { /* If you also use .dark-theme class */
+display: inline-flex;
+}
+
+/* When light theme is active */
+/* Show the SUN icon, because the current theme is light. */
+html.light-theme .theme-toggle-button .theme-icon-sun {
+display: inline-flex;
+}
+
+
+    .page-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 0.875rem;
+    flex-wrap: wrap; /* Allow items to wrap on small screens */
+    gap: 0.5rem; /* Add gap for wrapped items */
     }
 
-    /* When light theme is active */
-    /* Show the SUN icon, because the current theme is light. */
-    html.light-theme .theme-toggle-button .theme-icon-sun {
+    .edit-page-link {
+    color: var(--color-footer-link);
+    text-decoration: none;
     display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease;
+    }
+    .edit-page-link:hover {
+    text-decoration: underline;
+    }
+    .edit-page-link svg {
+    width: 1.1em;
+    height: 1.1em;
+    margin-right: 0.4em;
+    vertical-align: middle;
+    }
+
+    .last-updated-text {
+    color: var(--color-footer-meta-text);
+    transition: color 0.3s ease;
+    }
+
+    .footer-divider-line {
+    border: none;
+    border-top: 1px solid var(--color-footer-divider);
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s ease;
+    }
+
+    .page-navigation-boxes {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    }
+
+    .nav-box {
+    flex: 1;
+    padding: 1rem;
+    border: 1px solid var(--color-footer-nav-box-border);
+    border-radius: 8px;
+    background-color: var(--color-footer-nav-box-bg);
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+    min-width: 0; /* Allow flex items to shrink properly */
+    }
+    .nav-box:hover {
+         border-color: var(--color-text-toc-link-active); /* Use active color for consistency */
+}
+
+    .nav-box-label {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--color-footer-meta-text);
+    margin-bottom: 0.25rem;
+    transition: color 0.3s ease;
+    }
+
+    .nav-box-link {
+    display: block;
+    font-size: 1rem;
+    color: var(--color-footer-link);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    word-break: break-word; /* Prevent long links from breaking layout */
     }
 
 
-        .page-meta-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-        font-size: 0.875rem; 
-        }
-
-        .edit-page-link {
-        color: var(--color-footer-link);
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        transition: color 0.2s ease;
-        }
-        .edit-page-link:hover {
-        text-decoration: underline;
-        }
-        .edit-page-link svg {
-        width: 1.1em;
-        height: 1.1em;
-        margin-right: 0.4em; 
-        vertical-align: middle;
-        }
-
-        .last-updated-text {
-        color: var(--color-footer-meta-text);
-        transition: color 0.3s ease;
-        }
-
-        .footer-divider-line {
-        border: none;
-        border-top: 1px solid var(--color-footer-divider);
-        margin-top: 1rem;
-        margin-bottom: 1.5rem;
-        transition: border-color 0.3s ease;
-        }
-
-        .page-navigation-boxes {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        }
-
-        .nav-box {
-        flex: 1;
-        padding: 1rem;
-        border: 1px solid var(--color-footer-nav-box-border);
-        border-radius: 8px;
-        background-color: var(--color-footer-nav-box-bg);
-        transition: border-color 0.2s ease, background-color 0.2s ease;
-        cursor: pointer; 
-        }
-        .nav-box:hover {   
-             border-color: #a8b1ff;    
+    .next-page-box {
+    text-align: right;
     }
-
-        .nav-box-label {
-        display: block;
-        font-size: 0.875rem; 
-        color: var(--color-footer-meta-text);
-        margin-bottom: 0.25rem;
-        transition: color 0.3s ease; 
-        }
-
-        .nav-box-link {
-        display: block;
-        font-size: 1rem; 
-        color: var(--color-footer-link);
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.2s ease;
-        }
-
-
-        .next-page-box {
+    .next-page-box .nav-box-label,
+    .next-page-box .nav-box-link {
         text-align: right;
-        }
-        .next-page-box .nav-box-label,
-        .next-page-box .nav-box-link {
-            text-align: right;
-        }
-        .previous-page-box .nav-box-label,
-        .previous-page-box .nav-box-link {
-            text-align: left;
-        }
-        /* Header Actions Wrapper */
-        .header-actions {
-          display: flex;
-          align-items: center;
-          flex-grow: 1; 
-          justify-content: space-between; 
-          gap: 0.75rem;
-        }
+    }
+    .previous-page-box .nav-box-label,
+    .previous-page-box .nav-box-link {
+        text-align: left;
+    }
+    /* Header Actions Wrapper */
+    .header-actions {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
 
-        .header-actions-right {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem; /* --- MODIFIED: Added gap for spacing between items --- */
-        }
-
-
-        .header-nav-link {
-          padding: 0.4rem 0.8rem; /* Adjust padding as needed */
-          border-radius: 6px; /* Consistent with other interactive elements */
-          text-decoration: none;
-          color: #dfdfd6;
-          font-weight: 500; /* A common weight for nav items */
-          font-size: 0.9rem; /* Slightly smaller than body text, adjust as needed */
-          line-height: 1.5; /* Ensure consistent line height */
-          transition: color 0.2s ease, background-color 0.2s ease;
-          display: inline-flex;
-          align-items: center;
-          white-space: nowrap; /* Prevent wrapping if text is long */
-        }
-
-        .header-nav-link:hover,
-    .header-nav-link:focus-visible {
-      color: var(--color-header-nav-link-hover-text-blue) !important;
-      background-color: transparent;
-      text-decoration: none; 
-      outline: none;
+    .header-actions-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem; /* --- MODIFIED: Added gap for spacing between items --- */
     }
 
 
-
-
-    .header-nav-link.active {
-        color: var(--color-header-nav-link-text-active);
+    .header-nav-link {
+      padding: 0.4rem 0.8rem; /* Adjust padding as needed */
+      border-radius: 6px; /* Consistent with other interactive elements */
+      text-decoration: none;
+      color: var(--color-header-nav-link-text); /* Use variable */
+      font-weight: 500; /* A common weight for nav items */
+      font-size: 0.9rem; /* Slightly smaller than body text, adjust as needed */
+      line-height: 1.5; /* Ensure consistent line height */
+      transition: color 0.2s ease, background-color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap; /* Prevent wrapping if text is long */
     }
 
-        /* Ensure visited links don't turn purple/blue by default browser styles */
-        .header-nav-link:visited {
-            color: var(--color-header-nav-link-text);
-        }
-        
+.header-nav-link:hover,
+.header-nav-link:focus-visible {
+  color: var(--color-header-nav-link-hover-text-blue) !important; /* Explicitly use variable */
+  background-color: transparent; /* Explicitly transparent */
+  text-decoration: none;
+  outline: none;
+}
+
+.header-nav-link.active {
+    color: var(--color-header-nav-link-text-active);
+}
+
+    /* Ensure visited links don't turn purple/blue by default browser styles */
+    .header-nav-link:visited {
+        color: var(--color-header-nav-link-text);
+    }
+
 
 #themeToggle.theme-toggle-button::before,
 #themeToggle.theme-toggle-button::after {
-  content: '';
-  display: inline-block;
-  width: 1px;
-  height: 1rem; /* Adjust height as needed */
-  background-color: var(--color-border-sidebar); /* Separator color */
-  vertical-align: middle; /* Helps with alignment */
+content: '';
+display: inline-block;
+width: 1px;
+height: 1rem; /* Adjust height as needed */
+background-color: var(--color-border-sidebar); /* Separator color */
+vertical-align: middle; /* Helps with alignment */
 }
 
 /* --- Separator BEFORE the Theme Toggle icon --- */
 #themeToggle.theme-toggle-button::before {
-  /* margin-left: 0.5rem; /* Only if there's an element before this group */
-  margin-right: 0.75rem; /* Space between this first separator and the Theme Toggle icon */
+/* margin-left: 0.5rem; /* Only if there's an element before this group */
+margin-right: 0.75rem; /* Space between this first separator and the Theme Toggle icon */
 }
 
 /* --- Separator AFTER Theme Toggle icon (which is BETWEEN Theme Toggle and GitHub) --- */
 #themeToggle.theme-toggle-button::after {
-  margin-left: 0.75rem;  /* Space between Theme Toggle icon and this second separator */
+margin-left: 0.75rem;  /* Space between Theme Toggle icon and this second separator */
 }
 
-/*
-  Ensure your existing .icon-button and .theme-toggle-button styles
-  don't have conflicting horizontal margins that would disrupt this.
-  The padding on the buttons themselves is for inside the button,
-  the margins on the pseudo-elements are for outside.
-*/
-    /* Search Trigger Button in Header */
-    /* Search Trigger Button in Header */
-    .search-trigger-button {
-        display: flex;
-        align-items: center;
-        padding: 0.4rem 0.8rem;
-        background-color: transparent; /* Use button bg for consistency or keep transparent */
-        color: var(--color-text-toc-link); /* More subtle than body text */
-        border: 1px solid var(--color-search-shortcut-border);
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-    }
-
-    .search-trigger-button:hover {
-        border-color: var(--color-search-border); /* Brighter border on hover */
-        color: var(--color-text-body);       /* Brighter text on hover */
-        /* No outline style here, it will inherit from the base or browser default */
-    }
-
-    .search-trigger-button:focus-visible {
-        /* When focused via keyboard (or programmatically like after ESC): */
-        /* Revert color and border to the button's default state */
-        color: var(--color-text-toc-link);
-        border-color: var(--color-search-shortcut-border);
-        
-        outline: none; /* This removes the blue outline as per your first request */
-    }
-
-    /* --- ADD THIS NEW RULE --- */
-    /* Ensures hover styles apply even when focus-visible is also active */
-    .search-trigger-button:focus-visible:hover {
-        border-color: var(--color-search-border); /* Brighter (same as :hover) */
-        color: var(--color-text-body);       /* Brighter (same as :hover) */
-        /* outline: none; (implicitly, it will still have no outline from the rule above) */
-    }
-    /* --- END OF NEW RULE --- */
-
-    .search-trigger-icon-svg {
-        margin-right: 0.5em;
-        stroke: currentColor; /* Inherits color from button */
-    }
-    .search-shortcut-hint {
-    margin-left: 0.75rem;
-    padding: 0.1rem 0.4rem;
-    border-radius: 4px;
-    font-size: 0.8em;
-    background-color: var(--color-search-shortcut-bg);
-    border: 1px solid var(--color-search-shortcut-border);
-    color: var(--color-search-shortcut-text);
-    line-height: 1.2;
-    }
-
-
-    /* Search Overlay */
-    .search-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: var(--color-search-overlay-bg);
-    display: flex; /* Changed from none to flex for direct alignment */
-    align-items: flex-start;
-    justify-content: center;
-    padding-top: 15vh; /* Position modal from top, gives space to "fall" into */
-    z-index: 10000; /* High z-index */
-
-    opacity: 0;
-    visibility: hidden; /* Hidden by default */
-    /* Smooth transition for opacity, visibility changes instantly based on active class */
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
-    }
-
-    .search-overlay.active {
-    opacity: 1;
-    visibility: visible;
-    transition-delay: 0s; /* Apply visibility change immediately when .active is added */
-    }
-
-    /* Search Modal */
-    .search-modal {
-    background-color: var(--color-search-modal-bg);
-    padding: 1.25rem; /* Slightly less padding than original thought */
-    border-radius: 8px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 0 1px var(--color-search-border); /* Softer shadow + border */
-    width: 90%;
-    max-width: 560px; /* Slightly narrower */
-    
-    /* Animation: Starts slightly scaled down and offset upwards, fades in */
-    opacity: 0;
-    transform: translateY(-25px) scale(0.98);
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    transition-delay: 0.05s; /* Modal animation starts slightly after overlay fades in */
-    }
-
-    .search-overlay.active .search-modal {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    }
-
-    .search-input-container {
+/* Search Trigger Button in Header */
+.search-trigger-button {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid var(--color-search-border);
-    padding-bottom: 0.75rem;
-    margin-bottom: 1rem;
-    }
-
-    .search-modal-icon {
-    color: var(--color-search-icon);
-    margin-right: 0.8rem;
-    flex-shrink: 0;
-    }
-
-    .search-input {
-    flex-grow: 1;
-    font-size: 1.1rem; /* Slightly smaller input text for balance */
-    border: none;
-    outline: none;
-    background-color: transparent;
-    color: var(--color-search-text);
-    height: 2.5rem; /* Explicit height for better alignment */
-    }
-
-    .search-input::placeholder {
-    color: var(--color-search-placeholder-text);
-    opacity: 1; /* Ensure placeholder is fully visible */
-    }
-
-    .search-close-button {
-    background: transparent;
-    border: 1px solid transparent; /* Keep space but hide border */
-    color: var(--color-text-toc-link);
-    padding: 0.4rem 0.6rem;
-    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    background-color: transparent; /* Use button bg for consistency or keep transparent */
+    color: var(--color-text-toc-link); /* More subtle than body text */
+    border: 1px solid var(--color-search-shortcut-border);
     border-radius: 6px;
     cursor: pointer;
-    margin-left: 0.75rem;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    }
-    .search-close-button:hover {
-        background-color: var(--color-search-trigger-hover-bg);
-        color: var(--color-text-body);
-    }
-
-    .search-close-button kbd {
-    background-color: var(--color-search-kbd-bg);
-    border: 1px solid var(--color-search-kbd-border);
-    color: var(--color-search-kbd-text);
-    padding: 0.2rem 0.45rem;
-    border-radius: 4px;
-    font-size: 0.8em;
-    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-    display: inline-block; /* Ensure padding and border are respected well */
-    }
-
-    .search-results-container {
-    min-height: 80px; /* Placeholder for results area */
-    /* For actual results: max-height: 50vh; overflow-y: auto; */
-    }
-
-    .search-results-placeholder {
-    color: var(--color-text-toc-link);
-    text-align: center;
-    padding: 1.5rem 0;
     font-size: 0.9rem;
-    }
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
 
-    .icon-button, /* General styles if used on <button> */
+.search-trigger-button:hover {
+    border-color: var(--color-search-border); /* Brighter border on hover */
+    color: var(--color-text-body);       /* Brighter text on hover */
+    /* No outline style here, it will inherit from the base or browser default */
+}
+
+.search-trigger-button:focus-visible {
+    /* When focused via keyboard (or programmatically like after ESC): */
+    /* Revert color and border to the button's default state */
+    color: var(--color-text-toc-link);
+    border-color: var(--color-search-shortcut-border);
+
+    outline: none; /* This removes the blue outline as per your first request */
+}
+
+/* --- ADD THIS NEW RULE --- */
+/* Ensures hover styles apply even when focus-visible is also active */
+.search-trigger-button:focus-visible:hover {
+    border-color: var(--color-search-border); /* Brighter (same as :hover) */
+    color: var(--color-text-body);       /* Brighter (same as :hover) */
+    /* outline: none; (implicitly, it will still have no outline from the rule above) */
+}
+/* --- END OF NEW RULE --- */
+
+.search-trigger-icon-svg {
+    margin-right: 0.5em;
+    stroke: currentColor; /* Inherits color from button */
+}
+.search-shortcut-hint {
+margin-left: 0.75rem;
+padding: 0.1rem 0.4rem;
+border-radius: 4px;
+font-size: 0.8em;
+background-color: var(--color-search-shortcut-bg);
+border: 1px solid var(--color-search-shortcut-border);
+color: var(--color-search-shortcut-text);
+line-height: 1.2;
+}
+
+
+/* Search Overlay */
+.search-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: var(--color-search-overlay-bg);
+display: flex; /* Changed from none to flex for direct alignment */
+align-items: flex-start;
+justify-content: center;
+padding-top: 15vh; /* Position modal from top, gives space to "fall" into */
+z-index: 10000; /* High z-index */
+
+opacity: 0;
+visibility: hidden; /* Hidden by default */
+/* Smooth transition for opacity, visibility changes instantly based on active class */
+transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
+}
+
+.search-overlay.active {
+opacity: 1;
+visibility: visible;
+transition-delay: 0s; /* Apply visibility change immediately when .active is added */
+}
+
+/* Search Modal */
+.search-modal {
+background-color: var(--color-search-modal-bg);
+padding: 1rem; /* Adjusted for potentially smaller screens */
+border-radius: 8px;
+box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 0 1px var(--color-search-border); /* Softer shadow + border */
+width: 90%;
+max-width: 560px; /* Slightly narrower */
+
+/* Animation: Starts slightly scaled down and offset upwards, fades in */
+opacity: 0;
+transform: translateY(-25px) scale(0.98);
+transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+transition-delay: 0.05s; /* Modal animation starts slightly after overlay fades in */
+}
+
+.search-overlay.active .search-modal {
+opacity: 1;
+transform: translateY(0) scale(1);
+}
+
+.search-input-container {
+display: flex;
+align-items: center;
+border-bottom: 1px solid var(--color-search-border);
+padding-bottom: 0.75rem;
+margin-bottom: 1rem;
+}
+
+.search-modal-icon {
+color: var(--color-search-icon);
+margin-right: 0.8rem;
+flex-shrink: 0;
+}
+
+.search-input {
+flex-grow: 1;
+font-size: 1rem; /* Slightly smaller for mobile */
+border: none;
+outline: none;
+background-color: transparent;
+color: var(--color-search-text);
+height: 2.5rem; /* Explicit height for better alignment */
+}
+
+.search-input::placeholder {
+color: var(--color-search-placeholder-text);
+opacity: 1; /* Ensure placeholder is fully visible */
+}
+
+.search-close-button {
+background: transparent;
+border: 1px solid transparent; /* Keep space but hide border */
+color: var(--color-text-toc-link);
+padding: 0.4rem 0.6rem;
+font-size: 0.9rem;
+border-radius: 6px;
+cursor: pointer;
+margin-left: 0.75rem;
+transition: background-color 0.2s ease, color 0.2s ease;
+}
+.search-close-button:hover {
+    background-color: var(--color-search-trigger-hover-bg);
+    color: var(--color-text-body);
+}
+
+.search-close-button kbd {
+background-color: var(--color-search-kbd-bg);
+border: 1px solid var(--color-search-kbd-border);
+color: var(--color-search-kbd-text);
+padding: 0.2rem 0.45rem;
+border-radius: 4px;
+font-size: 0.8em;
+box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+display: inline-block; /* Ensure padding and border are respected well */
+}
+
+.search-results-container {
+min-height: 80px; /* Placeholder for results area */
+/* For actual results: max-height: 50vh; overflow-y: auto; */
+}
+
+.search-results-placeholder {
+color: var(--color-text-toc-link);
+text-align: center;
+padding: 1.5rem 0;
+font-size: 0.9rem;
+}
+
+.icon-button, /* General styles if used on <button> */
 a.icon-button   /* Specific styles for <a> tags with this class */ {
-  padding: 0.4rem;
-  background-color: transparent;
-  color: var(--color-text-toc-link); /* THIS SETS THE GREY COLOR */
-  border: 1px solid transparent;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 0;
-  text-decoration: none !important; /* REMOVES THE UNDERSCORE */
+padding: 0.4rem;
+background-color: transparent;
+color: var(--color-text-toc-link); /* THIS SETS THE GREY COLOR */
+border: 1px solid transparent;
+border-radius: 6px;
+cursor: pointer;
+transition: background-color 0.2s ease, color 0.2s ease;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+line-height: 0;
+text-decoration: none !important; /* REMOVES THE UNDERSCORE */
 }
 
 /* Hover and Focus states for the <a> tag */
 a.icon-button:hover,
 a.icon-button:focus-visible {
-  background-color: var(--color-search-trigger-hover-bg);
-  color: var(--color-text-body); /* Changes color on hover/focus */
-  text-decoration: none !important; /* Ensure no underscore on hover/focus */
-  background: transparent;
-  
+background-color: var(--color-search-trigger-hover-bg);
+color: var(--color-text-body); /* Changes color on hover/focus */
+text-decoration: none !important; /* Ensure no underscore on hover/focus */
+/* background: transparent; /* This was overriding the bg color change */
 }
 
 /* Explicitly style visited state for <a> tag to prevent purple/blue */
 a.icon-button:visited {
-  color: var(--color-text-toc-link); /* Keep visited same color as normal */
-  text-decoration: none !important;
+color: var(--color-text-toc-link); /* Keep visited same color as normal */
+text-decoration: none !important;
 }
 
 /* Style for the SVG inside the icon button */
 .icon-button svg {
-  width: 24px;
-  height: 24px;
-  /* The fill="currentColor" in your SVG path will use the 'color' from a.icon-button */
+width: 24px;
+height: 24px;
+/* The fill="currentColor" in your SVG path will use the 'color' from a.icon-button */
 }
 
 .header-dropdown-container {
-    position: relative;
-    display: inline-block; /* or inline-flex if that's what you use */
-    padding-bottom: 0.5rem; /* Matches the '0.5rem' gap from 'top: calc(100% + 0.5rem);' on the menu */
-    margin-bottom: -0.5rem; /* Optional: Counteracts the padding if it pushes other elements down */
+position: relative;
+display: inline-block; /* or inline-flex if that's what you use */
+padding-bottom: 0.5rem; /* Matches the '0.5rem' gap from 'top: calc(100% + 0.5rem);' on the menu */
+margin-bottom: -0.5rem; /* Optional: Counteracts the padding if it pushes other elements down */
 }
 
-    .header-dropdown-trigger {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.4rem 0.8rem;
-        border-radius: 6px;
-        background-color: transparent;
-        color: #dfdfd6;
-        border: none;
-        font-family: inherit;
-        font-size: 0.9rem;
-        font-weight: 500;
-        cursor: pointer; /* Still good to have a pointer */
-        transition: background-color 0.2s ease, color 0.2s ease;
-        white-space: nowrap;
-        
-    }
-
-    .header-dropdown-trigger:hover {
-        color: var(--color-dropdown-trigger-text);
-    }
-
-    .header-dropdown-trigger[aria-expanded="true"] {
-        background-color: var(--color-dropdown-trigger-active-bg); /* Keep hover style when open */
-
-    }
-
-    .header-dropdown-trigger .dropdown-arrow-icon {
-        margin-left: 0.35rem;
-        stroke: var(--color-dropdown-trigger-arrow);
-        transition: transform 0.2s ease-out;
-        width: 1em; /* Adjust size */
-        height: 1em;
-        
-    }
-
-    .header-dropdown-trigger[aria-expanded="true"] .dropdown-arrow-icon {
-        transform: rotate(-90deg); /* Change to 90 degrees */
-        stroke: var(--color-dropdown-trigger-hover-text); /* Match text color when open */
-        
-    }
-    
-    .header-dropdown-trigger:focus-visible .dropdown-arrow-icon {
-    transform: rotate(-90deg); /* Pointing UP */
-    stroke: var(--color-dropdown-trigger-hover-text); /* Match trigger text color on focus */
-    
-}
-
-    .header-dropdown-menu {
-    position: absolute;
-    top: 100%; /* Position below the trigger with a small gap */
-    /* REMOVE: right: 0; */
-    left: 50%;              /* <<< ADD: Position the left edge of the menu at the center of the container */
-    transform: translateX(-50%) translateY(-10px); /* <<< MODIFY: Pull menu left by half its own width, keep existing Y transform */
-                                                /* If the menu is visible (on hover), transform will be translateX(-50%) translateY(0) */
-    background-color: var(--color-dropdown-bg);
-    border-radius: 8px;
-    box-shadow: var(--color-dropdown-shadow);
-    padding: 0.5rem;
-    min-width: 180px; /* Adjust as needed */
-    z-index: 1000;
-    list-style: none;
-    margin: 0;
-
-    opacity: 0;
-    visibility: hidden;
-    /* The Y transform is part of the open/close animation */
-    transition: opacity 0.15s ease-out,
-                transform 0.15s ease-out, /* Ensure transform is part of the transition */
-                visibility 0s linear 0.15s;
-    pointer-events: none;
-}
-
-
-
-    .header-dropdown-container.active .header-dropdown-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-        transition-delay: 0s;
-    }
-
-    .header-dropdown-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between; /* Pushes icon to the right */
-        padding: 0.6rem 0.75rem;
-        color: var(--color-dropdown-item-text);
-        text-decoration: none;
-        border-radius: 6px; /* Rounded corners for items too */
-        font-size: 0.9rem;
-        transition: background-color 0.2s ease, color 0.2s ease;
-        white-space: nowrap;
-    }
-
-    .header-dropdown-item:hover,
-    .header-dropdown-item:focus-visible {
-        background-color: var(--color-dropdown-item-bg-hover);
-        color: var(--color-dropdown-item-text-hover); /* Though might be same as default */
-        outline: none;
-    }
-
-    .header-dropdown-item .external-link-icon {
-        margin-left: 0.75rem;
-        stroke: var(--color-dropdown-item-icon);
-        opacity: 0.7; /* Make it slightly less prominent */
-    }
-    .header-dropdown-item:hover .external-link-icon,
-    .header-dropdown-item:focus-visible .external-link-icon {
-        opacity: 1;
-    }
-
-    /* --- Left Sidebar Enhanced Styles --- */
-.left-sidebar {
-    /* flex-basis, flex-grow, flex-shrink, border-right, background-color are already set */
-    /* transition is already set */
-    padding: 0; /* Remove previous padding, will control internally */
-    display: flex;
-    flex-direction: column;
-    /* REMOVE overflow-y: auto; from here if it existed, sidebar-nav will handle its own scroll */
-    /* overflow: hidden; /* To prevent its own scrollbar if nav grows tall */
-}
-
-/* Sidebar Brand/Logo Area */
-.sidebar-brand {
-    padding-left: 1.25rem;
-    padding-top: 1.25rem;
-    flex-shrink: 0; /* Prevent shrinking */
-    
-}
-.sidebar-logo-link {
+.header-dropdown-trigger {
     display: inline-flex;
     align-items: center;
-    text-decoration: none;
-    color: var(--color-sidebar-logo-text);
-    font-size: 1.125rem; /* ~18px */
-    font-weight: 600;
-    transition: color 0.2s ease;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    background-color: transparent;
+    color: var(--color-header-nav-link-text); /* Use variable */
+    border: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer; /* Still good to have a pointer */
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+
 }
 
+/* MODIFIED: Header Navigation Link Hover Effect */
+.header-dropdown-trigger:hover,
+.header-dropdown-trigger:focus-visible { /* Focus-visible is for keyboard navigation */
+    background-color: transparent; /* MODIFIED: Removes background highlight */
+    color: var(--color-dropdown-trigger-hover-text); /* Keeps text color change (e.g., to brighter) */
+}
+
+.header-dropdown-trigger[aria-expanded="true"] {
+    background-color: var(--color-dropdown-trigger-active-bg); /* Keep hover style when open */
+}
+
+.header-dropdown-trigger .dropdown-arrow-icon {
+    margin-left: 0.35rem;
+    transition: transform 0.2s ease-out, stroke 0.2s ease-out; /* MODIFIED: Added stroke to transition */
+    transform: rotate(90deg); /* ADDED: Makes the default ">" arrow point DOWN "v" */
+    stroke: var(--color-dropdown-trigger-arrow);
+    width: 1em; /* Adjust size */
+    height: 1em;
+}
+
+ .header-dropdown-container:hover .header-dropdown-trigger .dropdown-arrow-icon,
+.header-dropdown-trigger[aria-expanded="true"] .dropdown-arrow-icon {
+    transform: rotate(-90deg); /* Change to -90 degrees for UP arrow */
+    stroke: var(--color-dropdown-trigger-hover-text); /* Match text color when open/hover */
+}
+
+.header-dropdown-trigger:focus-visible .dropdown-arrow-icon {
+    transform: rotate(-90deg); /* Pointing UP */
+    stroke: var(--color-dropdown-trigger-hover-text); /* Match trigger text color on focus */
+}
+
+.header-dropdown-menu {
+position: absolute;
+top: 100%; /* Position below the trigger with a small gap */
+/* REMOVE: right: 0; */
+left: 50%;              /* <<< ADD: Position the left edge of the menu at the center of the container */
+transform: translateX(-50%) translateY(-10px); /* <<< MODIFY: Pull menu left by half its own width, keep existing Y transform */
+                                            /* If the menu is visible (on hover), transform will be translateX(-50%) translateY(0) */
+background-color: var(--color-dropdown-bg);
+border-radius: 8px;
+box-shadow: var(--color-dropdown-shadow);
+padding: 0.5rem;
+min-width: 180px; /* Adjust as needed */
+z-index: 1000;
+list-style: none;
+margin: 0;
+
+opacity: 0;
+visibility: hidden;
+/* The Y transform is part of the open/close animation */
+transition: opacity 0.15s ease-out,
+            transform 0.15s ease-out, /* Ensure transform is part of the transition */
+            visibility 0s linear 0.15s;
+pointer-events: none;
+}
+
+/* --- THIS IS THE KEY CHANGE FOR HOVER --- */
+.header-dropdown-container:hover .header-dropdown-menu,
+.header-dropdown-trigger:focus-within + .header-dropdown-menu, /* Show on trigger focus for keyboard */
+.header-dropdown-menu:hover /* Keep open if mouse moves onto the menu itself */ {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0); /* <<< MODIFY: Center horizontally when visible */
+    transition-delay: 0s;
+    pointer-events: auto; /* Allow interaction when visible */
+}
+
+
+.header-dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Pushes icon to the right */
+    padding: 0.6rem 0.75rem;
+    color: var(--color-dropdown-item-text);
+    text-decoration: none;
+    border-radius: 6px; /* Rounded corners for items too */
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+}
+
+.header-dropdown-item:hover,
+.header-dropdown-item:focus-visible {
+    background-color: var(--color-dropdown-item-bg-hover);
+    color: var(--color-dropdown-item-text-hover); /* Though might be same as default */
+    outline: none;
+}
+
+.header-dropdown-item .external-link-icon {
+    margin-left: 0.75rem;
+    stroke: var(--color-dropdown-item-icon);
+    opacity: 0.7; /* Make it slightly less prominent */
+}
+.header-dropdown-item:hover .external-link-icon,
+.header-dropdown-item:focus-visible .external-link-icon {
+    opacity: 1;
+}
+
+/* --- Left Sidebar Enhanced Styles --- */
+.sidebar-brand {
+padding-left: 1.25rem;
+padding-top: 1.25rem;
+padding-bottom: 0; /* Adjusted as divider handles bottom space */
+flex-shrink: 0; /* Prevent shrinking */
+}
+.sidebar-logo-link { /* This was a.header-nav-link, changed for clarity and specific styling */
+display: inline-flex;
+align-items: center;
+text-decoration: none;
+color: var(--color-sidebar-logo-text);
+font-size: 1.125rem; /* ~18px */
+font-weight: 600;
+transition: color 0.2s ease;
+padding: 0.4rem 0; /* Give it some minimal padding like other header links */
+}
+.sidebar-logo-link:hover {
+color: var(--color-text-body);
+}
+
+
 .sidebar-logo-link .logo-svg {
-    width: 28px;
-    height: 28px;
-    margin-right: 0.65rem;
-    color: var(--color-sidebar-logo-svg); /* Uses the CSS variable for stroke */
+width: 28px;
+height: 28px;
+margin-right: 0.65rem;
+color: var(--color-sidebar-logo-svg); /* Uses the CSS variable for stroke */
 }
 
 /* Sidebar Dividers */
 .sidebar-divider {
-    border: none;
-    height: 1px;
-    background-color: var(--color-sidebar-divider);
-    margin: 0 1.25rem; /* Horizontal padding to match content */
-    flex-shrink: 0; /* Prevent shrinking */
+border: none;
+height: 1px;
+background-color: var(--color-sidebar-divider);
+margin: 0 1.25rem; /* Horizontal padding to match content */
+flex-shrink: 0; /* Prevent shrinking */
 }
 .logo-divider {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+margin-top: 0.75rem;
+margin-bottom: 0.75rem;
 }
 .section-divider {
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+margin-top: 0.75rem;
+margin-bottom: 0.75rem;
 }
 /* Hide divider if it's the very last child after a nav section, before the footer */
 .sidebar-nav > .sidebar-nav-section:last-of-type + .section-divider {
-    display: none;
+display: none;
 }
 
 
 
 /* Sidebar Navigation Area */
 .sidebar-nav {
-    flex-grow: 1; /* Allows nav to take up available space, pushing footer down */
-    overflow-y: auto; /* This part scrolls if content is too long */
-    padding: 0 0 0.75rem; /* Bottom padding before footer or end of sidebar */
-    scrollbar-width: thin;
-    scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--toc-scrollbar-track-bg);
+flex-grow: 1; /* Allows nav to take up available space, pushing footer down */
+overflow-y: auto; /* This part scrolls if content is too long */
+padding: 0 0 0.75rem; /* Bottom padding before footer or end of sidebar */
+scrollbar-width: thin;
+scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--toc-scrollbar-track-bg);
 }
 .sidebar-nav::-webkit-scrollbar {
-    width: 6px;
+width: 6px;
 }
 .sidebar-nav::-webkit-scrollbar-track {
-    background: transparent;
+background: transparent; /* Track often transparent in sidebars */
 }
 .sidebar-nav::-webkit-scrollbar-thumb {
-    background-color: var(--toc-scrollbar-thumb-bg);
-    border-radius: 3px;
+background-color: var(--toc-scrollbar-thumb-bg);
+border-radius: 3px;
 }
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+background-color: var(--toc-scrollbar-thumb-hover-bg);
+}
+
 
 .sidebar-nav-section {
-    padding: 0 1.25rem; /* Horizontal padding for section content */
-}
-.sidebar-section-title {
-    font-size: 0.9375rem; /* ~15px */
-    font-weight: 600;
-    color: var(--color-sidebar-section-title-text);
-    margin-top: 0.75rem;
-    margin-bottom: 0.6rem;
-    padding: 0.125rem 0;
-}
-.sidebar-nav-section:first-child > .sidebar-section-title {
-    margin-top: 0.25rem; /* Less top margin for the first title after logo-divider */
-}
-
-.sidebar-nav-links {
-    list-style: none;
-    padding-left: 0.75rem; /* Indent for the links under a title */
-    margin: 0;
-}
-.sidebar-nav-links li {
-    margin: 0; /* Remove default li margin if any */
-}
-.sidebar-link {
-    display: block;
-    padding-top: 0.4rem;
-    padding-bottom: 0.4rem;
-    font-size: 0.875rem; /* ~14px */
-    color: var(--color-sidebar-link-text);
-    text-decoration: none;
-    border-radius: 6px;
-    transition: color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease;
-    font-weight: 500;
-    line-height: 1.4;
-    margin-bottom: 0.1rem; /* Small gap between links */
-}
-.sidebar-link:hover {
-    color: var(--color-sidebar-link-text-active);
-}
-.sidebar-link.active {
-    color: var(--color-sidebar-link-text-active);
-    background-color: var(--color-sidebar-link-bg-active);
-    font-weight: 600;
-}
-
-/* Sidebar Footer Link Area */
-.sidebar-footer {
-    padding: 0.75rem 1.25rem 1.25rem;
-    margin-top: auto; /* Pushes to bottom if .sidebar-nav doesn't fill space */
-    border-top: 1px solid var(--color-sidebar-divider);
-    flex-shrink: 0; /* Prevent shrinking */
-}
-.sidebar-footer a {
-    font-size: 0.8125rem; /* ~13px */
-    color: var(--color-sidebar-footer-link-text);
-    text-decoration: none;
-    transition: color 0.2s ease;
-    display: block; /* Make the link take full width for easier clicking */
-}
-.sidebar-footer a:hover {
-    color: var(--color-sidebar-footer-link-text-hover);
-    text-decoration: underline;
-}
-
-/* Ensure the main left-sidebar rule does not have overflow-y: auto if you want only sidebar-nav to scroll */
-.left-sidebar {
-    /* ... existing flex-basis, etc ... */
-    overflow: hidden; /* Prevent this from scrolling, sidebar-nav will scroll */
-
-
-    /* ... (Keep all existing CSS from before) ... */
-
-/* Sidebar Navigation Area - MODIFICATIONS */
-.sidebar-nav-section {
-    padding: 0 1.25rem; /* Horizontal padding for section content */
-    /* is-open class will be handled by JS */
+padding: 0 1.25rem; /* Horizontal padding for section content */
+/* is-open class will be handled by JS */
 }
 
 /* REPLACED .sidebar-section-title with .sidebar-section-toggle */
 .sidebar-section-toggle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 0.5rem 0; /* Adjust padding for better click area */
-    margin-top: 0.75rem;
-    margin-bottom: 0; /* Content div will handle spacing */
-    font-size: 0.9375rem; /* ~15px */
-    font-weight: 600;
-    color: var(--color-sidebar-section-title-text);
-    background-color: transparent;
-    border: none;
-    text-align: left;
-    cursor: pointer;
-    font-family: inherit; /* Ensure button inherits font */
-    transition: color 0.2s ease;
+display: flex;
+justify-content: space-between;
+align-items: center;
+width: 100%;
+padding: 0.5rem 0; /* Adjust padding for better click area */
+margin-top: 0.75rem;
+margin-bottom: 0; /* Content div will handle spacing */
+font-size: 0.9375rem; /* ~15px */
+font-weight: 600;
+color: var(--color-sidebar-section-title-text);
+background-color: transparent;
+border: none;
+text-align: left;
+cursor: pointer;
+font-family: inherit; /* Ensure button inherits font */
+transition: color 0.2s ease;
 }
 .sidebar-section-toggle:hover {
-    color: var(--color-text-body); /* Or a specific hover color for title */
+color: var(--color-text-body); /* Or a specific hover color for title */
 }
 .sidebar-nav-section:first-child > .sidebar-section-toggle {
-    margin-top: 0.25rem;
+margin-top: 0.25rem;
 }
 
 .sidebar-section-arrow {
-    width: 1em;
-    height: 1em;
-    stroke: currentColor; /* Inherits color from button */
-    transition: transform 0.25s ease-out;
-    /* Default (collapsed state): Rotate the "down arrow" to point RIGHT */
-    transform: rotate(-90deg);
+width: 1em;
+height: 1em;
+stroke: currentColor; /* Inherits color from button */
+transition: transform 0.25s ease-out;
+/* Default (collapsed state): Rotate the "down arrow" to point RIGHT */
+transform: rotate(-90deg);
 }
 .sidebar-nav-section.is-open > .sidebar-section-toggle .sidebar-section-arrow {
-    /* Expanded state: Rotate the "down arrow" to point DOWN (no effective rotation) */
-    transform: rotate(0deg);
+/* Expanded state: Rotate the "down arrow" to point DOWN (no effective rotation) */
+transform: rotate(0deg);
 }
 
 
 /* Collapsible Content Area */
 .sidebar-section-content {
-    overflow: hidden;
-    max-height: 0; /* Collapsed by default (JS will add is-open to parent to override) */
-    transition: max-height 0.3s ease-out,
-                padding-top 0.3s ease-out,
-                padding-bottom 0.3s ease-out;
-    padding-top: 0;
-    padding-bottom: 0;
+overflow: hidden;
+max-height: 0; /* Collapsed by default (JS will add is-open to parent to override) */
+transition: max-height 0.3s ease-out,
+            padding-top 0.3s ease-out,
+            padding-bottom 0.3s ease-out;
+padding-top: 0;
+padding-bottom: 0;
 }
 .sidebar-nav-section.is-open > .sidebar-section-content {
-    /* Estimate a large enough max-height or calculate dynamically if needed */
-    max-height: 1000px; /* Adjust if you have very long sections */
-    padding-top: 0.4rem; /* Space between title and links when open */
-    padding-bottom: 0.2rem; /* Space after links when open */
+/* Estimate a large enough max-height or calculate dynamically if needed */
+max-height: 1000px; /* Adjust if you have very long sections */
+padding-top: 0.4rem; /* Space between title and links when open */
+padding-bottom: 0.2rem; /* Space after links when open */
 }
 
 .sidebar-nav-links {
-    list-style: none;
-    padding-left: 0.75rem; /* Indent for the links under a title */
-    margin: 0;
+list-style: none;
+padding-left: 0.75rem; /* Indent for the links under a title */
+margin: 0;
 }
-/* Other .sidebar-link styles remain the same */
+.sidebar-nav-links li {
+margin: 0; /* Remove default li margin if any */
+}
+.sidebar-link {
+display: block;
+padding-top: 0.4rem;
+padding-bottom: 0.4rem;
+font-size: 0.875rem; /* ~14px */
+color: var(--color-sidebar-link-text);
+text-decoration: none;
+border-radius: 6px;
+transition: color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease;
+font-weight: 500;
+line-height: 1.4;
+margin-bottom: 0.1rem; /* Small gap between links */
+}
+.sidebar-link:hover {
+color: var(--color-sidebar-link-text-active); /* Use active color for hover as per spec */
+}
+.sidebar-link.active {
+color: var(--color-sidebar-link-text-active);
+background-color: var(--color-sidebar-link-bg-active);
+font-weight: 600;
+}
 
-/* Adjust divider margins if necessary */
-.section-divider {
-    margin-top: 0.5rem; /* Reduced slightly */
-    margin-bottom: 0.25rem; /* Reduced slightly */
+/* Sidebar Footer Link Area */
+.sidebar-footer {
+padding: 0.75rem 1.25rem 1.25rem;
+margin-top: auto; /* Pushes to bottom if .sidebar-nav doesn't fill space */
+border-top: 1px solid var(--color-sidebar-divider);
+flex-shrink: 0; /* Prevent shrinking */
 }
-    
+.sidebar-footer a {
+font-size: 0.8125rem; /* ~13px */
+color: var(--color-sidebar-footer-link-text);
+text-decoration: none;
+transition: color 0.2s ease;
+display: block; /* Make the link take full width for easier clicking */
 }
+.sidebar-footer a:hover {
+color: var(--color-sidebar-footer-link-text-hover);
+text-decoration: underline;
+}
+
+/* --- Mobile Menu Button --- */
+.mobile-menu-button {
+display: none; /* Hidden by default, shown in media query */
+padding: 0.4rem;
+background-color: transparent;
+color: var(--color-text-body);
+border: 1px solid transparent;
+border-radius: 6px;
+cursor: pointer;
+line-height: 0; /* For icon alignment */
+margin-right: 0.75rem; /* Space from other header items */
+}
+.mobile-menu-button svg {
+width: 24px;
+height: 24px;
+stroke: currentColor;
+}
+.mobile-menu-button:hover {
+background-color: var(--color-search-trigger-hover-bg);
+}
+
+/* Page Overlay for Mobile Sidebar */
+.page-overlay {
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background-color: rgba(0,0,0,0.5); /* Semi-transparent black */
+z-index: 10005; /* Below sidebar, above content */
+display: none; /* Shown by JS when sidebar is open */
+opacity: 0;
+transition: opacity 0.3s ease-in-out;
+}
+body.mobile-sidebar-open .page-overlay {
+display: block;
+opacity: 1;
+}
+
+/* Prevent body scroll when mobile sidebar is open */
+body.mobile-sidebar-open {
+overflow: hidden;
+}
+
+
+/* --- Media Query for Responsiveness (e.g., Tablets and Phones) --- */
+@media (max-width: 992px) {
+.app-header {
+    padding: 0 0.75rem; /* Slightly reduce padding */
+}
+.app-header > div:not(.header-actions):not(.mobile-menu-button) {
+  margin-right: 0.5rem; /* Adjust space */
+}
+
+
+.mobile-menu-button {
+    display: inline-flex; /* Show hamburger */
+}
+
+.left-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh; /* Full viewport height */
+    width: 280px; /* Or your preferred width for mobile sidebar */
+    transform: translateX(-100%);
+    z-index: 10010; /* Above page overlay and header */
+    flex-basis: auto; /* Override desktop flex-basis */
+    border-right: 1px solid var(--color-border-sidebar); /* Keep border for definition */
+    box-shadow: 2px 0 8px rgba(0,0,0,0.15); /* Add shadow for overlay effect */
+}
+
+body.mobile-sidebar-open .left-sidebar {
+    transform: translateX(0);
+}
+
+/* Hide desktop-specific nav elements in the header */
+.header-actions-right > .header-nav-link, /* Guide, Reference */
+.header-actions-right > .header-dropdown-container { /* Version Dropdown */
+    display: none;
+}
+/* Theme toggle separators specific adjustments if needed */
+#themeToggle.theme-toggle-button::before,
+#themeToggle.theme-toggle-button::after {
+    /* Consider hiding or adjusting on mobile if space is very tight */
+    /* display: none; */
+}
+
+
+/* Adjust the search trigger on mobile */
+#searchTrigger .search-trigger-text,
+#searchTrigger .search-shortcut-hint {
+    display: none; /* Show only search icon */
+}
+#searchTrigger {
+    padding: 0.4rem; /* Adjust padding for icon-only */
+    border-color: transparent; /* Cleaner look for icon-only */
+    margin-right: 0; /* No margin from icon for text */
+}
+ #searchTrigger .search-trigger-icon-svg {
+    margin-right: 0;
+}
+#searchTrigger:hover {
+    border-color: var(--color-search-border); /* Restore border on hover if desired */
+    background-color: var(--color-search-trigger-hover-bg); /* Consistent hover */
+}
+
+/* Adjust header actions layout */
+.header-actions {
+    /* justify-content: flex-end; /* Push remaining items to the right */
+    margin-left: auto; /* Pushes search & right icons to the far right when menu btn is present */
+}
+.header-actions-right {
+    gap: 0.25rem; /* Slightly reduce gap between theme/github icons */
+}
+
+
+/* Main content adjustments */
+.main-area-wrapper {
+    /* No change needed if sidebar overlays */
+}
+.content-toc-row {
+    flex-direction: column; /* Stack content and (hidden) ToC */
+}
+#toc-container {
+    display: none; /* Hide ToC on mobile */
+}
+#content-area {
+    flex-basis: auto; /* Allow content to take full width */
+    padding: 1.25rem; /* Mobile-friendly padding */
+}
+ #content-area h2 {
+    padding-top: calc(4rem + 1rem); /* Maintain space for sticky header */
+}
+
+
+/* Footer nav boxes */
+.page-navigation-boxes {
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.nav-box {
+    text-align: left !important; /* Override specific text-aligns for consistency */
+}
+.next-page-box .nav-box-label,
+.next-page-box .nav-box-link,
+.previous-page-box .nav-box-label,
+.previous-page-box .nav-box-link {
+    text-align: left !important;
+}
+}
+
+@media (max-width: 480px) { /* Smaller phone adjustments */
+.app-header {
+    padding: 0 0.5rem;
+}
+.mobile-menu-button {
+    margin-right: 0.5rem;
+}
+.header-actions {
+    gap: 0.25rem;
+}
+#searchTrigger, .theme-toggle-button, a.icon-button {
+    padding: 0.3rem; /* Even smaller touch targets */
+}
+.icon-button svg, .theme-toggle-button svg, #searchTrigger svg {
+    width: 20px;
+    height: 20px;
+}
+#themeToggle.theme-toggle-button::before,
+#themeToggle.theme-toggle-button::after {
+    display: none; /* Hide separators on very small screens */
+}
+.header-actions-right {
+    gap: 0.1rem;
+}
+
+#content-area {
+    padding: 1rem;
+}
+#content-area h1 {
+    font-size: 1.75rem;
+}
+#content-area h2 {
+    font-size: 1.4rem;
+    padding-top: calc(4rem + 0.5rem); /* Adjust if needed */
+}
+ .page-meta-row .last-updated-text {
+    font-size: 0.8rem; /* Slightly smaller meta text */
+}
+}
+
 
 </style>
-    </head>
-    <body>
-        <div class="left-sidebar">
-            <div class="sidebar-brand">
-                <a href="#" class="header-nav-link">Logo</a>
-            </div>
-
-            <hr class="sidebar-divider logo-divider">
-    
-            <nav class="sidebar-nav">
-                <!-- Navigation Section 1 -->
-                <div class="sidebar-nav-section is-open">     
-                                     <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-reference">
-                        <span>Reference</span>
-                        <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                    <div class="sidebar-section-content" id="section-content-reference">
-                        <ul class="sidebar-nav-links">
-                            <li><a href="#site-config" class="sidebar-link active">Site Config</a></li>
-                            <li><a href="#frontmatter-config" class="sidebar-link">Frontmatter Config</a></li>
-                            <li><a href="#runtime-api" class="sidebar-link">Runtime API</a></li>
-                            <li><a href="#cli" class="sidebar-link">CLI</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <hr class="sidebar-divider section-divider">
-    
-                <!-- Navigation Section 2 -->
-                <div class="sidebar-nav-section is-open">                  
-                        <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-theme">
-                        <span>Default Theme</span>
-                        <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                    </button>
-                    <div class="sidebar-section-content" id="section-content-theme">
-                        <ul class="sidebar-nav-links">
-                            <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
-                            <li><a href="#theme-nav" class="sidebar-link">Nav</a></li>
-                            <li><a href="#theme-sidebar" class="sidebar-link">Sidebar</a></li>
-                            <li><a href="#theme-home-page" class="sidebar-link">Home Page</a></li>
-                            <li><a href="#theme-footer" class="sidebar-link">Footer</a></li>
-                            <li><a href="#theme-layout" class="sidebar-link">Layout</a></li>
-                            <li><a href="#theme-badge" class="sidebar-link">Badge</a></li>
-                            <li><a href="#theme-team-page" class="sidebar-link">Team Page</a></li>
-                            <li><a href="#theme-prev-next" class="sidebar-link">Prev / Next Links</a></li>
-                            <li><a href="#theme-edit-link" class="sidebar-link">Edit Link</a></li>
-                            <li><a href="#theme-last-updated" class="sidebar-link">Last Updated Timestamp</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- <hr class="sidebar-divider section-divider"> -->
-    
-            </nav>
-    
+</head>
+<body>
+    <div class="left-sidebar">
+        <div class="sidebar-brand">
+            <!-- Changed class from header-nav-link to sidebar-logo-link for specific styling -->
+            <a href="#" class="sidebar-logo-link">
+                <!-- You can put an SVG logo here instead of text -->
+                <!-- <svg class="logo-svg">...</svg> -->
+                Logo
+            </a>
         </div>
-    <div class="main-area-wrapper">
-        <div class="app-header">
-            <!-- VVV THIS IS THE PART YOU REPLACE/UPDATE VVV -->
-             
-            <div class="header-actions">
-                <button id="searchTrigger" class="search-trigger-button" aria-label="Open search (Press /)">
-                   
 
-                    <svg class="search-trigger-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                    <span class="search-trigger-text">Search...</span>
-                    <!-- <span class="search-shortcut-hint">/</span> -->
+        <hr class="sidebar-divider logo-divider">
+
+        <nav class="sidebar-nav">
+            <!-- Navigation Section 1 -->
+            <div class="sidebar-nav-section is-open">
+                                 <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-reference">
+                    <span>Reference</span>
+                    <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
-    
-                <!-- Item 2: Container for GitHub and Theme Toggle -->
-                <div class="header-actions-right">
-                    <a href="#guide" class="header-nav-link">Guide</a>
-                    <a href="#reference" class="header-nav-link">Reference</a>
+                <div class="sidebar-section-content" id="section-content-reference">
+                    <ul class="sidebar-nav-links">
+                        <li><a href="#site-config" class="sidebar-link active">Site Config</a></li>
+                        <li><a href="#frontmatter-config" class="sidebar-link">Frontmatter Config</a></li>
+                        <li><a href="#runtime-api" class="sidebar-link">Runtime API</a></li>
+                        <li><a href="#cli" class="sidebar-link">CLI</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="sidebar-divider section-divider">
 
-                    <!-- START: Version Dropdown -->
-                    <div class="header-dropdown-container" id="versionDropdownContainer">
-                        <button class="header-dropdown-trigger" id="versionDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="versionDropdownMenu">
-                            <span>2.0.0-alpha.5</span>
-                            <svg class="dropdown-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline>></svg>
-                        </button>
-                        <div class="header-dropdown-menu" id="versionDropdownMenu" role="menu" aria-labelledby="versionDropdownTrigger">
-                            <a href="#" role="menuitem" class="header-dropdown-item">
-                                <span>Changelog</span>
-                                <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                            </a>
-                            <a href="#" role="menuitem" class="header-dropdown-item">
-                                <span>Contributing</span>
-                                <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                            </a>
-                            <a href="#" role="menuitem" class="header-dropdown-item">
-                                <span>Another Link</span>
-                            </a>
-                        </div>
-                    </div>
-                    <!-- END: Version Dropdown -->
-                    
-                    <button id="themeToggle" class="theme-toggle-button" aria-label="Toggle theme">
-                        <span class="theme-icon theme-icon-sun">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17q-2.075 0-3.537-1.463T7 12t1.463-3.537T12 7t3.538 1.463T17 12t-1.463 3.538T12 17m-7-4H1v-2h4zm18 0h-4v-2h4zM11 5V1h2v4zm0 18v-4h2v4zM6.4 7.75L3.875 5.325L5.3 3.85l2.4 2.5zm12.3 12.4l-2.425-2.525L17.6 16.25l2.525 2.425zM16.25 6.4l2.425-2.525L20.15 5.3l-2.5 2.4zM3.85 18.7l2.525-2.425L7.75 17.6l-2.425 2.525z"/></svg>
-                        </span>
-                        <span class="theme-icon theme-icon-moon">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21q-3.75 0-6.375-2.625T3 12t2.625-6.375T12 3q.35 0 .688.025t.662.075q-1.025.725-1.638 1.888T11.1 7.5q0 2.25 1.575 3.825T16.5 12.9q1.375 0 2.525-.613T20.9 10.65q.05.325.075.662T21 12q0 3.75-2.625 6.375T12 21"/></svg>
-                        </span>
+            <!-- Navigation Section 2 -->
+            <div class="sidebar-nav-section is-open">
+                    <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-theme">
+                    <span>Default Theme</span>
+                    <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="sidebar-section-content" id="section-content-theme">
+                    <ul class="sidebar-nav-links">
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-nav" class="sidebar-link">Nav</a></li>
+                        <li><a href="#theme-sidebar" class="sidebar-link">Sidebar</a></li>
+                        <li><a href="#theme-home-page" class="sidebar-link">Home Page</a></li>
+                        <li><a href="#theme-footer" class="sidebar-link">Footer</a></li>
+                        <li><a href="#theme-layout" class="sidebar-link">Layout</a></li>
+                        <li><a href="#theme-badge" class="sidebar-link">Badge</a></li>
+                        <li><a href="#theme-team-page" class="sidebar-link">Team Page</a></li>
+                        <li><a href="#theme-prev-next" class="sidebar-link">Prev / Next Links</a></li>
+                        <li><a href="#theme-edit-link" class="sidebar-link">Edit Link</a></li>
+                        <li><a href="#theme-last-updated" class="sidebar-link">Last Updated Timestamp</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!-- <hr class="sidebar-divider section-divider"> -->
+
+        </nav>
+        <!-- Example Sidebar Footer (optional) -->
+        <!--
+        <div class="sidebar-footer">
+            <a href="#">Help</a>
+            <a href="#">Settings</a>
+        </div>
+        -->
+    </div>
+<div class="main-area-wrapper">
+    <div class="app-header">
+        <button class="mobile-menu-button" id="mobileMenuToggle" aria-label="Open navigation menu" aria-expanded="false" aria-controls="leftSidebar">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+
+        <div class="header-actions">
+            <button id="searchTrigger" class="search-trigger-button" aria-label="Open search (Press /)">
+                <svg class="search-trigger-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span class="search-trigger-text">Search...</span>
+                <span class="search-shortcut-hint">/</span>
+            </button>
+
+            <div class="header-actions-right">
+                <a href="#guide" class="header-nav-link">Guide</a>
+                <a href="#reference" class="header-nav-link">Reference</a>
+
+                <div class="header-dropdown-container" id="versionDropdownContainer">
+                    <button class="header-dropdown-trigger" id="versionDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="versionDropdownMenu">
+                        <span>2.0.0-alpha.5</span>
+                        <svg class="dropdown-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline>></svg>
                     </button>
-                
-                    <a href="YOUR_GITHUB_REPO_LINK_HERE" target="_blank" rel="noopener noreferrer" id="githubLink" class="icon-button" aria-label="View source on GitHub">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
-                    </a>
-                </div>
-            </div>
-        </div>
-        
-        <div class="content-toc-row">
-            <div id="content-area" tabindex="0">
-                
-                <h1>MOM</h1>
-                <P>ASD</P>
-                <h2 id="introduction">Introduction</h2>
-                <p>Welcome to this comprehensive guide. This section provides an overview of the entire document, its purpose, and what you can expect to learn. We will cover various topics in detail, ensuring a clear understanding for all readers.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-                <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-    
-                <h2 id="getting-started">Getting Started</h2>
-                <p>This section will walk you through the initial setup and prerequisites. Before diving into the core features, it's important to have your environment configured correctly. We'll cover software installation and basic configuration steps.</p>
-                <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.</p>
-                <p>Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi.</p>
-    
-                <h2 id="core-concepts">Core Concepts</h2>
-                <p>Understanding the core concepts is crucial for effective use. This part delves into the fundamental principles and ideas that underpin the system. We will explore definitions, key terminologies, and their relationships.</p>
-                <p>Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue.</p>
-                <p>Eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. Phasellus ultrices nulla quis nibh. Quisque a lectus.</p>
-    
-                <h2 id="feature-alpha">Feature Alpha</h2>
-                <p>Feature Alpha provides capabilities for X, Y, and Z. It is designed to enhance productivity and streamline workflows related to data processing. This section explains its architecture and benefits.</p>
-                <p>Donec consectetuer ligula vulputate sem tristique cursus. Nam nulla quam, gravida non, commodo a, sodales sit amet, nisi. Pellentesque fermentum dolor. Aliquam quam lectus, facilisis auctor, ultrices ut, elementum vulputate, nunc.</p>
-                <p>Sed adipiscing ornare risus. Morbi est est, blandit sit amet, sagittis vel, euismod vel, velit. Pellentesque egestas sem. Suspendisse commodo ullamcorper magna.</p>
-    
-                <h2 id="feature-beta">Feature Beta</h2>
-                <p>Building upon Alpha, Feature Beta introduces advanced functionalities. It focuses on scalability and integration with other services. Here, we will cover its advanced configuration options and use cases.</p>
-                <p>Curabitur bibendum justo non orci. Integer pellentesque quam vel velit. Duis pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
-                <p>Nam liberate potestatem assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
-    
-                <h2 id="advanced-configuration">Advanced Configuration</h2>
-                <p>For users requiring more control, the advanced configuration options offer granular adjustments. This section is for experienced users who need to tailor the system to specific, complex requirements.</p>
-                <p>Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
-                <p>Accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur.</p>
-    
-                <h2 id="api-reference">API Reference</h2>
-                <p>The API Reference provides detailed documentation for all available endpoints and methods. Developers can use this information to integrate the system with other applications or build custom tools.</p>
-                <p>Aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
-                <p>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.</p>
-    
-                <h2 id="troubleshooting">Troubleshooting</h2>
-                <p>Encountering issues? This section lists common problems and their solutions. It also provides guidance on how to diagnose and report new issues effectively. Please consult this section before seeking further support.</p>
-                <p>Nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
-                <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
-    
-                <h2 id="security-guidelines">Security Guidelines</h2>
-                <p>Security is paramount. These guidelines outline best practices for securing your installation and data. It covers aspects like access control, data encryption, and regular security audits.</p>
-                <p>Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi.</p>
-                <p>Optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis.</p>
-    
-                <h2 id="performance-tuning">Performance Tuning</h2>
-                <p>Learn how to optimize performance for various workloads. This section covers techniques for identifying bottlenecks and applying configurations to improve speed and efficiency.</p>
-                <p>Aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias.</p>
-                <p>Consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-    
-                <h2 id="backup-restore">Backup and Restore</h2>
-                <p>Data integrity is crucial. This section details procedures for backing up your data and restoring it in case of system failure or data loss. Regular backups are highly recommended.</p>
-                <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
-                <p>Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
-    
-                <h2 id="migration-guide">Migration Guide</h2>
-                <p>Upgrading from a previous version? This guide provides step-by-step instructions for migrating your existing data and configurations to the latest version smoothly.</p>
-                <p>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis.</p>
-                <p>Suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.</p>
-    
-                <h2 id="contributing">Contributing</h2>
-                <p>Interested in contributing to the project? This section outlines how you can get involved, from reporting bugs and suggesting features to submitting code contributions. Your help is appreciated!</p>
-                <p>Vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.</p>
-                <p>Corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
-    
-                <h2 id="license-information" style="padding-left: 1rem;">License Information</h2>
-                <p>This software is distributed under the XYZ License. This section provides the full text of the license and details about any third-party components and their respective licenses.</p>
-                <p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>
-                <p>Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae.</p>
-    
-                <h2 id="appendix-a">Appendix A: Glossary</h2>
-                <p>A list of terms and definitions used throughout this documentation. This can be a helpful reference for understanding specific jargon or technical terms.</p>
-                <p>Sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-    
-                <h2 id="appendix-b">Appendix B: Further Reading</h2>
-                <p>For those who wish to explore related topics further, this appendix lists recommended books, articles, and online resources. These can provide deeper insights or alternative perspectives.</p>
-                <p>Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
-                <h2 id="section-example-1">Example Section 1</h2>
-            <p>Placeholder content for example section 1 to ensure it's a target.</p>
-            <h2 id="section-example-2">Example Section 2</h2>
-            <p>Placeholder content for example section 2.</p>
-            <h2 id="section-example-3">Example Section 3</h2>
-            <p>Placeholder content for example section 3.</p>
-            <h2 id="section-example-4">Example Section 4</h2>
-            <p>Placeholder content for example section 4.</p>
-            <h2 id="section-example-5">Example Section 5</h2>
-            <p>Placeholder content for example section 5. This is the very last piece of main content.</p>
-
-
-                <!-- Page Footer Container (KEEP YOUR EXISTING ONE) -->
-                <div class="page-footer-container">
-                    <div class="page-meta-row">
-                        <a href="#" class="edit-page-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/>
-                        </svg>Edit this page on GitHub
+                    <div class="header-dropdown-menu" id="versionDropdownMenu" role="menu" aria-labelledby="versionDropdownTrigger">
+                        <a href="#" role="menuitem" class="header-dropdown-item">
+                            <span>Changelog</span>
+                            <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         </a>
-                        <span class="last-updated-text">Last updated: 1/7/25, 2:24 AM</span>
-                    </div>
-                    <hr class="footer-divider-line">
-                    <div class="page-navigation-boxes">
-                        <div class="nav-box previous-page-box">
-                        <span class="nav-box-label">Previous page</span>
-                        <a href="#" class="nav-box-link">What is VitePress?</a>
-                        </div>
-                        <div class="nav-box next-page-box">
-                        <span class="nav-box-label">Next page</span>
-                        <a href="#" class="nav-box-link">Routing</a>
-                        </div>
+                        <a href="#" role="menuitem" class="header-dropdown-item">
+                            <span>Contributing</span>
+                            <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        </a>
+                        <a href="#" role="menuitem" class="header-dropdown-item">
+                            <span>Another Link</span>
+                        </a>
                     </div>
                 </div>
+
+                <button id="themeToggle" class="theme-toggle-button" aria-label="Toggle theme">
+                    <span class="theme-icon theme-icon-sun">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17q-2.075 0-3.537-1.463T7 12t1.463-3.537T12 7t3.538 1.463T17 12t-1.463 3.538T12 17m-7-4H1v-2h4zm18 0h-4v-2h4zM11 5V1h2v4zm0 18v-4h2v4zM6.4 7.75L3.875 5.325L5.3 3.85l2.4 2.5zm12.3 12.4l-2.425-2.525L17.6 16.25l2.525 2.425zM16.25 6.4l2.425-2.525L20.15 5.3l-2.5 2.4zM3.85 18.7l2.525-2.425L7.75 17.6l-2.425 2.525z"/></svg>
+                    </span>
+                    <span class="theme-icon theme-icon-moon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 21q-3.75 0-6.375-2.625T3 12t2.625-6.375T12 3q.35 0 .688.025t.662.075q-1.025.725-1.638 1.888T11.1 7.5q0 2.25 1.575 3.825T16.5 12.9q1.375 0 2.525-.613T20.9 10.65q.05.325.075.662T21 12q0 3.75-2.625 6.375T12 21"/></svg>
+                    </span>
+                </button>
+
+                <a href="YOUR_GITHUB_REPO_LINK_HERE" target="_blank" rel="noopener noreferrer" id="githubLink" class="icon-button" aria-label="View source on GitHub">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5c.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.87 1.52 2.34 1.07 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.92c0-1.11.38-2 1.03-2.71c-.1-.25-.45-1.29.1-2.64c0 0 .84-.27 2.75 1.02c.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02c.55 1.35.2 2.39.1 2.64c.65.71 1.03 1.6 1.03 2.71c0 3.82-2.34 4.66-4.57 4.91c.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+                </a>
             </div>
-        <div id="toc-container">
-            
-            <nav id="toc-links">
-                <div id="toc-active-marker"></div> <!-- <<< ADD THIS DIV - EXACTLY AS SHOWN -->
-
-                <a href="#introduction"> <span style="padding-left: 1rem;">Introduction</span></a>
-                <a href="#getting-started">Getting Started</a>
-                <a href="#core-concepts">Core Concepts</a>
-                <a href="#feature-alpha">Feature Alpha</a>
-                <a href="#feature-beta">Feature Beta</a>
-                <a href="#advanced-configuration">Advanced Configuration</a>
-                <a href="#api-reference">API Reference</a>
-                <a href="#troubleshooting">Troubleshooting</a>
-                <a href="#security-guidelines">Security Guidelines</a>
-                <a href="#performance-tuning">Performance Tuning</a>
-                <a href="#backup-restore">Backup and Restore</a>
-                <a href="#migration-guide">Migration Guide</a>
-                <a href="#contributing">Contributing</a>
-                <a href="#license-information" style="padding-left: 1rem;">License Information</a>
-                <a href="#appendix-a">Appendix A: Glossary</a>
-                <a href="#appendix-b">Appendix B: Further Reading</a>
-                <!-- Add a few more to really test ToC scroll -->
-                <a href="#section-example-1">Example Section 1</a>
-                <a href="#section-example-2">Example Section 2</a>
-                <a href="#section-example-3">Example Section 3</a>
-                <a href="#section-example-4">Example Section 4</a>
-                <a href="#section-example-5">Example Section 5</a>
-            </nav>
-
         </div>
-            </div>
     </div>
 
-    
-     <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    <div class="content-toc-row">
+        <div id="content-area" tabindex="0">
 
-        const sidebarNavSections = document.querySelectorAll('.sidebar-nav .sidebar-nav-section');
+            <h1>MOM</h1>
+            <P>ASD</P>
+            <h2 id="introduction">Introduction</h2>
+            <p>Welcome to this comprehensive guide. This section provides an overview of the entire document, its purpose, and what you can expect to learn. We will cover various topics in detail, ensuring a clear understanding for all readers.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 
-sidebarNavSections.forEach(section => {
-    const toggleButton = section.querySelector('.sidebar-section-toggle');
-    const content = section.querySelector('.sidebar-section-content');
+            <h2 id="getting-started">Getting Started</h2>
+            <p>This section will walk you through the initial setup and prerequisites. Before diving into the core features, it's important to have your environment configured correctly. We'll cover software installation and basic configuration steps.</p>
+            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.</p>
+            <p>Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi.</p>
 
-    if (toggleButton && content) {
-        // Set initial max-height for sections marked as 'is-open' in HTML
-        if (section.classList.contains('is-open')) {
-            // Temporarily remove transition for initial calculation
-            const originalTransition = content.style.transition;
-            content.style.transition = 'none';
+            <h2 id="core-concepts">Core Concepts</h2>
+            <p>Understanding the core concepts is crucial for effective use. This part delves into the fundamental principles and ideas that underpin the system. We will explore definitions, key terminologies, and their relationships.</p>
+            <p>Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue.</p>
+            <p>Eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. Phasellus ultrices nulla quis nibh. Quisque a lectus.</p>
 
-            content.style.maxHeight = content.scrollHeight + "px";
+            <h2 id="feature-alpha">Feature Alpha</h2>
+            <p>Feature Alpha provides capabilities for X, Y, and Z. It is designed to enhance productivity and streamline workflows related to data processing. This section explains its architecture and benefits.</p>
+            <p>Donec consectetuer ligula vulputate sem tristique cursus. Nam nulla quam, gravida non, commodo a, sodales sit amet, nisi. Pellentesque fermentum dolor. Aliquam quam lectus, facilisis auctor, ultrices ut, elementum vulputate, nunc.</p>
+            <p>Sed adipiscing ornare risus. Morbi est est, blandit sit amet, sagittis vel, euismod vel, velit. Pellentesque egestas sem. Suspendisse commodo ullamcorper magna.</p>
 
-            // Restore transition after a brief moment
-            // Use requestAnimationFrame to ensure style is applied before re-enabling transition
-            requestAnimationFrame(() => {
-                requestAnimationFrame(() => { // Double rAF for more robustness on some browsers
-                   content.style.transition = originalTransition;
+            <h2 id="feature-beta">Feature Beta</h2>
+            <p>Building upon Alpha, Feature Beta introduces advanced functionalities. It focuses on scalability and integration with other services. Here, we will cover its advanced configuration options and use cases.</p>
+            <p>Curabitur bibendum justo non orci. Integer pellentesque quam vel velit. Duis pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
+            <p>Nam liberate potestatem assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
+
+            <h2 id="advanced-configuration">Advanced Configuration</h2>
+            <p>For users requiring more control, the advanced configuration options offer granular adjustments. This section is for experienced users who need to tailor the system to specific, complex requirements.</p>
+            <p>Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
+            <p>Accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur.</p>
+
+            <h2 id="api-reference">API Reference</h2>
+            <p>The API Reference provides detailed documentation for all available endpoints and methods. Developers can use this information to integrate the system with other applications or build custom tools.</p>
+            <p>Aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+            <p>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.</p>
+
+            <h2 id="troubleshooting">Troubleshooting</h2>
+            <p>Encountering issues? This section lists common problems and their solutions. It also provides guidance on how to diagnose and report new issues effectively. Please consult this section before seeking further support.</p>
+            <p>Nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
+
+            <h2 id="security-guidelines">Security Guidelines</h2>
+            <p>Security is paramount. These guidelines outline best practices for securing your installation and data. It covers aspects like access control, data encryption, and regular security audits.</p>
+            <p>Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi.</p>
+            <p>Optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis.</p>
+
+            <h2 id="performance-tuning">Performance Tuning</h2>
+            <p>Learn how to optimize performance for various workloads. This section covers techniques for identifying bottlenecks and applying configurations to improve speed and efficiency.</p>
+            <p>Aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias.</p>
+            <p>Consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+
+            <h2 id="backup-restore">Backup and Restore</h2>
+            <p>Data integrity is crucial. This section details procedures for backing up your data and restoring it in case of system failure or data loss. Regular backups are highly recommended.</p>
+            <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
+            <p>Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
+
+            <h2 id="migration-guide">Migration Guide</h2>
+            <p>Upgrading from a previous version? This guide provides step-by-step instructions for migrating your existing data and configurations to the latest version smoothly.</p>
+            <p>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis.</p>
+            <p>Suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.</p>
+
+            <h2 id="contributing">Contributing</h2>
+            <p>Interested in contributing to the project? This section outlines how you can get involved, from reporting bugs and suggesting features to submitting code contributions. Your help is appreciated!</p>
+            <p>Vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.</p>
+            <p>Corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
+
+            <h2 id="license-information">License Information</h2> <!-- Removed inline style -->
+            <p>This software is distributed under the XYZ License. This section provides the full text of the license and details about any third-party components and their respective licenses.</p>
+            <p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>
+            <p>Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae.</p>
+
+            <h2 id="appendix-a">Appendix A: Glossary</h2>
+            <p>A list of terms and definitions used throughout this documentation. This can be a helpful reference for understanding specific jargon or technical terms.</p>
+            <p>Sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+
+            <h2 id="appendix-b">Appendix B: Further Reading</h2>
+            <p>For those who wish to explore related topics further, this appendix lists recommended books, articles, and online resources. These can provide deeper insights or alternative perspectives.</p>
+            <p>Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
+            <h2 id="section-example-1">Example Section 1</h2>
+        <p>Placeholder content for example section 1 to ensure it's a target.</p>
+        <h2 id="section-example-2">Example Section 2</h2>
+        <p>Placeholder content for example section 2.</p>
+        <h2 id="section-example-3">Example Section 3</h2>
+        <p>Placeholder content for example section 3.</p>
+        <h2 id="section-example-4">Example Section 4</h2>
+        <p>Placeholder content for example section 4.</p>
+        <h2 id="section-example-5">Example Section 5</h2>
+        <p>Placeholder content for example section 5. This is the very last piece of main content.</p>
+
+
+            <!-- Page Footer Container -->
+            <div class="page-footer-container">
+                <div class="page-meta-row">
+                    <a href="#" class="edit-page-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83l3.75 3.75l1.83-1.83z"/>
+                    </svg>Edit this page on GitHub
+                    </a>
+                    <span class="last-updated-text">Last updated: 1/7/25, 2:24 AM</span>
+                </div>
+                <hr class="footer-divider-line">
+                <div class="page-navigation-boxes">
+                    <div class="nav-box previous-page-box">
+                    <span class="nav-box-label">Previous page</span>
+                    <a href="#" class="nav-box-link">What is VitePress?</a>
+                    </div>
+                    <div class="nav-box next-page-box">
+                    <span class="nav-box-label">Next page</span>
+                    <a href="#" class="nav-box-link">Routing</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <div id="toc-container">
+
+        <nav id="toc-links">
+            <div id="toc-active-marker"></div>
+
+            <a href="#introduction">Introduction</a> <!-- Removed inline style -->
+            <a href="#getting-started">Getting Started</a>
+            <a href="#core-concepts">Core Concepts</a>
+            <a href="#feature-alpha">Feature Alpha</a>
+            <a href="#feature-beta">Feature Beta</a>
+            <a href="#advanced-configuration">Advanced Configuration</a>
+            <a href="#api-reference">API Reference</a>
+            <a href="#troubleshooting">Troubleshooting</a>
+            <a href="#security-guidelines">Security Guidelines</a>
+            <a href="#performance-tuning">Performance Tuning</a>
+            <a href="#backup-restore">Backup and Restore</a>
+            <a href="#migration-guide">Migration Guide</a>
+            <a href="#contributing">Contributing</a>
+            <a href="#license-information">License Information</a> <!-- Removed inline style -->
+            <a href="#appendix-a">Appendix A: Glossary</a>
+            <a href="#appendix-b">Appendix B: Further Reading</a>
+            <!-- Add a few more to really test ToC scroll -->
+            <a href="#section-example-1">Example Section 1</a>
+            <a href="#section-example-2">Example Section 2</a>
+            <a href="#section-example-3">Example Section 3</a>
+            <a href="#section-example-4">Example Section 4</a>
+            <a href="#section-example-5">Example Section 5</a>
+        </nav>
+
+    </div>
+        </div>
+</div>
+
+<!-- Page overlay for mobile sidebar -->
+<div class="page-overlay" id="pageOverlay"></div>
+
+ <script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const sidebarNavSections = document.querySelectorAll('.sidebar-nav .sidebar-nav-section');
+
+    sidebarNavSections.forEach(section => {
+        const toggleButton = section.querySelector('.sidebar-section-toggle');
+        const content = section.querySelector('.sidebar-section-content');
+
+        if (toggleButton && content) {
+            // Set initial max-height for sections marked as 'is-open' in HTML
+            if (section.classList.contains('is-open')) {
+                const originalTransition = content.style.transition;
+                content.style.transition = 'none';
+                content.style.maxHeight = content.scrollHeight + "px";
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                       content.style.transition = originalTransition;
+                    });
                 });
+            }
+
+            toggleButton.addEventListener('click', () => {
+                const isOpen = section.classList.toggle('is-open');
+                toggleButton.setAttribute('aria-expanded', isOpen.toString());
+
+                if (isOpen) {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                } else {
+                    content.style.maxHeight = "0px";
+                }
             });
         }
+    });
 
+    // --- Element References ---
+    const htmlElement = document.documentElement;
+    const mainScroller = document.querySelector('.main-area-wrapper');
 
-        toggleButton.addEventListener('click', () => {
-            const isOpen = section.classList.toggle('is-open');
-            toggleButton.setAttribute('aria-expanded', isOpen.toString());
+    // Theme Toggle
+    const themeToggleButton = document.getElementById('themeToggle');
 
-            if (isOpen) {
-                // Calculate scrollHeight before setting max-height for smooth opening
-                // Temporarily set auto height to get correct scrollHeight
-                const currentMaxHeight = content.style.maxHeight; // Save current in case it's already set
-                content.style.maxHeight = 'auto'; // Let it expand fully to measure
-                const scrollHeight = content.scrollHeight;
-                if (currentMaxHeight !== 'auto') { // Restore if it wasn't 'auto'
-                    content.style.maxHeight = currentMaxHeight;
-                }
-                // Force reflow to get accurate scrollHeight before transition
-                // This can sometimes be just reading a property like offsetHeight
-                content.offsetHeight; // eslint-disable-line no-unused-expressions
+    // Table of Contents (ToC)
+    const tocContainerElement = document.getElementById('toc-container');
+    const tocLinksContainer = document.getElementById('toc-links');
+    const tocActiveMarker = document.getElementById('toc-active-marker');
+    let tocLinks = [];
+    if (tocLinksContainer) {
+        tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
+    }
 
-                content.style.maxHeight = scrollHeight + "px";
+    // Search
+    const searchTriggerButton = document.getElementById('searchTrigger');
+    const searchOverlayEl = document.getElementById('searchOverlay'); // Renamed to avoid conflict
+    const searchModal = document.getElementById('searchModal');
+    const searchInput = document.getElementById('searchInput');
+    const searchCloseButton = document.getElementById('searchCloseButton');
 
-            } else {
-                content.style.maxHeight = "0px";
+    // Mobile Navigation
+    const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+    const leftSidebar = document.querySelector('.left-sidebar');
+    const pageOverlay = document.getElementById('pageOverlay'); // For mobile sidebar
+
+    // --- State Variables ---
+    const THEME_KEY = 'user-preferred-theme';
+    const sections = {};
+    const scrollOffset = 20;
+    let isSearchActive = false;
+
+    // --- 1. Theme Functionality ---
+    function applyTheme(theme) {
+        if (theme === 'light') {
+            htmlElement.classList.add('light-theme');
+            htmlElement.classList.remove('dark-theme');
+            if (themeToggleButton) themeToggleButton.setAttribute('aria-label', 'Switch to Dark Theme');
+        } else {
+            htmlElement.classList.remove('light-theme');
+            htmlElement.classList.add('dark-theme');
+            if (themeToggleButton) themeToggleButton.setAttribute('aria-label', 'Switch to Light Theme');
+        }
+    }
+    function saveThemePreference(theme) { localStorage.setItem(THEME_KEY, theme); }
+    function getInitialTheme() {
+        const savedTheme = localStorage.getItem(THEME_KEY);
+        if (savedTheme) return savedTheme;
+        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+    }
+    if (themeToggleButton) {
+        themeToggleButton.addEventListener('click', () => {
+            const newTheme = htmlElement.classList.contains('light-theme') ? 'dark' : 'light';
+            applyTheme(newTheme);
+            saveThemePreference(newTheme);
+        });
+    }
+    applyTheme(getInitialTheme());
+
+    // --- 2. Table of Contents (Scroll Spy & Active Marker) ---
+    if (tocLinks.length > 0) {
+        tocLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href && href.startsWith('#')) {
+                const sectionId = href.substring(1);
+                const sectionElement = document.getElementById(sectionId);
+                if (sectionElement) sections[sectionId] = sectionElement;
             }
         });
     }
-});
+    function updateActiveLinkAndMarker() {
+        if (!mainScroller || tocLinks.length === 0 || !tocActiveMarker) return;
+        let currentSectionId = null;
+        const contentScrollTop = mainScroller.scrollTop;
+        const sectionIds = Object.keys(sections);
 
-        // --- Element References ---
-        const htmlElement = document.documentElement;
-        const mainScroller = document.querySelector('.main-area-wrapper');
-
-        // Theme Toggle
-        const themeToggleButton = document.getElementById('themeToggle');
-
-        // Table of Contents (ToC)
-        const tocContainerElement = document.getElementById('toc-container');
-        const tocLinksContainer = document.getElementById('toc-links'); // This is <nav id="toc-links">
-        const tocActiveMarker = document.getElementById('toc-active-marker');
-        let tocLinks = []; // Initialize as empty, will be populated
-        if (tocLinksContainer) {
-            tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
-        }
-
-        // Search
-        const searchTriggerButton = document.getElementById('searchTrigger');
-        const searchOverlay = document.getElementById('searchOverlay');
-        const searchModal = document.getElementById('searchModal');
-        const searchInput = document.getElementById('searchInput');
-        const searchCloseButton = document.getElementById('searchCloseButton');
-
-        // --- State Variables ---
-        const THEME_KEY = 'user-preferred-theme';
-        const sections = {};
-        const scrollOffset = 20; // For ToC active link detection
-        let isSearchActive = false;
-        // let lastFocusedElement; // For search, if needed for more complex focus restore
-
-        // --- 1. Theme Functionality ---
-        function applyTheme(theme) {
-            if (theme === 'light') {
-                htmlElement.classList.add('light-theme');
-                htmlElement.classList.remove('dark-theme');
-                if (themeToggleButton) {
-                    themeToggleButton.setAttribute('aria-label', 'Switch to Dark Theme');
-                }
-            } else {
-                htmlElement.classList.remove('light-theme');
-                htmlElement.classList.add('dark-theme');
-                if (themeToggleButton) {
-                    themeToggleButton.setAttribute('aria-label', 'Switch to Light Theme');
-                }
+        for (let i = sectionIds.length - 1; i >= 0; i--) {
+            const id = sectionIds[i];
+            const sectionElement = sections[id];
+            if (sectionElement && (sectionElement.offsetTop - scrollOffset <= contentScrollTop)) {
+                currentSectionId = id; break;
             }
         }
-
-        function saveThemePreference(theme) {
-            localStorage.setItem(THEME_KEY, theme);
-        }
-
-        function getInitialTheme() {
-            const savedTheme = localStorage.getItem(THEME_KEY);
-            if (savedTheme) return savedTheme;
-            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) return 'light';
-            return 'dark'; // Default to dark
-        }
-
-        if (themeToggleButton) {
-            themeToggleButton.addEventListener('click', () => {
-                let currentTheme = htmlElement.classList.contains('light-theme') ? 'light' : 'dark';
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                applyTheme(newTheme);
-                saveThemePreference(newTheme);
-            });
-        }
-        applyTheme(getInitialTheme()); // Apply theme on load
-
-        // --- 2. Table of Contents (Scroll Spy & Active Marker) ---
-        if (tocLinks.length > 0) {
-            tocLinks.forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    const sectionId = href.substring(1);
-                    const sectionElement = document.getElementById(sectionId);
-                    if (sectionElement) {
-                        sections[sectionId] = sectionElement;
-                    }
-                }
-            });
-        }
-
-        function updateActiveLinkAndMarker() {
-            if (!mainScroller || tocLinks.length === 0) return;
-
-            let currentSectionId = null;
-            const contentScrollTop = mainScroller.scrollTop;
-            const sectionIds = Object.keys(sections);
-
-            // Determine current section based on scroll position
-            for (let i = sectionIds.length - 1; i >= 0; i--) {
-                const id = sectionIds[i];
-                const sectionElement = sections[id];
-                if (sectionElement && (sectionElement.offsetTop - scrollOffset <= contentScrollTop)) {
-                    currentSectionId = id;
-                    break;
-                }
-            }
-
-            // If scrolled to the very top, or above the first "calculated" active section
-            if (currentSectionId === null && sectionIds.length > 0) {
-                const firstSection = sections[sectionIds[0]];
-                if (firstSection) {
-                    if (contentScrollTop < scrollOffset || contentScrollTop < (firstSection.offsetTop - scrollOffset)) {
-                        currentSectionId = sectionIds[0];
-                    }
-                }
-            }
-
-            // If scrolled to the very bottom
-            if (sectionIds.length > 0 && (mainScroller.scrollHeight - mainScroller.scrollTop <= mainScroller.clientHeight + 5)) { // +5 for a small buffer
-                currentSectionId = sectionIds[sectionIds.length - 1];
-            }
-
-            let activeLinkElement = null;
-            tocLinks.forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === `#${currentSectionId}`) {
-                    link.classList.add('active');
-                    activeLinkElement = link;
-                }
-            });
-
-            // Scroll ToC container to keep active link in view
-            if (activeLinkElement && tocContainerElement && tocContainerElement.scrollHeight > tocContainerElement.clientHeight) {
-                const linkTopInToc = activeLinkElement.offsetTop; // Relative to #toc-links
-                const linkHeight = activeLinkElement.offsetHeight;
-                const linkBottomInToc = linkTopInToc + linkHeight;
-                const tocScrollTop = tocContainerElement.scrollTop;
-                const tocClientHeight = tocContainerElement.clientHeight;
-                const scrollPadding = 30;
-
-                if (linkTopInToc < tocScrollTop + scrollPadding) {
-                    tocContainerElement.scrollTo({
-                        top: Math.max(0, linkTopInToc - scrollPadding),
-                        behavior: 'smooth'
-                    });
-                } else if (linkBottomInToc > tocScrollTop + tocClientHeight - scrollPadding) {
-                    tocContainerElement.scrollTo({
-                        top: Math.min(
-                            linkBottomInToc - tocClientHeight + scrollPadding,
-                            tocContainerElement.scrollHeight - tocClientHeight
-                        ),
-                        behavior: 'smooth'
-                    });
-                }
-            }
-
-            // Update the active ToC marker
-            if (tocActiveMarker) {
-                if (activeLinkElement) {
-                    const markerTop = activeLinkElement.offsetTop;
-                    const markerHeight = activeLinkElement.offsetHeight;
-                    tocActiveMarker.style.top = `${markerTop}px`;
-                    tocActiveMarker.style.height = `${markerHeight}px`;
-                    tocActiveMarker.style.opacity = '1';
-                } else {
-                    tocActiveMarker.style.opacity = '0';
-                    // tocActiveMarker.style.height = '0px'; // Optional: shrink if no active link
-                }
+        if (currentSectionId === null && sectionIds.length > 0) {
+            const firstSection = sections[sectionIds[0]];
+            if (firstSection && (contentScrollTop < scrollOffset || contentScrollTop < (firstSection.offsetTop - scrollOffset))) {
+                currentSectionId = sectionIds[0];
             }
         }
-
-        if (tocLinksContainer) {
-            tocLinksContainer.addEventListener('click', (e) => {
-                const target = e.target.closest('a'); // Handle clicks on <a> or its children
-                if (target && target.getAttribute('href')?.startsWith('#')) {
-                    e.preventDefault();
-                    const targetId = target.getAttribute('href').substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    if (targetElement && mainScroller) {
-                        mainScroller.scrollTo({
-                            top: targetElement.offsetTop,
-                            behavior: 'smooth'
-                        });
-                    }
-                }
-            });
+        if (sectionIds.length > 0 && (mainScroller.scrollHeight - mainScroller.scrollTop <= mainScroller.clientHeight + 5)) {
+            currentSectionId = sectionIds[sectionIds.length - 1];
         }
 
-        if (mainScroller && tocLinks.length > 0) {
-            mainScroller.addEventListener('scroll', updateActiveLinkAndMarker);
-            updateActiveLinkAndMarker(); // Initial call on page load
-        }
-
-        // --- 3. Search Functionality ---
-        function isEditingContent(element) {
-            if (!element) return false;
-            const tagName = element.tagName;
-            return tagName === 'INPUT' ||
-                   tagName === 'TEXTAREA' ||
-                   element.isContentEditable ||
-                   element.closest('input, textarea, [contenteditable="true"], [contenteditable=""]');
-        }
-
-        function openSearch() {
-            if (isSearchActive || !searchOverlay || !searchInput) return;
-            // lastFocusedElement = document.activeElement; // Store focus
-            requestAnimationFrame(() => {
-                searchOverlay.classList.add('active');
-                setTimeout(() => { // Allow overlay to transition
-                    searchInput.value = '';
-                    searchInput.focus();
-                }, 60); // Slightly more than typical frame for safety
-            });
-            document.body.style.overflow = 'hidden'; // Prevent body scroll
-            isSearchActive = true;
-        }
-
-        function closeSearch() {
-            if (!isSearchActive || !searchOverlay) return;
-            searchOverlay.classList.remove('active');
-            if(searchInput) searchInput.blur();
-            document.body.style.overflow = ''; // Restore body scroll
-
-            // Restore focus to trigger button or previously focused element
-            // if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
-            //     lastFocusedElement.focus({ preventScroll: true });
-            // } else
-            if (searchTriggerButton) {
-                searchTriggerButton.focus({ preventScroll: true });
-            }
-            isSearchActive = false;
-        }
-
-        function toggleSearch() {
-            if (isSearchActive) {
-                closeSearch();
-            } else {
-                openSearch();
-            }
-        }
-
-        if (searchTriggerButton) {
-            searchTriggerButton.addEventListener('click', openSearch);
-        }
-        if (searchCloseButton) {
-            searchCloseButton.addEventListener('click', closeSearch);
-        }
-        if (searchOverlay) {
-            searchOverlay.addEventListener('click', (event) => {
-                // Close if clicked on the overlay itself, not its children (modal)
-                if (event.target === searchOverlay) {
-                    closeSearch();
-                }
-            });
-        }
-
-        document.addEventListener('keydown', (event) => {
-            // Open search with '/'
-            if (event.key === '/' && !isSearchActive && !isEditingContent(document.activeElement)) {
-                event.preventDefault();
-                openSearch();
-            }
-            // Toggle search with Ctrl/Cmd + K
-            if (event.key === 'k' && (event.ctrlKey || event.metaKey)) {
-                event.preventDefault();
-                toggleSearch();
-            }
-            // Close search with Escape
-            if (event.key === 'Escape' && isSearchActive) {
-                event.preventDefault();
-                closeSearch();
+        let activeLinkElement = null;
+        tocLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${currentSectionId}`) {
+                link.classList.add('active'); activeLinkElement = link;
             }
         });
 
+        if (activeLinkElement && tocContainerElement && tocContainerElement.scrollHeight > tocContainerElement.clientHeight) {
+            const linkTopInToc = activeLinkElement.offsetTop;
+            const linkHeight = activeLinkElement.offsetHeight;
+            const linkBottomInToc = linkTopInToc + linkHeight;
+            const tocScrollTop = tocContainerElement.scrollTop;
+            const tocClientHeight = tocContainerElement.clientHeight;
+            const scrollPadding = 30;
+            if (linkTopInToc < tocScrollTop + scrollPadding) {
+                tocContainerElement.scrollTo({ top: Math.max(0, linkTopInToc - scrollPadding), behavior: 'smooth' });
+            } else if (linkBottomInToc > tocScrollTop + tocClientHeight - scrollPadding) {
+                tocContainerElement.scrollTo({ top: Math.min(linkBottomInToc - tocClientHeight + scrollPadding, tocContainerElement.scrollHeight - tocClientHeight), behavior: 'smooth' });
+            }
+        }
+        if (activeLinkElement) {
+            tocActiveMarker.style.top = `${activeLinkElement.offsetTop}px`;
+            tocActiveMarker.style.height = `${activeLinkElement.offsetHeight}px`;
+            tocActiveMarker.style.opacity = '1';
+        } else {
+            tocActiveMarker.style.opacity = '0';
+        }
+    }
+    if (tocLinksContainer) {
+        tocLinksContainer.addEventListener('click', (e) => {
+            const target = e.target.closest('a');
+            if (target && target.getAttribute('href')?.startsWith('#')) {
+                e.preventDefault();
+                const targetElement = document.getElementById(target.getAttribute('href').substring(1));
+                if (targetElement && mainScroller) mainScroller.scrollTo({ top: targetElement.offsetTop, behavior: 'smooth' });
+            }
+        });
+    }
+    if (mainScroller && tocLinks.length > 0) {
+        mainScroller.addEventListener('scroll', updateActiveLinkAndMarker);
+        updateActiveLinkAndMarker();
+    }
+
+    // --- 3. Search Functionality ---
+    function isEditingContent(element) {
+        if (!element) return false;
+        const tagName = element.tagName;
+        return tagName === 'INPUT' || tagName === 'TEXTAREA' || element.isContentEditable || element.closest('input, textarea, [contenteditable="true"], [contenteditable=""]');
+    }
+    function openSearch() {
+        if (isSearchActive || !searchOverlayEl || !searchInput) return;
+        requestAnimationFrame(() => {
+            searchOverlayEl.classList.add('active');
+            setTimeout(() => { searchInput.value = ''; searchInput.focus(); }, 60);
+        });
+        document.body.style.overflow = 'hidden';
+        isSearchActive = true;
+    }
+    function closeSearch() {
+        if (!isSearchActive || !searchOverlayEl) return;
+        searchOverlayEl.classList.remove('active');
+        if(searchInput) searchInput.blur();
+        document.body.style.overflow = '';
+        if (searchTriggerButton) searchTriggerButton.focus({ preventScroll: true });
+        isSearchActive = false;
+    }
+    function toggleSearch() { isSearchActive ? closeSearch() : openSearch(); }
+
+    if (searchTriggerButton) searchTriggerButton.addEventListener('click', openSearch);
+    if (searchCloseButton) searchCloseButton.addEventListener('click', closeSearch);
+    if (searchOverlayEl) searchOverlayEl.addEventListener('click', (e) => { if (e.target === searchOverlayEl) closeSearch(); });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === '/' && !isSearchActive && !isEditingContent(document.activeElement)) { e.preventDefault(); openSearch(); }
+        if (e.key === 'k' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); toggleSearch(); }
+        if (e.key === 'Escape' && isSearchActive) { e.preventDefault(); closeSearch(); }
     });
-    </script>   <!-- Search Modal Overlay -->
-    <div id="searchOverlay" class="search-overlay">
-        <div id="searchModal" class="search-modal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle">
-        <div class="search-input-container">
-            <svg class="search-modal-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search documentation..." aria-label="Search input">
-            <button id="searchCloseButton" class="search-close-button" aria-label="Close search">
-            <kbd>ESC</kbd>
-            </button>
-        </div>
-        <div id="searchResultsContainer" class="search-results-container">
-            <p class="search-results-placeholder">Start typing to see results.</p>
-            <!-- Actual search results would be populated here by JS -->
-        </div>
-        </div>
+
+
+    // --- 4. Mobile Navigation ---
+    function openMobileSidebar() {
+        if (!leftSidebar || !mobileMenuToggle) return;
+        document.body.classList.add('mobile-sidebar-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'true');
+        const sidebarNav = leftSidebar.querySelector('.sidebar-nav');
+        if (sidebarNav) sidebarNav.scrollTop = 0; // Reset scroll position of internal nav
+    }
+
+    function closeMobileSidebar() {
+        if (!leftSidebar || !mobileMenuToggle) return;
+        document.body.classList.remove('mobile-sidebar-open');
+        mobileMenuToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    if (mobileMenuToggle && leftSidebar) {
+        mobileMenuToggle.addEventListener('click', () => {
+            if (document.body.classList.contains('mobile-sidebar-open')) {
+                closeMobileSidebar();
+            } else {
+                openMobileSidebar();
+            }
+        });
+    }
+
+    if (pageOverlay) { // This is the overlay for the mobile sidebar
+        pageOverlay.addEventListener('click', closeMobileSidebar);
+    }
+
+    if (leftSidebar) {
+        leftSidebar.addEventListener('click', (event) => {
+            // Close sidebar if a link inside it is clicked
+            if (event.target.closest('a') && document.body.classList.contains('mobile-sidebar-open')) {
+                closeMobileSidebar();
+            }
+        });
+    }
+     // Close mobile sidebar on ESC key
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && document.body.classList.contains('mobile-sidebar-open')) {
+            closeMobileSidebar();
+        }
+    });
+
+});
+</script>
+<!-- Search Modal Overlay -->
+<div id="searchOverlay" class="search-overlay"> <!-- This ID is for the search functionality -->
+    <div id="searchModal" class="search-modal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle">
+    <div class="search-input-container">
+        <svg class="search-modal-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search documentation..." aria-label="Search input">
+        <button id="searchCloseButton" class="search-close-button" aria-label="Close search">
+        <kbd>ESC</kbd>
+        </button>
     </div>
-    </body>
-    </html>
+    <div id="searchResultsContainer" class="search-results-container">
+        <p class="search-results-placeholder">Start typing to see results.</p>
+    </div>
+    </div>
+</div>
+</body>
+</html>
