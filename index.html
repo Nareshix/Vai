@@ -6,7 +6,7 @@
 
     <style>
         :root {
-            --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1); /* offset-x | offset-y | blur-radius | color (black with 20% opacity) */
+            --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1); 
 
 
 
@@ -32,7 +32,7 @@
         --color-border-toc-line: #555;
         --color-text-toc-link: #aaa;
         --color-text-toc-link-hover: #ccc;
-        --color-text-toc-link-active: dodgerblue;
+        --color-text-toc-link-active: #a8b1ff;
         --color-button-bg: #444;
         --color-button-text: #e0e0e0;
         --color-button-border: #555;
@@ -210,7 +210,7 @@
 
     .header-dropdown-container:hover .header-dropdown-trigger .dropdown-arrow-icon {
         transform: rotate(-90deg); /* Change to 90 degrees */
-        stroke: var(--color-dropdown-trigger-hover-text);
+
     }
     
     /* --- THIS IS THE KEY CHANGE FOR HOVER --- */
@@ -410,7 +410,7 @@ html{
 
 #toc-links a {
     display: block;
-    padding: 0.3rem 0 0.3rem 1rem; /* This 1rem creates the space between the guide/marker and the text */
+    padding: 0.3rem 0 calc(0.3rem + 0.35rem) 1rem; /* New padding-bottom incorporates old margin */
     color: var(--color-text-toc-link);
     text-decoration: none;
     margin-bottom: 0.35rem;
@@ -420,8 +420,7 @@ html{
 }
 
 #toc-links a.active {
-    font-weight: bold;
-    color: var(--color-text-toc-link-active) !important;
+    color: #dfdfd6;
     /* It will inherit the padding-left: 1rem; from the general 'a' rule, which is what we want */
 }
 
@@ -433,16 +432,11 @@ html{
     width: 2px; /* Match the width of #toc-links's border-left */
     height: 0; /* JavaScript will update this */
     background-color: var(--color-text-toc-link-active); /* Active color */
-    border-radius: 1px; /* Optional: for slightly rounded ends */
-    opacity: 0; /* Start hidden */
     transition: top 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 #toc-links a:hover {
         color: var(--color-text-toc-link-hover);
         }
-
-
-
         #content-area h2 {
         margin-top: 2rem;
         margin-bottom: 1rem;
@@ -565,9 +559,8 @@ html{
         transition: border-color 0.2s ease, background-color 0.2s ease;
         cursor: pointer; 
         }
-        .nav-box:hover {
-    border-color: var(--color-footer-nav-box-border-hover); /* Use defined hover variable */
-    background-color: var(--color-footer-nav-box-bg-hover); /* Use defined hover variable */
+        .nav-box:hover {   
+             border-color: #a8b1ff;    
     }
 
         .nav-box-label {
@@ -619,7 +612,7 @@ html{
           padding: 0.4rem 0.8rem; /* Adjust padding as needed */
           border-radius: 6px; /* Consistent with other interactive elements */
           text-decoration: none;
-          color: var(--color-header-nav-link-text);
+          color: #dfdfd6;
           font-weight: 500; /* A common weight for nav items */
           font-size: 0.9rem; /* Slightly smaller than body text, adjust as needed */
           line-height: 1.5; /* Ensure consistent line height */
@@ -655,7 +648,7 @@ html{
   content: '';
   display: inline-block;
   width: 1px;
-  height: 1.5rem; /* Adjust height as needed */
+  height: 1rem; /* Adjust height as needed */
   background-color: var(--color-border-sidebar); /* Separator color */
   vertical-align: middle; /* Helps with alignment */
 }
@@ -678,38 +671,48 @@ html{
   the margins on the pseudo-elements are for outside.
 */
     /* Search Trigger Button in Header */
+    /* Search Trigger Button in Header */
     .search-trigger-button {
-    display: flex;
-    align-items: center;
-    padding: 0.4rem 0.8rem;
-    background-color: transparent; /* Use button bg for consistency or keep transparent */
-    color: var(--color-text-toc-link); /* More subtle than body text */
-    border: 1px solid var(--color-search-shortcut-border);
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+        display: flex;
+        align-items: center;
+        padding: 0.4rem 0.8rem;
+        background-color: transparent; /* Use button bg for consistency or keep transparent */
+        color: var(--color-text-toc-link); /* More subtle than body text */
+        border: 1px solid var(--color-search-shortcut-border);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
     }
 
-    .search-trigger-button:hover,
-    .search-trigger-button:focus-visible { /* Added :focus-visible */
-    background-color: var(--color-search-trigger-hover-bg);
-    border-color: var(--color-search-border);
-    color: var(--color-text-body);
-    outline: none; /* Optional: Remove default browser outline if this highlight is sufficient */
+    .search-trigger-button:hover {
+        border-color: var(--color-search-border); /* Brighter border on hover */
+        color: var(--color-text-body);       /* Brighter text on hover */
+        /* No outline style here, it will inherit from the base or browser default */
     }
+
+    .search-trigger-button:focus-visible {
+        /* When focused via keyboard (or programmatically like after ESC): */
+        /* Revert color and border to the button's default state */
+        color: var(--color-text-toc-link);
+        border-color: var(--color-search-shortcut-border);
+        
+        outline: none; /* This removes the blue outline as per your first request */
+    }
+
+    /* --- ADD THIS NEW RULE --- */
+    /* Ensures hover styles apply even when focus-visible is also active */
+    .search-trigger-button:focus-visible:hover {
+        border-color: var(--color-search-border); /* Brighter (same as :hover) */
+        color: var(--color-text-body);       /* Brighter (same as :hover) */
+        /* outline: none; (implicitly, it will still have no outline from the rule above) */
+    }
+    /* --- END OF NEW RULE --- */
 
     .search-trigger-icon-svg {
-    margin-right: 0.5em;
-    stroke: currentColor; /* Inherits color from button */
+        margin-right: 0.5em;
+        stroke: currentColor; /* Inherits color from button */
     }
-
-    .search-trigger-text {
-        /* Optional: if you want text like "Search..." */
-        /* display: none; */ /* By default, hide it if you prefer a more compact icon */
-        /* @media (min-width: 768px) { display: inline; } */ /* Show on larger screens */
-    }
-
     .search-shortcut-hint {
     margin-left: 0.75rem;
     padding: 0.1rem 0.4rem;
@@ -889,7 +892,7 @@ a.icon-button:visited {
         padding: 0.4rem 0.8rem;
         border-radius: 6px;
         background-color: transparent;
-        color: var(--color-dropdown-trigger-text);
+        color: #dfdfd6;
         border: none;
         font-family: inherit;
         font-size: 0.9rem;
@@ -897,10 +900,16 @@ a.icon-button:visited {
         cursor: pointer; /* Still good to have a pointer */
         transition: background-color 0.2s ease, color 0.2s ease;
         white-space: nowrap;
+        
+    }
+
+    .header-dropdown-trigger:hover {
+        color: var(--color-dropdown-trigger-text);
     }
 
     .header-dropdown-trigger[aria-expanded="true"] {
         background-color: var(--color-dropdown-trigger-active-bg); /* Keep hover style when open */
+
     }
 
     .header-dropdown-trigger .dropdown-arrow-icon {
@@ -909,16 +918,19 @@ a.icon-button:visited {
         transition: transform 0.2s ease-out;
         width: 1em; /* Adjust size */
         height: 1em;
+        
     }
 
     .header-dropdown-trigger[aria-expanded="true"] .dropdown-arrow-icon {
         transform: rotate(-90deg); /* Change to 90 degrees */
         stroke: var(--color-dropdown-trigger-hover-text); /* Match text color when open */
+        
     }
     
     .header-dropdown-trigger:focus-visible .dropdown-arrow-icon {
     transform: rotate(-90deg); /* Pointing UP */
     stroke: var(--color-dropdown-trigger-hover-text); /* Match trigger text color on focus */
+    
 }
 
     .header-dropdown-menu {
@@ -945,6 +957,8 @@ a.icon-button:visited {
                 visibility 0s linear 0.15s;
     pointer-events: none;
 }
+
+
 
     .header-dropdown-container.active .header-dropdown-menu {
         opacity: 1;
@@ -1010,10 +1024,7 @@ a.icon-button:visited {
     font-weight: 600;
     transition: color 0.2s ease;
 }
-.sidebar-logo-link:hover {
-    /* Optional: could dim or brighten logo text on hover */
-    /* color: var(--color-sidebar-link-text-hover); */
-}
+
 .sidebar-logo-link .logo-svg {
     width: 28px;
     height: 28px;
@@ -1041,10 +1052,7 @@ a.icon-button:visited {
 .sidebar-nav > .sidebar-nav-section:last-of-type + .section-divider {
     display: none;
 }
-/* If the footer immediately follows the nav without a section-divider: */
-.sidebar-nav + .sidebar-footer {
-    /* Styles for footer when it directly follows nav */
-}
+
 
 
 /* Sidebar Navigation Area */
@@ -1091,7 +1099,8 @@ a.icon-button:visited {
 }
 .sidebar-link {
     display: block;
-    padding: 0.4rem 0.5rem; /* Vertical, Horizontal padding for clickable area */
+    padding-top: 0.4rem;
+    padding-bottom: 0.4rem;
     font-size: 0.875rem; /* ~14px */
     color: var(--color-sidebar-link-text);
     text-decoration: none;
@@ -1102,8 +1111,7 @@ a.icon-button:visited {
     margin-bottom: 0.1rem; /* Small gap between links */
 }
 .sidebar-link:hover {
-    color: var(--color-sidebar-link-text-hover);
-    background-color: var(--color-sidebar-link-bg-hover);
+    color: var(--color-sidebar-link-text-active);
 }
 .sidebar-link.active {
     color: var(--color-sidebar-link-text-active);
@@ -1175,10 +1183,12 @@ a.icon-button:visited {
     height: 1em;
     stroke: currentColor; /* Inherits color from button */
     transition: transform 0.25s ease-out;
-    transform: rotate(0deg); /* Default: arrow pointing down (already like this in SVG) */
+    /* Default (collapsed state): Rotate the "down arrow" to point RIGHT */
+    transform: rotate(-90deg);
 }
 .sidebar-nav-section.is-open > .sidebar-section-toggle .sidebar-section-arrow {
-    transform: rotate(180deg); /* Arrow points up when open */
+    /* Expanded state: Rotate the "down arrow" to point DOWN (no effective rotation) */
+    transform: rotate(0deg);
 }
 
 
@@ -1272,6 +1282,7 @@ a.icon-button:visited {
     <div class="main-area-wrapper">
         <div class="app-header">
             <!-- VVV THIS IS THE PART YOU REPLACE/UPDATE VVV -->
+             
             <div class="header-actions">
                 <button id="searchTrigger" class="search-trigger-button" aria-label="Open search (Press /)">
                    
@@ -1292,8 +1303,8 @@ a.icon-button:visited {
                     <!-- START: Version Dropdown -->
                     <div class="header-dropdown-container" id="versionDropdownContainer">
                         <button class="header-dropdown-trigger" id="versionDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="versionDropdownMenu">
-                            <span >2.0.0-alpha.5</span>
-                            <svg class="dropdown-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><<polyline points="9 18 15 12 9 6"></polyline>                                ></svg>
+                            <span>2.0.0-alpha.5</span>
+                            <svg class="dropdown-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline>></svg>
                         </button>
                         <div class="header-dropdown-menu" id="versionDropdownMenu" role="menu" aria-labelledby="versionDropdownTrigger">
                             <a href="#" role="menuitem" class="header-dropdown-item">
@@ -1326,8 +1337,12 @@ a.icon-button:visited {
                 </div>
             </div>
         </div>
+        
         <div class="content-toc-row">
             <div id="content-area" tabindex="0">
+                
+                <h1>MOM</h1>
+                <P>ASD</P>
                 <h2 id="introduction">Introduction</h2>
                 <p>Welcome to this comprehensive guide. This section provides an overview of the entire document, its purpose, and what you can expect to learn. We will cover various topics in detail, ensuring a clear understanding for all readers.</p>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
@@ -1443,6 +1458,7 @@ a.icon-button:visited {
                 </div>
             </div>
         <div id="toc-container">
+            
             <nav id="toc-links">
                 <div id="toc-active-marker"></div> <!-- <<< ADD THIS DIV - EXACTLY AS SHOWN -->
 
