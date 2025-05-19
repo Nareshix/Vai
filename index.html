@@ -6,10 +6,26 @@
 
     <style>
         :root {
+            --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1); /* offset-x | offset-y | blur-radius | color (black with 20% opacity) */
+
+
+
+            --color-sidebar-logo-text: var(--color-text-body);
+        --color-sidebar-section-title-text: rgba(224, 224, 224, 0.93); /* Brighter than links */
+        --color-sidebar-link-text: rgba(224, 224, 224, 0.67);
+        --color-sidebar-link-text-hover: var(--color-text-body); /* Brighter on hover */
+        --color-sidebar-link-text-active: var(--color-text-toc-link-active); /* Active color, e.g., dodgerblue */
+        --color-sidebar-link-bg-hover: rgba(255, 255, 255, 0.05); /* Very subtle hover background */
+        --color-sidebar-link-bg-active: transparent;
+        --color-sidebar-divider: var(--color-border-sidebar);
+        --color-sidebar-footer-link-text: var(--color-text-toc-link);
+        --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
+        --color-sidebar-logo-svg: var(--color-text-toc-link-active); /* Color for the SVG logo lines */
+
         /* Dark */
-        --color-bg-body: #1a1a1a;
+        --color-bg-body: #1b1b1f;
         --color-text-body: #e0e0e0;
-        --color-bg-sidebar: #202020;
+        --color-bg-sidebar: #161618;
         --color-border-sidebar: #363636;
         --color-bg-header: #252529;
         --color-border-header: #363636;
@@ -83,6 +99,22 @@
 
 
         html.light-theme { /* light-theme */
+
+            --shadow-header-subtle: 0 1px 2px rgba(0, 0, 0, 0.04); /* offset-x | offset-y | blur-radius | color (black with 4% opacity) */
+
+
+            --color-sidebar-logo-text: var(--color-text-body);
+        --color-sidebar-section-title-text: rgba(51, 51, 51, 0.93);
+        --color-sidebar-link-text: rgba(51, 51, 51, 0.67);
+        --color-sidebar-link-text-hover: var(--color-text-body);
+        --color-sidebar-link-text-active: var(--color-text-toc-link-active);
+        --color-sidebar-link-bg-hover: rgba(0, 0, 0, 0.04);
+        --color-sidebar-link-bg-active: transparent;
+        --color-sidebar-divider: var(--color-border-sidebar);
+        --color-sidebar-footer-link-text: var(--color-text-toc-link);
+        --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
+        --color-sidebar-logo-svg: var(--color-text-toc-link-active);
+
         --color-bg-body: #f4f4f4;
         --color-text-body: #333333;
         --color-bg-sidebar: #e9e9e9;
@@ -296,23 +328,21 @@ html{
 }
 
 
-        .app-header {
+.app-header {
   height: 4rem;
   flex-shrink: 0;
-  padding: 0 1.5rem; /* This padding ensures content isn't flush to edges */
-  border-bottom: 1px solid var(--color-border-header);
-  background-color: var(--color-bg-header);
+  padding: 0 1.5rem;
+  background-color: var(--color-bg-body);       /* Changed in the previous step */
+  border-bottom: 1px solid var(--color-border-header); /* This remains the primary distinguishable line */
+  box-shadow: var(--shadow-header-subtle);      /* ADDED: Applies the new subtle shadow */
   display: flex;
   align-items: center;
-  /* REMOVE or change: justify-content: space-between; */
-  /* It defaults to flex-start, which is what we want for the main items initially */
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-
+  /* MODIFIED: Ensure box-shadow is included in the transition for theme changes */
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   position: sticky;
   top: 0;
-  z-index: 2;
+  z-index: 2; /* Keep z-index as it might be needed for stacking contexts */
 }
-
 .app-header > div:not(.header-actions) {
   margin-right: 1rem; /* Adjust this value to set the space between "Logo/Title" and "Search" */
 }
@@ -953,19 +983,296 @@ a.icon-button:visited {
         opacity: 1;
     }
 
+    /* --- Left Sidebar Enhanced Styles --- */
+.left-sidebar {
+    /* flex-basis, flex-grow, flex-shrink, border-right, background-color are already set */
+    /* transition is already set */
+    padding: 0; /* Remove previous padding, will control internally */
+    display: flex;
+    flex-direction: column;
+    /* REMOVE overflow-y: auto; from here if it existed, sidebar-nav will handle its own scroll */
+    /* overflow: hidden; /* To prevent its own scrollbar if nav grows tall */
+}
+
+/* Sidebar Brand/Logo Area */
+.sidebar-brand {
+    padding-left: 1.25rem;
+    padding-top: 1.25rem;
+    flex-shrink: 0; /* Prevent shrinking */
+    
+}
+.sidebar-logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-sidebar-logo-text);
+    font-size: 1.125rem; /* ~18px */
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+.sidebar-logo-link:hover {
+    /* Optional: could dim or brighten logo text on hover */
+    /* color: var(--color-sidebar-link-text-hover); */
+}
+.sidebar-logo-link .logo-svg {
+    width: 28px;
+    height: 28px;
+    margin-right: 0.65rem;
+    color: var(--color-sidebar-logo-svg); /* Uses the CSS variable for stroke */
+}
+
+/* Sidebar Dividers */
+.sidebar-divider {
+    border: none;
+    height: 1px;
+    background-color: var(--color-sidebar-divider);
+    margin: 0 1.25rem; /* Horizontal padding to match content */
+    flex-shrink: 0; /* Prevent shrinking */
+}
+.logo-divider {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+.section-divider {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+/* Hide divider if it's the very last child after a nav section, before the footer */
+.sidebar-nav > .sidebar-nav-section:last-of-type + .section-divider {
+    display: none;
+}
+/* If the footer immediately follows the nav without a section-divider: */
+.sidebar-nav + .sidebar-footer {
+    /* Styles for footer when it directly follows nav */
+}
+
+
+/* Sidebar Navigation Area */
+.sidebar-nav {
+    flex-grow: 1; /* Allows nav to take up available space, pushing footer down */
+    overflow-y: auto; /* This part scrolls if content is too long */
+    padding: 0 0 0.75rem; /* Bottom padding before footer or end of sidebar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--toc-scrollbar-track-bg);
+}
+.sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background-color: var(--toc-scrollbar-thumb-bg);
+    border-radius: 3px;
+}
+
+.sidebar-nav-section {
+    padding: 0 1.25rem; /* Horizontal padding for section content */
+}
+.sidebar-section-title {
+    font-size: 0.9375rem; /* ~15px */
+    font-weight: 600;
+    color: var(--color-sidebar-section-title-text);
+    margin-top: 0.75rem;
+    margin-bottom: 0.6rem;
+    padding: 0.125rem 0;
+}
+.sidebar-nav-section:first-child > .sidebar-section-title {
+    margin-top: 0.25rem; /* Less top margin for the first title after logo-divider */
+}
+
+.sidebar-nav-links {
+    list-style: none;
+    padding-left: 0.75rem; /* Indent for the links under a title */
+    margin: 0;
+}
+.sidebar-nav-links li {
+    margin: 0; /* Remove default li margin if any */
+}
+.sidebar-link {
+    display: block;
+    padding: 0.4rem 0.5rem; /* Vertical, Horizontal padding for clickable area */
+    font-size: 0.875rem; /* ~14px */
+    color: var(--color-sidebar-link-text);
+    text-decoration: none;
+    border-radius: 6px;
+    transition: color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 0.1rem; /* Small gap between links */
+}
+.sidebar-link:hover {
+    color: var(--color-sidebar-link-text-hover);
+    background-color: var(--color-sidebar-link-bg-hover);
+}
+.sidebar-link.active {
+    color: var(--color-sidebar-link-text-active);
+    background-color: var(--color-sidebar-link-bg-active);
+    font-weight: 600;
+}
+
+/* Sidebar Footer Link Area */
+.sidebar-footer {
+    padding: 0.75rem 1.25rem 1.25rem;
+    margin-top: auto; /* Pushes to bottom if .sidebar-nav doesn't fill space */
+    border-top: 1px solid var(--color-sidebar-divider);
+    flex-shrink: 0; /* Prevent shrinking */
+}
+.sidebar-footer a {
+    font-size: 0.8125rem; /* ~13px */
+    color: var(--color-sidebar-footer-link-text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: block; /* Make the link take full width for easier clicking */
+}
+.sidebar-footer a:hover {
+    color: var(--color-sidebar-footer-link-text-hover);
+    text-decoration: underline;
+}
+
+/* Ensure the main left-sidebar rule does not have overflow-y: auto if you want only sidebar-nav to scroll */
+.left-sidebar {
+    /* ... existing flex-basis, etc ... */
+    overflow: hidden; /* Prevent this from scrolling, sidebar-nav will scroll */
+
+
+    /* ... (Keep all existing CSS from before) ... */
+
+/* Sidebar Navigation Area - MODIFICATIONS */
+.sidebar-nav-section {
+    padding: 0 1.25rem; /* Horizontal padding for section content */
+    /* is-open class will be handled by JS */
+}
+
+/* REPLACED .sidebar-section-title with .sidebar-section-toggle */
+.sidebar-section-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 0.5rem 0; /* Adjust padding for better click area */
+    margin-top: 0.75rem;
+    margin-bottom: 0; /* Content div will handle spacing */
+    font-size: 0.9375rem; /* ~15px */
+    font-weight: 600;
+    color: var(--color-sidebar-section-title-text);
+    background-color: transparent;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit; /* Ensure button inherits font */
+    transition: color 0.2s ease;
+}
+.sidebar-section-toggle:hover {
+    color: var(--color-text-body); /* Or a specific hover color for title */
+}
+.sidebar-nav-section:first-child > .sidebar-section-toggle {
+    margin-top: 0.25rem;
+}
+
+.sidebar-section-arrow {
+    width: 1em;
+    height: 1em;
+    stroke: currentColor; /* Inherits color from button */
+    transition: transform 0.25s ease-out;
+    transform: rotate(0deg); /* Default: arrow pointing down (already like this in SVG) */
+}
+.sidebar-nav-section.is-open > .sidebar-section-toggle .sidebar-section-arrow {
+    transform: rotate(180deg); /* Arrow points up when open */
+}
+
+
+/* Collapsible Content Area */
+.sidebar-section-content {
+    overflow: hidden;
+    max-height: 0; /* Collapsed by default (JS will add is-open to parent to override) */
+    transition: max-height 0.3s ease-out,
+                padding-top 0.3s ease-out,
+                padding-bottom 0.3s ease-out;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+.sidebar-nav-section.is-open > .sidebar-section-content {
+    /* Estimate a large enough max-height or calculate dynamically if needed */
+    max-height: 1000px; /* Adjust if you have very long sections */
+    padding-top: 0.4rem; /* Space between title and links when open */
+    padding-bottom: 0.2rem; /* Space after links when open */
+}
+
+.sidebar-nav-links {
+    list-style: none;
+    padding-left: 0.75rem; /* Indent for the links under a title */
+    margin: 0;
+}
+/* Other .sidebar-link styles remain the same */
+
+/* Adjust divider margins if necessary */
+.section-divider {
+    margin-top: 0.5rem; /* Reduced slightly */
+    margin-bottom: 0.25rem; /* Reduced slightly */
+}
+    
+}
+
 </style>
     </head>
     <body>
-    <div class="left-sidebar">
-        Column 1 Content
-    </div>
+        <div class="left-sidebar">
+            <div class="sidebar-brand">
+                <a href="#" class="header-nav-link">Logo</a>
+            </div>
 
-
+            <hr class="sidebar-divider logo-divider">
+    
+            <nav class="sidebar-nav">
+                <!-- Navigation Section 1 -->
+                <div class="sidebar-nav-section is-open">     
+                                     <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-reference">
+                        <span>Reference</span>
+                        <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="sidebar-section-content" id="section-content-reference">
+                        <ul class="sidebar-nav-links">
+                            <li><a href="#site-config" class="sidebar-link active">Site Config</a></li>
+                            <li><a href="#frontmatter-config" class="sidebar-link">Frontmatter Config</a></li>
+                            <li><a href="#runtime-api" class="sidebar-link">Runtime API</a></li>
+                            <li><a href="#cli" class="sidebar-link">CLI</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr class="sidebar-divider section-divider">
+    
+                <!-- Navigation Section 2 -->
+                <div class="sidebar-nav-section is-open">                  
+                        <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-theme">
+                        <span>Default Theme</span>
+                        <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </button>
+                    <div class="sidebar-section-content" id="section-content-theme">
+                        <ul class="sidebar-nav-links">
+                            <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                            <li><a href="#theme-nav" class="sidebar-link">Nav</a></li>
+                            <li><a href="#theme-sidebar" class="sidebar-link">Sidebar</a></li>
+                            <li><a href="#theme-home-page" class="sidebar-link">Home Page</a></li>
+                            <li><a href="#theme-footer" class="sidebar-link">Footer</a></li>
+                            <li><a href="#theme-layout" class="sidebar-link">Layout</a></li>
+                            <li><a href="#theme-badge" class="sidebar-link">Badge</a></li>
+                            <li><a href="#theme-team-page" class="sidebar-link">Team Page</a></li>
+                            <li><a href="#theme-prev-next" class="sidebar-link">Prev / Next Links</a></li>
+                            <li><a href="#theme-edit-link" class="sidebar-link">Edit Link</a></li>
+                            <li><a href="#theme-last-updated" class="sidebar-link">Last Updated Timestamp</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <!-- <hr class="sidebar-divider section-divider"> -->
+    
+            </nav>
+    
+        </div>
     <div class="main-area-wrapper">
         <div class="app-header">
             <!-- VVV THIS IS THE PART YOU REPLACE/UPDATE VVV -->
             <div class="header-actions">
-                <!-- Item 1: Search Button -->
                 <button id="searchTrigger" class="search-trigger-button" aria-label="Open search (Press /)">
                    
 
@@ -1170,6 +1477,58 @@ a.icon-button:visited {
     
      <script>
     document.addEventListener('DOMContentLoaded', () => {
+
+        const sidebarNavSections = document.querySelectorAll('.sidebar-nav .sidebar-nav-section');
+
+sidebarNavSections.forEach(section => {
+    const toggleButton = section.querySelector('.sidebar-section-toggle');
+    const content = section.querySelector('.sidebar-section-content');
+
+    if (toggleButton && content) {
+        // Set initial max-height for sections marked as 'is-open' in HTML
+        if (section.classList.contains('is-open')) {
+            // Temporarily remove transition for initial calculation
+            const originalTransition = content.style.transition;
+            content.style.transition = 'none';
+
+            content.style.maxHeight = content.scrollHeight + "px";
+
+            // Restore transition after a brief moment
+            // Use requestAnimationFrame to ensure style is applied before re-enabling transition
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => { // Double rAF for more robustness on some browsers
+                   content.style.transition = originalTransition;
+                });
+            });
+        }
+
+
+        toggleButton.addEventListener('click', () => {
+            const isOpen = section.classList.toggle('is-open');
+            toggleButton.setAttribute('aria-expanded', isOpen.toString());
+
+            if (isOpen) {
+                // Calculate scrollHeight before setting max-height for smooth opening
+                // Temporarily set auto height to get correct scrollHeight
+                const currentMaxHeight = content.style.maxHeight; // Save current in case it's already set
+                content.style.maxHeight = 'auto'; // Let it expand fully to measure
+                const scrollHeight = content.scrollHeight;
+                if (currentMaxHeight !== 'auto') { // Restore if it wasn't 'auto'
+                    content.style.maxHeight = currentMaxHeight;
+                }
+                // Force reflow to get accurate scrollHeight before transition
+                // This can sometimes be just reading a property like offsetHeight
+                content.offsetHeight; // eslint-disable-line no-unused-expressions
+
+                content.style.maxHeight = scrollHeight + "px";
+
+            } else {
+                content.style.maxHeight = "0px";
+            }
+        });
+    }
+});
+
         // --- Element References ---
         const htmlElement = document.documentElement;
         const mainScroller = document.querySelector('.main-area-wrapper');
