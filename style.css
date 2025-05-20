@@ -252,6 +252,17 @@ flex-direction: row;
 /* REMOVE: overflow: hidden; if it was here, to allow vertical expansion */
 }
 
+.left-side-bar-link {
+    text-decoration: none;
+     color: inert
+}
+
+.left-side-bar-link-container-image-and-text {
+    display: flex;
+    align-items: center;
+    color: var(--color-text-toc-link-hover);
+    font-weight: 600;    
+}
 
 .app-header {
 height: 4rem;
@@ -905,20 +916,8 @@ pointer-events: none;
 
 /* --- Left Sidebar Enhanced Styles --- */
 .sidebar-brand {
-padding-left: 1.25rem;
-padding-top: 1.25rem;
-padding-bottom: 0; /* Adjusted as divider handles bottom space */
-flex-shrink: 0; /* Prevent shrinking */
-}
-.sidebar-logo-link { /* This was a.header-nav-link, changed for clarity and specific styling */
-display: inline-flex;
-align-items: center;
-text-decoration: none;
-color: var(--color-sidebar-logo-text);
-font-size: 1.125rem; /* ~18px */
-font-weight: 600;
-transition: color 0.2s ease;
-padding: 0.4rem 0; /* Give it some minimal padding like other header links */
+padding-left: 1rem;
+padding-top: 1rem;
 }
 .sidebar-logo-link:hover {
 color: var(--color-text-body);
