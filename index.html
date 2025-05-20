@@ -17,8 +17,8 @@
     --color-sidebar-link-text-hover: var(--color-text-body); /* Brighter on hover */
     --color-sidebar-link-text-active: var(--color-text-toc-link-active); /* Active color, e.g., dodgerblue */
     --color-sidebar-link-bg-hover: rgba(255, 255, 255, 0.05); /* Very subtle hover background */
-    --color-sidebar-link-bg-active: transparent;
-    --color-sidebar-divider: var(--color-border-sidebar);
+    --color-sidebar-link-bg-active: var(--color-search-trigger-hover-bg);
+        --color-sidebar-divider: var(--color-border-sidebar);
     --color-sidebar-footer-link-text: var(--color-text-toc-link);
     --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
     --color-sidebar-logo-svg: var(--color-text-toc-link-active); /* Color for the SVG logo lines */
@@ -103,14 +103,14 @@
 
         --shadow-header-subtle: 0 1px 2px rgba(0, 0, 0, 0.04); /* offset-x | offset-y | blur-radius | color (black with 4% opacity) */
 
-
+        --color-text-toc-link-active: rgb(14, 41, 129);
         --color-sidebar-logo-text: var(--color-text-body);
     --color-sidebar-section-title-text: rgba(51, 51, 51, 0.93);
     --color-sidebar-link-text: rgba(51, 51, 51, 0.67);
     --color-sidebar-link-text-hover: var(--color-text-body);
     --color-sidebar-link-text-active: var(--color-text-toc-link-active);
     --color-sidebar-link-bg-hover: rgba(0, 0, 0, 0.04);
-    --color-sidebar-link-bg-active: transparent;
+    --color-sidebar-link-bg-active: var(--color-search-trigger-hover-bg);
     --color-sidebar-divider: var(--color-border-sidebar);
     --color-sidebar-footer-link-text: var(--color-text-toc-link);
     --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
@@ -229,7 +229,7 @@ html{
     overflow-y: auto; /* <<< KEY: This makes this wrapper scrollable */
 height: 100vh; /* <<< KEY: Ensure it has a defined height to enable scrolling within it */
 scrollbar-width: thin;
-scrollbar-color: var(--main-scrollbar-thumb-bg) var(--main-scrollbar-track-bg); /* Use your existing variables */
+scrollbar-color: var(--main-scrollbar-thumb-bg) var(--color-bg-body); /* Use your existing variables */
 
     }
 
@@ -294,18 +294,19 @@ width: 8px; /* Or your preferred width */
 
 
 #toc-container {
-flex-grow: 1;
-flex-basis: 0;
-padding: 1.5rem;
-overflow-y: auto;      /* Must be 'auto' or 'scroll' to enable scrolling */
-overflow-x: hidden;
-height: calc(100vh - 4rem); /* Assumes header is 4rem high. Adjust if different. */
-position: sticky;
-top: 4rem;             /* Stick 4rem from the top of .main-area-wrapper */
-
-/* --- SCROLLBAR HIDING FOR FIREFOX --- */
+flex-basis: 13rem; /* Narrower ToC */
+flex-shrink: 0;
+padding: 1.5rem 1rem; /* Reduced padding */
+overflow-y: auto; overflow-x: hidden;
+height: calc(100vh - 3.75rem);
+position: sticky; 
+top: 3.75rem;
+right: 1.5rem;
+/* border-left: 1px solid var(--color-border-sidebar); */ /* Removed left border for cleaner look */
 scrollbar-width: none;  /* For Firefox: hides the scrollbar completely */
+
 }
+/* --- SCROLLBAR HIDING FOR FIREFOX --- */
 
 /* --- SCROLLBAR HIDING FOR WEBKIT BROWSERS --- */
 #toc-container::-webkit-scrollbar {
@@ -406,10 +407,7 @@ transition: top 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-
 
 .theme-toggle-button:hover,
 .theme-toggle-button:focus-visible {
-    background-color: var(--color-search-trigger-hover-bg); /* Same as search trigger hover for consistency */
     color: var(--color-text-body); /* Make icon more prominent on hover/focus */
-    /* border-color: var(--color-search-border); /* Optional: add border back on hover if desired */
-    /* background: transparent; /* This was overriding bg color change */
 }
 
 
@@ -784,9 +782,7 @@ text-decoration: none !important; /* REMOVES THE UNDERSCORE */
 /* Hover and Focus states for the <a> tag */
 a.icon-button:hover,
 a.icon-button:focus-visible {
-background-color: var(--color-search-trigger-hover-bg);
 color: var(--color-text-body); /* Changes color on hover/focus */
-text-decoration: none !important; /* Ensure no underscore on hover/focus */
 /* background: transparent; /* This was overriding the bg color change */
 }
 
@@ -983,7 +979,7 @@ flex-grow: 1; /* Allows nav to take up available space, pushing footer down */
 overflow-y: auto; /* This part scrolls if content is too long */
 padding: 0 0 0.75rem; /* Bottom padding before footer or end of sidebar */
 scrollbar-width: thin;
-scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--toc-scrollbar-track-bg);
+scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--color-bg-sidebar);
 }
 .sidebar-nav::-webkit-scrollbar {
 width: 6px;
@@ -1064,7 +1060,7 @@ padding-bottom: 0.2rem; /* Space after links when open */
 
 .sidebar-nav-links {
 list-style: none;
-padding-left: 0.75rem; /* Indent for the links under a title */
+padding-left: 0em; /* Indent for the links under a title */
 margin: 0;
 }
 .sidebar-nav-links li {
@@ -1082,14 +1078,12 @@ transition: color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease;
 font-weight: 500;
 line-height: 1.4;
 margin-bottom: 0.1rem; /* Small gap between links */
+padding-left: 1rem;
+font-weight: 600;
 }
 .sidebar-link:hover {
-color: var(--color-sidebar-link-text-active); /* Use active color for hover as per spec */
-}
-.sidebar-link.active {
-color: var(--color-sidebar-link-text-active);
-background-color: var(--color-sidebar-link-bg-active);
-font-weight: 600;
+    color: var(--color-sidebar-link-text-hover); /* Use theme-aware hover text color */
+    background-color: var(--color-search-trigger-hover-bg);
 }
 
 /* Sidebar Footer Link Area */
@@ -1303,9 +1297,13 @@ body.mobile-sidebar-open .left-sidebar {
 }
 }
 
-
+.sidebar-link.active {
+    color: var(--color-sidebar-link-text-active);
+    font-weight: 600;
+}
 </style>
 </head>
+
 <body>
     <div class="left-sidebar">
         <div class="sidebar-brand">

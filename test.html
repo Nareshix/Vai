@@ -539,56 +539,78 @@
         #content-area p { line-height: 1.7; margin-bottom: 1.15rem; font-size: 1rem; }
 
         #toc-container {
-            flex-basis: 13rem; /* Narrower ToC */
-            flex-shrink: 0;
-            padding: 1.5rem 1rem; /* Reduced padding */
-            overflow-y: auto; overflow-x: hidden;
-            height: calc(100vh - 3.75rem);
-            position: sticky; top: 3.75rem;
-            /* border-left: 1px solid var(--color-border-sidebar); */ /* Removed left border for cleaner look */
-            scrollbar-width: thin; scrollbar-color: var(--toc-scrollbar-thumb-bg) transparent;
-        }
-        #toc-container::-webkit-scrollbar { width: 5px; }
-        #toc-container::-webkit-scrollbar-track { background: transparent; }
-        #toc-container::-webkit-scrollbar-thumb { background-color: var(--toc-scrollbar-thumb-bg); border-radius: var(--border-radius-sm); }
-        #toc-container::-webkit-scrollbar-thumb:hover { background-color: var(--toc-scrollbar-thumb-hover-bg); }
+    flex-basis: 13rem; /* Narrower ToC */
+    flex-shrink: 0;
+    padding: 1.5rem 1rem; /* Reduced padding */
+    margin-right: 2rem;
+    overflow-y: auto; /* Allows scrolling when content overflows */
+    overflow-x: hidden;
+    height: calc(100vh - 3.75rem);
+    position: sticky; top: 3.75rem;
+    right: 30px;
+    
+    /* border-left: 1px solid var(--color-border-sidebar); */ /* Removed left border for cleaner look */
 
-        #toc-links {
-            position: relative; padding-left: 0.75rem; /* Space for marker alignment */
-            border-left: 1.5px solid var(--color-border-toc-line); /* Thinner guide line */
-            display: flex; flex-direction: column;
-            transition: border-color var(--transition-slow);
-        }
-        #toc-links a {
-            display: block; padding: 0.3rem 0.6rem; /* Tighter padding */
-            color: var(--color-text-toc-link); text-decoration: none;
-            margin-bottom: 0.15rem; font-size: 0.825rem; /* Smaller ToC links */
-            border-radius: var(--border-radius-sm);
-            transition: color var(--transition-fast), background-color var(--transition-fast);
-            position: relative; line-height: 1.35; white-space: normal; /* Allow wrapping */
-        }
-        #toc-links a:hover, #toc-links a:focus-visible {
-            color: var(--color-text-toc-link-hover);
-            background-color: var(--color-bg-interactive-hover-dark); /* Themed */
-            outline: none;
-        }
-        html.light-theme #toc-links a:hover, html.light-theme #toc-links a:focus-visible {
-            background-color: var(--color-bg-interactive-hover-light);
-        }
-        #toc-links a.active {
-            color: var(--color-text-toc-link-active);
-            font-weight: 500;
-            background-color: transparent; /* Active doesn't need bg if marker is present */
-        }
-        #toc-active-marker {
-            position: absolute; top: 0; left: -1.75px; /* Adjusted for border */
-            width: 2px; height: 0;
-            background-color: var(--color-text-toc-link-active); /* Solid active color */
-            opacity: 1;
-            border-radius: var(--border-radius-sm);
-            transition: top var(--transition-medium), height var(--transition-medium), opacity var(--transition-medium);
-        }
+    /* Hide scrollbar for Firefox */
+    scrollbar-width: none;
+    /* Hide scrollbar for IE and Edge (older versions) */
+    -ms-overflow-style: none;
+}
 
+/* Hide scrollbar for WebKit-based browsers (Chrome, Safari, Edge) */
+#toc-container::-webkit-scrollbar {
+    display: none; /* Hides the scrollbar, but the element remains scrollable */
+}
+
+/* The following ::-webkit-scrollbar-* rules style parts of the scrollbar.
+   Since the scrollbar is now hidden (display: none), these rules will not have a visible effect.
+   They can be removed if desired, but leaving them does no harm. */
+#toc-container::-webkit-scrollbar-track {
+    background: transparent;
+}
+#toc-container::-webkit-scrollbar-thumb {
+    background-color: var(--toc-scrollbar-thumb-bg);
+    border-radius: var(--border-radius-sm);
+}
+#toc-container::-webkit-scrollbar-thumb:hover {
+    background-color: var(--toc-scrollbar-thumb-hover-bg);
+}
+
+#toc-links {
+    position: relative; padding-left: 0.75rem; /* Space for marker alignment */
+    border-left: 1.5px solid var(--color-border-toc-line); /* Thinner guide line */
+    display: flex; flex-direction: column;
+    transition: border-color var(--transition-slow);
+}
+#toc-links a {
+    display: block; padding: 0.3rem 0.6rem; /* Tighter padding */
+    color: var(--color-text-toc-link); text-decoration: none;
+    margin-bottom: 0.15rem; font-size: 0.825rem; /* Smaller ToC links */
+    border-radius: var(--border-radius-sm);
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+    position: relative; line-height: 1.35; white-space: normal; /* Allow wrapping */
+}
+#toc-links a:hover, #toc-links a:focus-visible {
+    color: var(--color-text-toc-link-hover);
+    background-color: var(--color-bg-interactive-hover-dark); /* Themed */
+    outline: none;
+}
+html.light-theme #toc-links a:hover, html.light-theme #toc-links a:focus-visible {
+    background-color: var(--color-bg-interactive-hover-light);
+}
+#toc-links a.active {
+    color: var(--color-text-toc-link-active);
+    font-weight: 500;
+    background-color: transparent; /* Active doesn't need bg if marker is present */
+}
+#toc-active-marker {
+    position: absolute; top: 0; left: -1.75px; /* Adjusted for border */
+    width: 2px; height: 0;
+    background-color: var(--color-text-toc-link-active); /* Solid active color */
+    opacity: 1;
+    border-radius: var(--border-radius-sm);
+    transition: top var(--transition-medium), height var(--transition-medium), opacity var(--transition-medium);
+}
         /* --- Interactive Elements (Buttons, Icons, etc.) --- */
         .theme-toggle-button, .icon-button, .search-trigger-button, .mobile-menu-button, .search-close-button, .back-to-top-button {
             display: inline-flex; align-items: center; justify-content: center;
@@ -971,6 +993,17 @@
                 <div class="sidebar-section-content" id="section-content-theme">
                     <ul class="sidebar-nav-links">
                         <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
+                        <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
                         <li><a href="#theme-nav" class="sidebar-link">Nav</a></li>
                         <li><a href="#theme-sidebar" class="sidebar-link">Sidebar</a></li>
                          <li><a href="#theme-home-page" class="sidebar-link">Home Page</a></li>
@@ -1091,6 +1124,27 @@
             <div id="toc-container">
                 <nav id="toc-links">
                     <div id="toc-active-marker"></div>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
+                    <a href="#introduction">Introduction</a>
                     <a href="#introduction">Introduction</a>
                     <a href="#getting-started">Getting Started</a>
                     <a href="#core-concepts">Core Concepts</a>
