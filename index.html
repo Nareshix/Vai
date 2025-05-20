@@ -277,7 +277,7 @@ top: 0;
 z-index: 990; /* Ensure it's above content but below mobile sidebar/overlay */
 }
 /* Desktop: Space between logo (if it were a direct child) and header-actions */
-.app-header > div:not(.header-actions):not(.mobile-menu-button) {
+.app-header > div:not(.header-actions):not(.mobile-menu-button):not(.mobile-header-logo) { /* MODIFIED */
 margin-right: 1rem;
 }
 
@@ -301,34 +301,24 @@ overflow-y: auto; overflow-x: hidden;
 height: calc(100vh - 3.75rem);
 position: sticky; 
 top: 3.75rem;
-right: 1.5rem;
 /* border-left: 1px solid var(--color-border-sidebar); */ /* Removed left border for cleaner look */
 scrollbar-width: none;  /* For Firefox: hides the scrollbar completely */
-
+/* --- SCROLLBAR STYLING --- */
 }
-/* --- SCROLLBAR HIDING FOR FIREFOX --- */
-
-/* --- SCROLLBAR HIDING FOR WEBKIT BROWSERS --- */
 #toc-container::-webkit-scrollbar {
-width: 0px;             /* Make the scrollbar have no width */
-background: transparent; /* Optional: just in case */
+width: 6px;
 }
-
-
 #toc-container::-webkit-scrollbar-track {
-background: var(--toc-scrollbar-track-bg);
+background: transparent; /* Or var(--color-bg-sidebar) if you want it visible */
 }
-
 #toc-container::-webkit-scrollbar-thumb {
 background-color: var(--toc-scrollbar-thumb-bg);
-border-radius: 10px; /* Or your preferred radius, e.g., 6px */
-/* This border IS the "gap". */
-border: 3px solid var(--toc-scrollbar-track-bg); /* Increased from 2px */
+border-radius: 3px;
 }
-
 #toc-container::-webkit-scrollbar-thumb:hover {
 background-color: var(--toc-scrollbar-thumb-hover-bg);
 }
+/* --- END SCROLLBAR STYLING --- */
 
 
 #toc-links {
@@ -529,15 +519,15 @@ display: inline-flex;
     .header-actions {
       display: flex;
       align-items: center;
-      flex-grow: 1;
-      justify-content: space-between;
-      gap: 0.75rem;
+      flex-grow: 1; /* Desktop: take remaining space */
+      justify-content: flex-end; /* Desktop: align items to the right */
+      gap: 0.75rem; /* Desktop: gap between search and right group */
     }
 
-    .header-actions-right {
+    .header-actions-right { /* Contains desktop links, theme, github */
       display: flex;
       align-items: center;
-      gap: 0.5rem; /* --- MODIFIED: Added gap for spacing between items --- */
+      gap: 0.5rem; 
     }
 
 
@@ -606,6 +596,7 @@ margin-left: 0.75rem;  /* Space between Theme Toggle icon and this second separa
     cursor: pointer;
     font-size: 0.9rem;
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    margin-right: auto;
 }
 
 .search-trigger-button:hover {
@@ -1120,7 +1111,11 @@ stroke: currentColor;
 background-color: var(--color-search-trigger-hover-bg);
 }
 
-/* Page Overlay for Mobile Sidebar */
+/* Mobile ToC Toggle Button */
+.mobile-toc-toggle {
+    display: none; /* Hidden by default */
+}
+/* Page Overlay for Mobile Sidebar / ToC */
 .page-overlay {
 position: fixed;
 top: 0;
@@ -1133,13 +1128,12 @@ display: none; /* Shown by JS when sidebar is open */
 opacity: 0;
 transition: opacity 0.3s ease-in-out;
 }
-body.mobile-sidebar-open .page-overlay {
-display: block;
-opacity: 1;
-}
+/* No need for .mobile-sidebar-open .page-overlay here, JS handles display and opacity directly */
+
 
 /* Prevent body scroll when mobile sidebar is open */
-body.mobile-sidebar-open {
+body.mobile-sidebar-open,
+body.mobile-toc-open { /* ADDED: Also prevent scroll if ToC panel is open */
 overflow: hidden;
 }
 
@@ -1170,101 +1164,143 @@ overflow: hidden;
 }
 
 
-
-.mobile-header-logo {
-            display: none; /* Hidden by default on desktop */
-            align-items: center; 
-            justify-content: center; /* Center the link itself if it's narrower than this container */
-        }
-
 /* --- Media Query for Responsiveness (e.g., Tablets and Phones) --- */
 @media (max-width: 992px) {
 .app-header {
-    padding: 0 0.75rem; /* Slightly reduce padding */
+    padding: 0 0.75rem; 
+    justify-content: flex-start; /* Align items to the start, logo will grow */
 }
-.app-header > div:not(.header-actions):not(.mobile-menu-button) {
-  margin-right: 0.5rem; /* Adjust space */
+.app-header > div:not(.header-actions):not(.mobile-menu-button):not(.mobile-header-logo) {
+  margin-right: 0.5rem;
 }
 
 
 .mobile-menu-button {
-    display: inline-flex; /* Show hamburger */
+    display: inline-flex; 
+    flex-shrink: 0;
+    margin-right: 0.5rem; /* Space between hamburger and logo */
+}
+.mobile-header-logo {
+    display: inline-flex;
+    flex-grow: 1; /* Logo takes available space */
+    justify-content: flex-start; /* Logo content (text/svg) aligns left within its container */
+    margin-right: 0.5rem; /* Space before action icons */
+    overflow: hidden;
 }
 
 .left-sidebar {
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh; /* Full viewport height */
-    width: 280px; /* Or your preferred width for mobile sidebar */
+    height: 100vh; 
+    width: 280px; 
     transform: translateX(-100%);
-    z-index: 10010; /* Above page overlay and header */
-    flex-basis: auto; /* Override desktop flex-basis */
-    border-right: 1px solid var(--color-border-sidebar); /* Keep border for definition */
-    box-shadow: 2px 0 8px rgba(0,0,0,0.15); /* Add shadow for overlay effect */
+    z-index: 10010; 
+    flex-basis: auto; 
+    border-right: 1px solid var(--color-border-sidebar); 
+    box-shadow: 2px 0 8px rgba(0,0,0,0.15); 
 }
 
 body.mobile-sidebar-open .left-sidebar {
     transform: translateX(0);
 }
 
-/* Hide desktop-specific nav elements in the header */
-.header-actions-right > .header-nav-link, /* Guide, Reference */
-.header-actions-right > .header-dropdown-container { /* Version Dropdown */
+/* Header Actions - container for search, toc-toggle, theme, github */
+.header-actions {
+    flex-grow: 0; /* Don't let it grow, size by content */
+    flex-shrink: 0; /* Don't let it shrink */
+    margin-left: auto; /* Push action group to the right */
+    gap: 0.25rem; /* Gap between items: search, toc-toggle, theme/github group */
+    justify-content: flex-end; /* This was for desktop, override for mobile if needed */
+}
+
+.header-actions-right { /* Contains theme, github, and DESKTOP nav links */
+    gap: 0; /* Was 0.25rem, but theme/github are hidden */
+}
+
+.header-actions-right > .header-nav-link, 
+.header-actions-right > .header-dropdown-container { 
     display: none;
 }
-/* Theme toggle separators specific adjustments if needed */
-#themeToggle.theme-toggle-button::before,
-#themeToggle.theme-toggle-button::after {
-    /* Consider hiding or adjusting on mobile if space is very tight */
-    /* display: none; */
-}
 
-
-/* Adjust the search trigger on mobile */
+/* Search trigger adjustments */
 #searchTrigger .search-trigger-text,
 #searchTrigger .search-shortcut-hint {
-    display: none; /* Show only search icon */
+    display: none; 
 }
+#themeToggle,
+#githubLink {
+    display: none !important;
+}
+/* Ensure separators for theme toggle are also hidden */
+#themeToggle.theme-toggle-button::before,
+#themeToggle.theme-toggle-button::after {
+    display: none;
+}
+
 #searchTrigger {
-    padding: 0.4rem; /* Adjust padding for icon-only */
-    border-color: transparent; /* Cleaner look for icon-only */
-    margin-right: 0; /* No margin from icon for text */
+    padding: 0.4rem; 
+    border-color: transparent; 
+    margin-right: 0; /* Rely on parent gap */
 }
  #searchTrigger .search-trigger-icon-svg {
     margin-right: 0;
 }
 #searchTrigger:hover {
-    border-color: var(--color-search-border); /* Restore border on hover if desired */
-    background-color: var(--color-search-trigger-hover-bg); /* Consistent hover */
+    border-color: var(--color-search-border); 
+    background-color: var(--color-search-trigger-hover-bg); 
 }
 
-/* Adjust header actions layout */
-.header-actions {
-    /* justify-content: flex-end; /* Push remaining items to the right */
-    margin-left: auto; /* Pushes search & right icons to the far right when menu btn is present */
+/* Mobile ToC Toggle Button */
+.mobile-toc-toggle {
+    display: inline-flex; /* Show ToC toggle on mobile */
+    /* Inherits .icon-button styles (padding, border-radius etc) */
+    /* color, hover color are from .icon-button */
 }
-.header-actions-right {
-    gap: 0.25rem; /* Slightly reduce gap between theme/github icons */
+.mobile-toc-toggle svg {
+    width: 22px; /* Slightly adjust if needed */
+    height: 22px;
+}
+
+/* Mobile ToC Panel */
+#toc-container {
+    position: fixed;
+    top: 0;
+    right: -280px; /* Start off-screen */
+    width: 280px; /* Or your preferred width */
+    height: 100vh;
+    background-color: var(--color-bg-sidebar);
+    z-index: 10008; /* Below main sidebar, above overlay if both open (but one closes other) */
+    padding: 1.25rem 1rem; /* Consistent padding */
+    box-shadow: -2px 0 8px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease-in-out;
+    flex-basis: auto; /* Override desktop flex-basis */
+    overflow-y: auto; /* Enable scrolling for ToC content */
+    /* Desktop sticky/height/top/right properties are overridden here */
+    /* scrollbar styling already applied globally to #toc-container */
+}
+body.mobile-toc-open #toc-container {
+    transform: translateX(-100%); /* Slide in from right */
+}
+/* Ensure ToC links are visible and styled appropriately in the mobile panel */
+#toc-container #toc-links a {
+    /* Adjust if needed, but existing styles might be fine */
+    font-size: 0.9rem;
 }
 
 
 /* Main content adjustments */
-.main-area-wrapper {
-    /* No change needed if sidebar overlays */
-}
 .content-toc-row {
-    flex-direction: column; /* Stack content and (hidden) ToC */
+    flex-direction: column; 
 }
-#toc-container {
-    display: none; /* Hide ToC on mobile */
-}
+/* #toc-container is handled above for mobile panel, no longer display:none here */
+
 #content-area {
-    flex-basis: auto; /* Allow content to take full width */
-    padding: 1.25rem; /* Mobile-friendly padding */
+    flex-basis: auto; 
+    padding: 1.25rem; 
 }
  #content-area h2 {
-    padding-top: calc(4rem + 1rem); /* Maintain space for sticky header */
+    padding-top: calc(4rem + 1rem); 
 }
 
 
@@ -1274,7 +1310,7 @@ body.mobile-sidebar-open .left-sidebar {
     gap: 0.75rem;
 }
 .nav-box {
-    text-align: left !important; /* Override specific text-aligns for consistency */
+    text-align: left !important; 
 }
 .next-page-box .nav-box-label,
 .next-page-box .nav-box-link,
@@ -1289,33 +1325,30 @@ body.mobile-sidebar-open .left-sidebar {
     padding: 0 0.5rem;
 }
 .mobile-menu-button {
-    margin-right: 0.5rem;
+    margin-right: 0.25rem; /* Tighter space */
 }
 .mobile-header-logo {
-        display: inline-flex; /* Show the logo container */
-        flex-grow: 1; /* Allow logo to take available space */
-        justify-content: center; /* Center the logo link within this container */
-        overflow: hidden; /* Prevent very long logos from breaking layout */
-    }
-    /* END: Styles for the new mobile header logo */
-
+    /* flex-grow: 1; by default from 992px */
+    justify-content: center; /* Center logo text if it's short */
+    margin: 0 0.25rem; /* Tighter space */
+}
 
 .header-actions {
-    gap: 0.25rem;
+    gap: 0.1rem; /* Tighter gap between search, toc, theme/github */
 }
-#searchTrigger, .theme-toggle-button, a.icon-button {
-    padding: 0.3rem; /* Even smaller touch targets */
+#searchTrigger, .mobile-toc-toggle, .theme-toggle-button, a.icon-button {
+    padding: 0.3rem; 
 }
-.icon-button svg, .theme-toggle-button svg, #searchTrigger svg {
+.icon-button svg, .theme-toggle-button svg, #searchTrigger svg, .mobile-toc-toggle svg {
     width: 20px;
     height: 20px;
 }
 #themeToggle.theme-toggle-button::before,
 #themeToggle.theme-toggle-button::after {
-    display: none; /* Hide separators on very small screens */
+    display: none; 
 }
-.header-actions-right {
-    gap: 0.1rem;
+.header-actions-right { /* contains theme/github */
+    gap: 0.05rem; /* very tight */
 }
 
 #content-area {
@@ -1326,10 +1359,10 @@ body.mobile-sidebar-open .left-sidebar {
 }
 #content-area h2 {
     font-size: 1.4rem;
-    padding-top: calc(4rem + 0.5rem); /* Adjust if needed */
+    padding-top: calc(4rem + 0.5rem); 
 }
  .page-meta-row .last-updated-text {
-    font-size: 0.8rem; /* Slightly smaller meta text */
+    font-size: 0.8rem; 
 }
 }
 
@@ -1341,22 +1374,16 @@ body.mobile-sidebar-open .left-sidebar {
 </head>
 
 <body>
-    <div class="left-sidebar">
+    <div class="left-sidebar" id="leftSidebar"> <!-- Added ID for aria-controls -->
         <div class="sidebar-brand">
-            <!-- Changed class from header-nav-link to sidebar-logo-link for specific styling -->
             <a href="#" class="sidebar-logo-link">
-                <!-- You can put an SVG logo here instead of text -->
-                <!-- <svg class="logo-svg">...</svg> -->
                 Logo
             </a>
         </div>
-
         <hr class="sidebar-divider logo-divider">
-
         <nav class="sidebar-nav">
-            <!-- Navigation Section 1 -->
             <div class="sidebar-nav-section is-open">
-                                 <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-reference">
+                <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-reference">
                     <span>Reference</span>
                     <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
@@ -1364,16 +1391,12 @@ body.mobile-sidebar-open .left-sidebar {
                     <ul class="sidebar-nav-links">
                         <li><a href="#site-config" class="sidebar-link active">Site Config</a></li>
                         <li><a href="#frontmatter-config" class="sidebar-link">Frontmatter Config</a></li>
-                        <li><a href="#runtime-api" class="sidebar-link">Runtime API</a></li>
-                        <li><a href="#cli" class="sidebar-link">CLI</a></li>
                     </ul>
                 </div>
             </div>
             <hr class="sidebar-divider section-divider">
-
-            <!-- Navigation Section 2 -->
             <div class="sidebar-nav-section is-open">
-                    <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-theme">
+                <button class="sidebar-section-toggle" aria-expanded="true" aria-controls="section-content-theme">
                     <span>Default Theme</span>
                     <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
@@ -1381,28 +1404,10 @@ body.mobile-sidebar-open .left-sidebar {
                     <ul class="sidebar-nav-links">
                         <li><a href="#theme-overview" class="sidebar-link">Overview</a></li>
                         <li><a href="#theme-nav" class="sidebar-link">Nav</a></li>
-                        <li><a href="#theme-sidebar" class="sidebar-link">Sidebar</a></li>
-                        <li><a href="#theme-home-page" class="sidebar-link">Home Page</a></li>
-                        <li><a href="#theme-footer" class="sidebar-link">Footer</a></li>
-                        <li><a href="#theme-layout" class="sidebar-link">Layout</a></li>
-                        <li><a href="#theme-badge" class="sidebar-link">Badge</a></li>
-                        <li><a href="#theme-team-page" class="sidebar-link">Team Page</a></li>
-                        <li><a href="#theme-prev-next" class="sidebar-link">Prev / Next Links</a></li>
-                        <li><a href="#theme-edit-link" class="sidebar-link">Edit Link</a></li>
-                        <li><a href="#theme-last-updated" class="sidebar-link">Last Updated Timestamp</a></li>
                     </ul>
                 </div>
             </div>
-            <!-- <hr class="sidebar-divider section-divider"> -->
-
         </nav>
-        <!-- Example Sidebar Footer (optional) -->
-        <!--
-        <div class="sidebar-footer">
-            <a href="#">Help</a>
-            <a href="#">Settings</a>
-        </div>
-        -->
     </div>
 <div class="main-area-wrapper">
     <div class="app-header">
@@ -1416,13 +1421,10 @@ body.mobile-sidebar-open .left-sidebar {
 
         <div class="mobile-header-logo">
             <a href="#" class="sidebar-logo-link">
-                <!-- If you have an SVG logo, it would go here, same as in .sidebar-brand -->
-                <!-- <svg class="logo-svg">...</svg> -->
                 Logo
             </a>
         </div>
     
-
         <div class="header-actions">
             <button id="searchTrigger" class="search-trigger-button" aria-label="Open search (Press /)">
                 <svg class="search-trigger-icon-svg" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1431,6 +1433,18 @@ body.mobile-sidebar-open .left-sidebar {
                 </svg>
                 <span class="search-trigger-text">Search...</span>
                 <span class="search-shortcut-hint">/</span>
+            </button>
+            
+            <!-- NEW Mobile ToC Toggle Button -->
+            <button class="icon-button mobile-toc-toggle" id="mobileTocToggle" aria-label="Open Table of Contents" aria-expanded="false" aria-controls="toc-container">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="8" y1="6" x2="21" y2="6"></line>
+                    <line x1="8" y1="12" x2="21" y2="12"></line>
+                    <line x1="8" y1="18" x2="21" y2="18"></line>
+                    <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                    <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                    <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                </svg>
             </button>
 
             <div class="header-actions-right">
@@ -1448,11 +1462,8 @@ body.mobile-sidebar-open .left-sidebar {
                             <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         </a>
                         <a href="#" role="menuitem" class="header-dropdown-item">
-                            <span>Contributing</span>
+                            <span>Changelog</span>
                             <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-                        </a>
-                        <a href="#" role="menuitem" class="header-dropdown-item">
-                            <span>Another Link</span>
                         </a>
                     </div>
                 </div>
@@ -1482,94 +1493,47 @@ body.mobile-sidebar-open .left-sidebar {
             <p>Welcome to this comprehensive guide. This section provides an overview of the entire document, its purpose, and what you can expect to learn. We will cover various topics in detail, ensuring a clear understanding for all readers.</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
             <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
             <h2 id="getting-started">Getting Started</h2>
             <p>This section will walk you through the initial setup and prerequisites. Before diving into the core features, it's important to have your environment configured correctly. We'll cover software installation and basic configuration steps.</p>
-            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae, ultricies eget, tempor sit amet, ante. Donec eu libero sit amet quam egestas semper.</p>
-            <p>Aenean ultricies mi vitae est. Mauris placerat eleifend leo. Quisque sit amet est et sapien ullamcorper pharetra. Vestibulum erat wisi, condimentum sed, commodo vitae, ornare sit amet, wisi.</p>
-
             <h2 id="core-concepts">Core Concepts</h2>
             <p>Understanding the core concepts is crucial for effective use. This part delves into the fundamental principles and ideas that underpin the system. We will explore definitions, key terminologies, and their relationships.</p>
-            <p>Aenean fermentum, elit eget tincidunt condimentum, eros ipsum rutrum orci, sagittis tempus lacus enim ac dui. Donec non enim in turpis pulvinar facilisis. Ut felis. Praesent dapibus, neque id cursus faucibus, tortor neque egestas augue.</p>
-            <p>Eu vulputate magna eros eu erat. Aliquam erat volutpat. Nam dui mi, tincidunt quis, accumsan porttitor, facilisis luctus, metus. Phasellus ultrices nulla quis nibh. Quisque a lectus.</p>
-
             <h2 id="feature-alpha">Feature Alpha</h2>
             <p>Feature Alpha provides capabilities for X, Y, and Z. It is designed to enhance productivity and streamline workflows related to data processing. This section explains its architecture and benefits.</p>
-            <p>Donec consectetuer ligula vulputate sem tristique cursus. Nam nulla quam, gravida non, commodo a, sodales sit amet, nisi. Pellentesque fermentum dolor. Aliquam quam lectus, facilisis auctor, ultrices ut, elementum vulputate, nunc.</p>
-            <p>Sed adipiscing ornare risus. Morbi est est, blandit sit amet, sagittis vel, euismod vel, velit. Pellentesque egestas sem. Suspendisse commodo ullamcorper magna.</p>
-
             <h2 id="feature-beta">Feature Beta</h2>
             <p>Building upon Alpha, Feature Beta introduces advanced functionalities. It focuses on scalability and integration with other services. Here, we will cover its advanced configuration options and use cases.</p>
-            <p>Curabitur bibendum justo non orci. Integer pellentesque quam vel velit. Duis pulvinar. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos.</p>
-            <p>Nam liberate potestatem assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.</p>
-
             <h2 id="advanced-configuration">Advanced Configuration</h2>
             <p>For users requiring more control, the advanced configuration options offer granular adjustments. This section is for experienced users who need to tailor the system to specific, complex requirements.</p>
-            <p>Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
-            <p>Accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur.</p>
-
             <h2 id="api-reference">API Reference</h2>
             <p>The API Reference provides detailed documentation for all available endpoints and methods. Developers can use this information to integrate the system with other applications or build custom tools.</p>
-            <p>Aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
-            <p>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam.</p>
-
             <h2 id="troubleshooting">Troubleshooting</h2>
             <p>Encountering issues? This section lists common problems and their solutions. It also provides guidance on how to diagnose and report new issues effectively. Please consult this section before seeking further support.</p>
-            <p>Nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
-            <p>At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.</p>
-
             <h2 id="security-guidelines">Security Guidelines</h2>
             <p>Security is paramount. These guidelines outline best practices for securing your installation and data. It covers aspects like access control, data encryption, and regular security audits.</p>
-            <p>Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi.</p>
-            <p>Optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis.</p>
-
             <h2 id="performance-tuning">Performance Tuning</h2>
             <p>Learn how to optimize performance for various workloads. This section covers techniques for identifying bottlenecks and applying configurations to improve speed and efficiency.</p>
-            <p>Aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias.</p>
-            <p>Consequatur aut perferendis doloribus asperiores repellat. Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-
             <h2 id="backup-restore">Backup and Restore</h2>
             <p>Data integrity is crucial. This section details procedures for backing up your data and restoring it in case of system failure or data loss. Regular backups are highly recommended.</p>
-            <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.</p>
-            <p>Sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.</p>
-
             <h2 id="migration-guide">Migration Guide</h2>
             <p>Upgrading from a previous version? This guide provides step-by-step instructions for migrating your existing data and configurations to the latest version smoothly.</p>
-            <p>Sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis.</p>
-            <p>Suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur.</p>
-
             <h2 id="contributing">Contributing</h2>
             <p>Interested in contributing to the project? This section outlines how you can get involved, from reporting bugs and suggesting features to submitting code contributions. Your help is appreciated!</p>
-            <p>Vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque.</p>
-            <p>Corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.</p>
-
-            <h2 id="license-information">License Information</h2> <!-- Removed inline style -->
+            <h2 id="license-information">License Information</h2>
             <p>This software is distributed under the XYZ License. This section provides the full text of the license and details about any third-party components and their respective licenses.</p>
-            <p>Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.</p>
-            <p>Omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae.</p>
-
             <h2 id="appendix-a">Appendix A: Glossary</h2>
             <p>A list of terms and definitions used throughout this documentation. This can be a helpful reference for understanding specific jargon or technical terms.</p>
-            <p>Sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
-
             <h2 id="appendix-b">Appendix B: Further Reading</h2>
             <p>For those who wish to explore related topics further, this appendix lists recommended books, articles, and online resources. These can provide deeper insights or alternative perspectives.</p>
-            <p>Quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste natus error sit voluptatem.</p>
             <h2 id="section-example-1">Example Section 1</h2>
-        <p>Placeholder content for example section 1 to ensure it's a target.</p>
-        <h2 id="section-example-2">Example Section 2</h2>
-        <p>Placeholder content for example section 2.</p>
-        <h2 id="section-example-3">Example Section 3</h2>
-        <p>Placeholder content for example section 3.</p>
-        <h2 id="section-example-4">Example Section 4</h2>
-        <p>Placeholder content for example section 4.</p>
-        <h2 id="section-example-5">Example Section 5</h2>
-        <p>Placeholder content for example section 5. This is the very last piece of main content.</p>
+            <p>Placeholder content for example section 1 to ensure it's a target.</p>
+            <h2 id="section-example-2">Example Section 2</h2>
+            <p>Placeholder content for example section 2.</p>
+            <h2 id="section-example-3">Example Section 3</h2>
+            <p>Placeholder content for example section 3.</p>
+            <h2 id="section-example-4">Example Section 4</h2>
+            <p>Placeholder content for example section 4.</p>
+            <h2 id="section-example-5">Example Section 5</h2>
+            <p>Placeholder content for example section 5. This is the very last piece of main content.</p>
 
-
-            <!-- Page Footer Container -->
             <div class="page-footer-container">
                 <div class="page-meta-row">
                     <a href="#" class="edit-page-link">
@@ -1592,12 +1556,10 @@ body.mobile-sidebar-open .left-sidebar {
                 </div>
             </div>
         </div>
-    <div id="toc-container">
-
+    <div id="toc-container"> <!-- This container is now also the mobile ToC panel -->
         <nav id="toc-links">
             <div id="toc-active-marker"></div>
-
-            <a href="#introduction">Introduction</a> <!-- Removed inline style -->
+            <a href="#introduction">Introduction</a> 
             <a href="#getting-started">Getting Started</a>
             <a href="#core-concepts">Core Concepts</a>
             <a href="#feature-alpha">Feature Alpha</a>
@@ -1610,110 +1572,81 @@ body.mobile-sidebar-open .left-sidebar {
             <a href="#backup-restore">Backup and Restore</a>
             <a href="#migration-guide">Migration Guide</a>
             <a href="#contributing">Contributing</a>
-            <a href="#license-information">License Information</a> <!-- Removed inline style -->
+            <a href="#license-information">License Information</a> 
             <a href="#appendix-a">Appendix A: Glossary</a>
             <a href="#appendix-b">Appendix B: Further Reading</a>
-            <!-- Add a few more to really test ToC scroll -->
             <a href="#section-example-1">Example Section 1</a>
             <a href="#section-example-2">Example Section 2</a>
             <a href="#section-example-3">Example Section 3</a>
             <a href="#section-example-4">Example Section 4</a>
             <a href="#section-example-5">Example Section 5</a>
         </nav>
-
     </div>
         </div>
 </div>
 
-<!-- Page overlay for mobile sidebar -->
 <div class="page-overlay" id="pageOverlay"></div>
 
  <script>
 document.addEventListener('DOMContentLoaded', () => {
-
-    const sidebarNavSections = document.querySelectorAll('.sidebar-nav .sidebar-nav-section');
-
-    sidebarNavSections.forEach(section => {
-        const toggleButton = section.querySelector('.sidebar-section-toggle');
-        const content = section.querySelector('.sidebar-section-content');
-
-        if (toggleButton && content) {
-            // Set initial max-height for sections marked as 'is-open' in HTML
-            if (section.classList.contains('is-open')) {
-                const originalTransition = content.style.transition;
-                content.style.transition = 'none';
-                content.style.maxHeight = content.scrollHeight + "px";
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                       content.style.transition = originalTransition;
-                    });
-                });
-            }
-
-            toggleButton.addEventListener('click', () => {
-                const isOpen = section.classList.toggle('is-open');
-                toggleButton.setAttribute('aria-expanded', isOpen.toString());
-
-                if (isOpen) {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                } else {
-                    content.style.maxHeight = "0px";
-                }
-            });
-        }
-    });
-
     // --- Element References ---
     const htmlElement = document.documentElement;
     const mainScroller = document.querySelector('.main-area-wrapper');
-
-    // Theme Toggle
     const themeToggleButton = document.getElementById('themeToggle');
-
-    // Table of Contents (ToC)
     const tocContainerElement = document.getElementById('toc-container');
     const tocLinksContainer = document.getElementById('toc-links');
     const tocActiveMarker = document.getElementById('toc-active-marker');
-    let tocLinks = [];
-    if (tocLinksContainer) {
-        tocLinks = Array.from(tocLinksContainer.getElementsByTagName('a'));
-    }
-
-    // Search
+    let tocLinks = tocLinksContainer ? Array.from(tocLinksContainer.getElementsByTagName('a')) : [];
     const searchTriggerButton = document.getElementById('searchTrigger');
-    const searchOverlayEl = document.getElementById('searchOverlay'); // Renamed to avoid conflict
-    const searchModal = document.getElementById('searchModal');
+    const searchOverlayEl = document.getElementById('searchOverlay');
     const searchInput = document.getElementById('searchInput');
     const searchCloseButton = document.getElementById('searchCloseButton');
-
-    // Mobile Navigation
     const mobileMenuToggle = document.getElementById('mobileMenuToggle');
-    const leftSidebar = document.querySelector('.left-sidebar');
-    const pageOverlay = document.getElementById('pageOverlay'); // For mobile sidebar
+    const leftSidebar = document.getElementById('leftSidebar'); // Used ID
+    const pageOverlay = document.getElementById('pageOverlay');
+    const mobileTocToggle = document.getElementById('mobileTocToggle'); // New ToC toggle
 
     // --- State Variables ---
     const THEME_KEY = 'user-preferred-theme';
     const sections = {};
-    const scrollOffset = 20;
+    const scrollOffset = 20; // For scroll spy
     let isSearchActive = false;
+
+    // --- Helper: Update Body Scroll & Page Overlay ---
+    function updateBodyScrollAndOverlay() {
+        const isSidebarOpen = document.body.classList.contains('mobile-sidebar-open');
+        const isTocOpen = document.body.classList.contains('mobile-toc-open');
+        const transitionDuration = 300; // ms, should match CSS transition for opacity
+
+        if (isSidebarOpen || isTocOpen) {
+            if (pageOverlay.style.display !== 'block') {
+                pageOverlay.style.display = 'block';
+                requestAnimationFrame(() => { pageOverlay.style.opacity = '1'; });
+            }
+            document.body.style.overflow = 'hidden';
+        } else {
+            pageOverlay.style.opacity = '0';
+            setTimeout(() => {
+                if (!document.body.classList.contains('mobile-sidebar-open') &&
+                    !document.body.classList.contains('mobile-toc-open')) {
+                    pageOverlay.style.display = 'none';
+                }
+            }, transitionDuration);
+            document.body.style.overflow = '';
+        }
+    }
 
     // --- 1. Theme Functionality ---
     function applyTheme(theme) {
-        if (theme === 'light') {
-            htmlElement.classList.add('light-theme');
-            htmlElement.classList.remove('dark-theme');
-            if (themeToggleButton) themeToggleButton.setAttribute('aria-label', 'Switch to Dark Theme');
-        } else {
-            htmlElement.classList.remove('light-theme');
-            htmlElement.classList.add('dark-theme');
-            if (themeToggleButton) themeToggleButton.setAttribute('aria-label', 'Switch to Light Theme');
-        }
+        htmlElement.classList.toggle('light-theme', theme === 'light');
+        htmlElement.classList.toggle('dark-theme', theme === 'dark');
+        if (themeToggleButton) themeToggleButton.setAttribute('aria-label', theme === 'light' ? 'Switch to Dark Theme' : 'Switch to Light Theme');
     }
     function saveThemePreference(theme) { localStorage.setItem(THEME_KEY, theme); }
     function getInitialTheme() {
         const savedTheme = localStorage.getItem(THEME_KEY);
         if (savedTheme) return savedTheme;
-        return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        return window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
     }
     if (themeToggleButton) {
         themeToggleButton.addEventListener('click', () => {
@@ -1728,10 +1661,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tocLinks.length > 0) {
         tocLinks.forEach(link => {
             const href = link.getAttribute('href');
-            if (href && href.startsWith('#')) {
-                const sectionId = href.substring(1);
-                const sectionElement = document.getElementById(sectionId);
-                if (sectionElement) sections[sectionId] = sectionElement;
+            if (href?.startsWith('#')) {
+                const sectionElement = document.getElementById(href.substring(1));
+                if (sectionElement) sections[href.substring(1)] = sectionElement;
             }
         });
     }
@@ -1743,16 +1675,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (let i = sectionIds.length - 1; i >= 0; i--) {
             const id = sectionIds[i];
-            const sectionElement = sections[id];
-            if (sectionElement && (sectionElement.offsetTop - scrollOffset <= contentScrollTop)) {
+            if (sections[id] && (sections[id].offsetTop - scrollOffset <= contentScrollTop)) {
                 currentSectionId = id; break;
             }
         }
-        if (currentSectionId === null && sectionIds.length > 0) {
-            const firstSection = sections[sectionIds[0]];
-            if (firstSection && (contentScrollTop < scrollOffset || contentScrollTop < (firstSection.offsetTop - scrollOffset))) {
-                currentSectionId = sectionIds[0];
-            }
+        if (currentSectionId === null && sectionIds.length > 0 && sections[sectionIds[0]] &&
+            (contentScrollTop < scrollOffset || contentScrollTop < (sections[sectionIds[0]].offsetTop - scrollOffset))) {
+            currentSectionId = sectionIds[0];
         }
         if (sectionIds.length > 0 && (mainScroller.scrollHeight - mainScroller.scrollTop <= mainScroller.clientHeight + 5)) {
             currentSectionId = sectionIds[sectionIds.length - 1];
@@ -1790,23 +1719,26 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tocLinksContainer) {
         tocLinksContainer.addEventListener('click', (e) => {
             const target = e.target.closest('a');
-            if (target && target.getAttribute('href')?.startsWith('#')) {
+            if (target?.getAttribute('href')?.startsWith('#')) {
                 e.preventDefault();
                 const targetElement = document.getElementById(target.getAttribute('href').substring(1));
                 if (targetElement && mainScroller) mainScroller.scrollTo({ top: targetElement.offsetTop, behavior: 'smooth' });
+                // If mobile ToC is open, close it
+                if (document.body.classList.contains('mobile-toc-open')) {
+                    closeMobileToc();
+                }
             }
         });
     }
     if (mainScroller && tocLinks.length > 0) {
         mainScroller.addEventListener('scroll', updateActiveLinkAndMarker);
-        updateActiveLinkAndMarker();
+        updateActiveLinkAndMarker(); // Initial call
     }
 
     // --- 3. Search Functionality ---
     function isEditingContent(element) {
-        if (!element) return false;
-        const tagName = element.tagName;
-        return tagName === 'INPUT' || tagName === 'TEXTAREA' || element.isContentEditable || element.closest('input, textarea, [contenteditable="true"], [contenteditable=""]');
+        const tagName = element?.tagName;
+        return tagName === 'INPUT' || tagName === 'TEXTAREA' || element?.isContentEditable || element?.closest('input, textarea, [contenteditable="true"], [contenteditable=""]');
     }
     function openSearch() {
         if (isSearchActive || !searchOverlayEl || !searchInput) return;
@@ -1814,78 +1746,115 @@ document.addEventListener('DOMContentLoaded', () => {
             searchOverlayEl.classList.add('active');
             setTimeout(() => { searchInput.value = ''; searchInput.focus(); }, 60);
         });
-        document.body.style.overflow = 'hidden';
+        document.body.style.overflow = 'hidden'; // Search also locks scroll
         isSearchActive = true;
     }
     function closeSearch() {
         if (!isSearchActive || !searchOverlayEl) return;
         searchOverlayEl.classList.remove('active');
         if(searchInput) searchInput.blur();
-        document.body.style.overflow = '';
         if (searchTriggerButton) searchTriggerButton.focus({ preventScroll: true });
         isSearchActive = false;
+        if (!document.body.classList.contains('mobile-sidebar-open') && !document.body.classList.contains('mobile-toc-open')) {
+            document.body.style.overflow = ''; // Restore scroll if no other panel is open
+        }
     }
-    function toggleSearch() { isSearchActive ? closeSearch() : openSearch(); }
-
     if (searchTriggerButton) searchTriggerButton.addEventListener('click', openSearch);
     if (searchCloseButton) searchCloseButton.addEventListener('click', closeSearch);
     if (searchOverlayEl) searchOverlayEl.addEventListener('click', (e) => { if (e.target === searchOverlayEl) closeSearch(); });
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === '/' && !isSearchActive && !isEditingContent(document.activeElement)) { e.preventDefault(); openSearch(); }
-        if (e.key === 'k' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); toggleSearch(); }
-        if (e.key === 'Escape' && isSearchActive) { e.preventDefault(); closeSearch(); }
+    // --- 4. Sidebar Accordion ---
+    document.querySelectorAll('.sidebar-nav .sidebar-nav-section').forEach(section => {
+        const toggleButton = section.querySelector('.sidebar-section-toggle');
+        const content = section.querySelector('.sidebar-section-content');
+        if (toggleButton && content) {
+            if (section.classList.contains('is-open')) {
+                const originalTransition = content.style.transition;
+                content.style.transition = 'none'; // Disable transition for initial open
+                content.style.maxHeight = content.scrollHeight + "px";
+                requestAnimationFrame(() => { // Force reflow
+                    requestAnimationFrame(() => { content.style.transition = originalTransition; }); // Restore transition
+                });
+            }
+            toggleButton.addEventListener('click', () => {
+                const isOpen = section.classList.toggle('is-open');
+                toggleButton.setAttribute('aria-expanded', isOpen.toString());
+                content.style.maxHeight = isOpen ? content.scrollHeight + "px" : "0px";
+            });
+        }
     });
 
-
-    // --- 4. Mobile Navigation ---
+    // --- 5. Mobile Navigation (Main Sidebar) ---
     function openMobileSidebar() {
         if (!leftSidebar || !mobileMenuToggle) return;
+        if (document.body.classList.contains('mobile-toc-open')) closeMobileToc(); // Close ToC if open
         document.body.classList.add('mobile-sidebar-open');
         mobileMenuToggle.setAttribute('aria-expanded', 'true');
-        const sidebarNav = leftSidebar.querySelector('.sidebar-nav');
-        if (sidebarNav) sidebarNav.scrollTop = 0; // Reset scroll position of internal nav
+        leftSidebar.querySelector('.sidebar-nav')?.scrollTo(0, 0);
+        updateBodyScrollAndOverlay();
     }
-
     function closeMobileSidebar() {
         if (!leftSidebar || !mobileMenuToggle) return;
         document.body.classList.remove('mobile-sidebar-open');
         mobileMenuToggle.setAttribute('aria-expanded', 'false');
+        updateBodyScrollAndOverlay();
     }
-
     if (mobileMenuToggle && leftSidebar) {
         mobileMenuToggle.addEventListener('click', () => {
-            if (document.body.classList.contains('mobile-sidebar-open')) {
-                closeMobileSidebar();
-            } else {
-                openMobileSidebar();
-            }
+            document.body.classList.contains('mobile-sidebar-open') ? closeMobileSidebar() : openMobileSidebar();
         });
     }
-
-    if (pageOverlay) { // This is the overlay for the mobile sidebar
-        pageOverlay.addEventListener('click', closeMobileSidebar);
-    }
-
     if (leftSidebar) {
         leftSidebar.addEventListener('click', (event) => {
-            // Close sidebar if a link inside it is clicked
             if (event.target.closest('a') && document.body.classList.contains('mobile-sidebar-open')) {
                 closeMobileSidebar();
             }
         });
     }
-     // Close mobile sidebar on ESC key
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && document.body.classList.contains('mobile-sidebar-open')) {
-            closeMobileSidebar();
+
+    // --- 6. Mobile Table of Contents Panel ---
+    function openMobileToc() {
+        if (!tocContainerElement || !mobileTocToggle) return;
+        if (document.body.classList.contains('mobile-sidebar-open')) closeMobileSidebar(); // Close main sidebar if open
+        document.body.classList.add('mobile-toc-open');
+        mobileTocToggle.setAttribute('aria-expanded', 'true');
+        tocContainerElement.scrollTo(0, 0); // Scroll to top of ToC panel
+        updateActiveLinkAndMarker(); // Ensure active marker is correct on open
+        updateBodyScrollAndOverlay();
+    }
+    function closeMobileToc() {
+        if (!tocContainerElement || !mobileTocToggle) return;
+        document.body.classList.remove('mobile-toc-open');
+        mobileTocToggle.setAttribute('aria-expanded', 'false');
+        updateBodyScrollAndOverlay();
+    }
+    if (mobileTocToggle && tocContainerElement) {
+        mobileTocToggle.addEventListener('click', () => {
+            document.body.classList.contains('mobile-toc-open') ? closeMobileToc() : openMobileToc();
+        });
+    }
+    // Note: ToC link clicks are handled in section 2 to close the panel.
+
+    // --- 7. Global Event Listeners (Overlay, Keyboard) ---
+    if (pageOverlay) {
+        pageOverlay.addEventListener('click', () => {
+            if (document.body.classList.contains('mobile-sidebar-open')) closeMobileSidebar();
+            if (document.body.classList.contains('mobile-toc-open')) closeMobileToc();
+        });
+    }
+    document.addEventListener('keydown', (e) => {
+        if (e.key === '/' && !isSearchActive && !isEditingContent(document.activeElement)) { e.preventDefault(); openSearch(); }
+        if (e.key === 'k' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); isSearchActive ? closeSearch() : openSearch(); }
+        if (e.key === 'Escape') {
+            if (isSearchActive) { e.preventDefault(); closeSearch(); }
+            else if (document.body.classList.contains('mobile-sidebar-open')) { e.preventDefault(); closeMobileSidebar(); }
+            else if (document.body.classList.contains('mobile-toc-open')) { e.preventDefault(); closeMobileToc(); }
         }
     });
-
 });
 </script>
 <!-- Search Modal Overlay -->
-<div id="searchOverlay" class="search-overlay"> <!-- This ID is for the search functionality -->
+<div id="searchOverlay" class="search-overlay"> 
     <div id="searchModal" class="search-modal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle">
     <div class="search-input-container">
         <svg class="search-modal-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
