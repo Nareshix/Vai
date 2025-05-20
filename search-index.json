@@ -1,0 +1,58 @@
+[
+    {
+        "id": "introduction",
+        "title": "Introduction",
+        "content": "Welcome to this comprehensive guide. Overview of the entire document, its purpose, and what you can expect to learn.",
+        "category": "Default Theme",
+        "tags": ["guide", "overview", "welcome"]
+    },
+    {
+        "id": "getting-started",
+        "title": "Getting Started",
+        "content": "Initial setup and prerequisites. Software installation and basic configuration steps.",
+        "category": "Default Theme",
+        "tags": ["setup", "install", "config"]
+    },
+    {
+        "id": "core-concepts",
+        "title": "Core Concepts",
+        "content": "Fundamental principles and ideas. Definitions, key terminologies, and their relationships.",
+        "category": "Default Theme",
+        "tags": ["fundamentals", "definitions", "basics"]
+    },
+    {
+        "id": "feature-alpha",
+        "title": "Feature Alpha",
+        "content": "Capabilities for X, Y, and Z. Enhance productivity and streamline workflows.",
+        "category": "Default Theme",
+        "tags": ["feature", "alpha", "workflow"]
+    },
+    {
+        "id": "site-config",
+        "title": "Site Config",
+        "content": "Configuration options for the overall site behavior and appearance.",
+        "category": "Reference",
+        "tags": ["site", "configuration", "settings"]
+    },
+    {
+        "id": "frontmatter-config",
+        "title": "Frontmatter Config",
+        "content": "Page-specific metadata using frontmatter. Title, description, layout settings.",
+        "category": "Reference",
+        "tags": ["frontmatter", "metadata", "page"]
+    },
+    {
+        "id": "theme-overview",
+        "title": "Theme Overview",
+        "content": "An overview of the default theme components and styling.",
+        "category": "Default Theme",
+        "tags": ["theme", "style", "components"]
+    },
+    {
+        "id": "theme-nav",
+        "title": "Theme Nav",
+        "content": "Customizing the top navigation bar in the default theme.",
+        "category": "Default Theme",
+        "tags": ["navigation", "header", "menu"]
+    }
+]

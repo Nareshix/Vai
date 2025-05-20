@@ -63,7 +63,7 @@
 --color-search-kbd-border: var(--color-border-sidebar);
 
 /* --- NEW: Header Navigation Link Colors - Dark Theme --- */
---color-header-nav-link-text: var(--color-text-toc-link); /* Default color for header nav links */
+--color-header-nav-link-text: #d8d8de; /* Default color for header nav links */
 --color-header-nav-link-text-hover: var(--color-text-body); /* Brighter on hover */
 --color-header-nav-link-bg-hover: var(--color-search-trigger-hover-bg); /* Consistent hover bg */
 --color-header-nav-link-text-active: var(--color-text-toc-link-active); /* For active/current page link */
@@ -266,7 +266,7 @@ height: 4rem;
 flex-shrink: 0;
 padding: 0 1rem; /* Adjusted padding for mobile */
 background-color: var(--color-bg-body);       /* Changed in the previous step */
-border-bottom: 1px solid var(--color-border-header); /* This remains the primary distinguishable line */
+border-bottom: 0px solid var(--color-border-header); /* This remains the primary distinguishable line */
 box-shadow: var(--shadow-header-subtle);      /* ADDED: Applies the new subtle shadow */
 display: flex;
 align-items: center;
@@ -802,8 +802,6 @@ height: 24px;
 .header-dropdown-container {
 position: relative;
 display: inline-block; /* or inline-flex if that's what you use */
-padding-bottom: 0.5rem; /* Matches the '0.5rem' gap from 'top: calc(100% + 0.5rem);' on the menu */
-margin-bottom: -0.5rem; /* Optional: Counteracts the padding if it pushes other elements down */
 }
 
 .header-dropdown-trigger {
@@ -824,40 +822,30 @@ margin-bottom: -0.5rem; /* Optional: Counteracts the padding if it pushes other 
 }
 
 /* MODIFIED: Header Navigation Link Hover Effect */
-.header-dropdown-trigger:hover,
-.header-dropdown-trigger:focus-visible { /* Focus-visible is for keyboard navigation */
-    background-color: transparent; /* MODIFIED: Removes background highlight */
-    color: var(--color-dropdown-trigger-hover-text); /* Keeps text color change (e.g., to brighter) */
-}
-
-.header-dropdown-trigger[aria-expanded="true"] {
-    background-color: var(--color-dropdown-trigger-active-bg); /* Keep hover style when open */
-}
 
 .header-dropdown-trigger .dropdown-arrow-icon {
     margin-left: 0.35rem;
     transition: transform 0.2s ease-out, stroke 0.2s ease-out; /* MODIFIED: Added stroke to transition */
     transform: rotate(90deg); /* ADDED: Makes the default ">" arrow point DOWN "v" */
-    stroke: var(--color-dropdown-trigger-arrow);
+    stroke: var(--color-header-nav-link-text);
     width: 1em; /* Adjust size */
     height: 1em;
+    
 }
 
  .header-dropdown-container:hover .header-dropdown-trigger .dropdown-arrow-icon,
 .header-dropdown-trigger[aria-expanded="true"] .dropdown-arrow-icon {
     transform: rotate(-90deg); /* Change to -90 degrees for UP arrow */
-    stroke: var(--color-dropdown-trigger-hover-text); /* Match text color when open/hover */
+    stroke: var(--color-sidebar-link-text);           ; /* Match text color when open/hover */
 }
 
 .header-dropdown-trigger:focus-visible .dropdown-arrow-icon {
     transform: rotate(-90deg); /* Pointing UP */
-    stroke: var(--color-dropdown-trigger-hover-text); /* Match trigger text color on focus */
 }
 
 .header-dropdown-menu {
 position: absolute;
-top: 100%; /* Position below the trigger with a small gap */
-/* REMOVE: right: 0; */
+top: 100%; 
 left: 50%;              /* <<< ADD: Position the left edge of the menu at the center of the container */
 transform: translateX(-50%) translateY(-10px); /* <<< MODIFY: Pull menu left by half its own width, keep existing Y transform */
                                             /* If the menu is visible (on hover), transform will be translateX(-50%) translateY(0) */
@@ -879,15 +867,21 @@ transition: opacity 0.15s ease-out,
 pointer-events: none;
 }
 
+
+
+.header-dropdown-container:hover .header-dropdown-trigger {
+    color: var(--color-sidebar-link-text);           /* Ensures text color matches hover state */
+}
+
+
 /* --- THIS IS THE KEY CHANGE FOR HOVER --- */
 .header-dropdown-container:hover .header-dropdown-menu,
-.header-dropdown-trigger:focus-within + .header-dropdown-menu, /* Show on trigger focus for keyboard */
-.header-dropdown-menu:hover /* Keep open if mouse moves onto the menu itself */ {
+.header-dropdown-menu:hover {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(0); /* <<< MODIFY: Center horizontally when visible */
+    transform: translateX(-50%) translateY(0);
     transition-delay: 0s;
-    pointer-events: auto; /* Allow interaction when visible */
+    pointer-events: auto;
 }
 
 
@@ -1149,6 +1143,39 @@ body.mobile-sidebar-open {
 overflow: hidden;
 }
 
+.mobile-header-logo {
+    display: none; /* Hidden by default on desktop */
+    align-items: center; /* Vertically align content if logo div is flex */
+}
+
+
+.mobile-header-logo .sidebar-logo-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: var(--color-text-body); /* Use body text color for header logo, or var(--color-sidebar-logo-text) if preferred */
+    font-size: 1.125rem; /* Consistent with sidebar logo */
+    font-weight: 600;
+    padding: 0; /* Remove padding that might come from .sidebar-logo-link */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mobile-header-logo .sidebar-logo-link .logo-svg { /* If you use an SVG logo */
+    width: 28px;
+    height: 28px;
+    margin-right: 0.65rem;
+    color: var(--color-text-body); /* Or var(--color-sidebar-logo-svg) */
+}
+
+
+
+.mobile-header-logo {
+            display: none; /* Hidden by default on desktop */
+            align-items: center; 
+            justify-content: center; /* Center the link itself if it's narrower than this container */
+        }
 
 /* --- Media Query for Responsiveness (e.g., Tablets and Phones) --- */
 @media (max-width: 992px) {
@@ -1264,6 +1291,15 @@ body.mobile-sidebar-open .left-sidebar {
 .mobile-menu-button {
     margin-right: 0.5rem;
 }
+.mobile-header-logo {
+        display: inline-flex; /* Show the logo container */
+        flex-grow: 1; /* Allow logo to take available space */
+        justify-content: center; /* Center the logo link within this container */
+        overflow: hidden; /* Prevent very long logos from breaking layout */
+    }
+    /* END: Styles for the new mobile header logo */
+
+
 .header-actions {
     gap: 0.25rem;
 }
@@ -1377,6 +1413,15 @@ body.mobile-sidebar-open .left-sidebar {
                 <line x1="3" y1="18" x2="21" y2="18"></line>
             </svg>
         </button>
+
+        <div class="mobile-header-logo">
+            <a href="#" class="sidebar-logo-link">
+                <!-- If you have an SVG logo, it would go here, same as in .sidebar-brand -->
+                <!-- <svg class="logo-svg">...</svg> -->
+                Logo
+            </a>
+        </div>
+    
 
         <div class="header-actions">
             <button id="searchTrigger" class="search-trigger-button" aria-label="Open search (Press /)">
