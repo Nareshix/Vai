@@ -32,7 +32,7 @@
     --color-border-header: #363636;
     --color-border-toc-line: #555;
     --color-text-toc-link: #aaa;
-    --color-text-toc-link-hover: #ccc;
+    --color-text-toc-link-hover: white;
     --color-text-toc-link-active: #a8b1ff;
     --color-button-bg: #444;
     --color-button-text: #e0e0e0;
@@ -331,14 +331,19 @@ transition: border-color 0.3s ease;
 }
 
 #toc-links a {
-display: block;
-padding: 0.3rem 0 calc(0.3rem + 0.35rem) 1rem; /* New padding-bottom incorporates old margin */
-color: var(--color-text-toc-link);
-text-decoration: none;
-margin-bottom: 0.35rem;
-white-space: normal;
-font-size: 0.9rem;
-position: relative; /* Good practice */
+    display: block;
+    /* Distribute the total vertical padding equally */
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+    /* Keep horizontal padding and other properties as they were */
+    padding-left: 1rem;
+    padding-right: 0; /* Assuming it was 0 or not set, based on original calc */
+    color: var(--color-text-toc-link);
+    text-decoration: none;
+    margin-bottom: 0; /* Crucial: keep this at 0 */
+    white-space: normal;
+    font-size: 0.9rem;
+    position: relative; /* Good practice */
 }
 
 #toc-links a.active {
@@ -1431,8 +1436,7 @@ body.mobile-toc-open #toc-container {
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-                <span class="search-trigger-text">Search...</span>
-                <span class="search-shortcut-hint">/</span>
+                <span class="search-trigger-text">Search</span>
             </button>
             
             <!-- NEW Mobile ToC Toggle Button -->
@@ -1863,7 +1867,6 @@ document.addEventListener('DOMContentLoaded', () => {
         </svg>
         <input type="text" id="searchInput" class="search-input" placeholder="Search documentation..." aria-label="Search input">
         <button id="searchCloseButton" class="search-close-button" aria-label="Close search">
-        <kbd>ESC</kbd>
         </button>
     </div>
     <div id="searchResultsContainer" class="search-results-container">
