@@ -1095,12 +1095,6 @@ color: var(--color-sidebar-footer-link-text-hover);
 text-decoration: underline;
 }
 
-.toc-container-header {
-    margin-bottom: 0.5rem;
-    margin-top: 0;
-    font-weight: 600;
-}
-
 /* --- Mobile Menu Button --- */
 .mobile-menu-button {
 display: none; /* Hidden by default, shown in media query */
@@ -1498,7 +1492,7 @@ body.mobile-toc-open #toc-container {
         <div id="content-area" tabindex="0">
 
             <h1>MOM</h1>
-            <P>On this page</P>
+            <P>ASD</P>
             <h2 id="introduction">Introduction</h2>
             <p>Welcome to this comprehensive guide. This section provides an overview of the entire document, its purpose, and what you can expect to learn. We will cover various topics in detail, ensuring a clear understanding for all readers.</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
@@ -1567,7 +1561,6 @@ body.mobile-toc-open #toc-container {
             </div>
         </div>
     <div id="toc-container"> <!-- This container is now also the mobile ToC panel -->
-        <p class="toc-container-header">On This Page</p>
         <nav id="toc-links">
             <div id="toc-active-marker"></div>
             <a href="#introduction">Introduction</a> 
@@ -1694,8 +1687,7 @@ document.addEventListener('DOMContentLoaded', () => {
             (contentScrollTop < scrollOffset || contentScrollTop < (sections[sectionIds[0]].offsetTop - scrollOffset))) {
             currentSectionId = sectionIds[0];
         }
-        // Check if scrolled to the very bottom
-        if (sectionIds.length > 0 && (mainScroller.scrollHeight - mainScroller.scrollTop <= mainScroller.clientHeight + 5)) { // +5 for small buffer
+        if (sectionIds.length > 0 && (mainScroller.scrollHeight - mainScroller.scrollTop <= mainScroller.clientHeight + 5)) {
             currentSectionId = sectionIds[sectionIds.length - 1];
         }
 
@@ -1709,7 +1701,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (activeLinkElement && tocContainerElement && tocContainerElement.scrollHeight > tocContainerElement.clientHeight) {
             const linkTopInToc = activeLinkElement.offsetTop;
-            const linkHeight = activeLinkElement.offsetHeight; // Still useful for scroll logic
+            const linkHeight = activeLinkElement.offsetHeight;
             const linkBottomInToc = linkTopInToc + linkHeight;
             const tocScrollTop = tocContainerElement.scrollTop;
             const tocClientHeight = tocContainerElement.clientHeight;
@@ -1720,14 +1712,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 tocContainerElement.scrollTo({ top: Math.min(linkBottomInToc - tocClientHeight + scrollPadding, tocContainerElement.scrollHeight - tocClientHeight), behavior: 'smooth' });
             }
         }
-
-        // UPDATED PART for marker height and top:
         if (activeLinkElement) {
-            const markerTop = activeLinkElement.offsetTop; // offsetTop is integer, relative to #toc-links
-            const linkRect = activeLinkElement.getBoundingClientRect(); // Get precise fractional dimensions
-
-            tocActiveMarker.style.top = `${markerTop}px`;
-            tocActiveMarker.style.height = `${linkRect.height}px`; // Use precise fractional height
+            tocActiveMarker.style.top = `${activeLinkElement.offsetTop}px`;
+            tocActiveMarker.style.height = `${activeLinkElement.offsetHeight}px`;
             tocActiveMarker.style.opacity = '1';
         } else {
             tocActiveMarker.style.opacity = '0';
@@ -1869,7 +1856,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-</script><!-- Search Modal Overlay -->
+</script>
+<!-- Search Modal Overlay -->
 <div id="searchOverlay" class="search-overlay"> 
     <div id="searchModal" class="search-modal" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle">
     <div class="search-input-container">
