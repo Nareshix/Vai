@@ -264,6 +264,12 @@ flex-direction: row;
     font-weight: 600;    
 }
 
+a {
+    font-weight: 500;
+    color: var(--color-text-toc-link-active);
+    text-underline-offset: 0.125rem;
+    
+}
 .app-header {
 height: 4rem;
 flex-shrink: 0;
