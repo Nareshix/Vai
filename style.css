@@ -1468,3 +1468,22 @@ body.mobile-toc-open #toc-container {
 .copy-code-button:active svg {
     transform: scale(0.9); /* Subtle shrink on click */
 }
+
+
+@media (max-width: 992px) {
+    .codehilite pre {
+        overflow-x: auto;
+        white-space: pre;
+    }
+
+}
+
+
+@media (max-width: 767px) { 
+    .codehilite pre {
+        overflow-x: auto;
+        white-space: pre;
+    }
+
+}
+
