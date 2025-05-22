@@ -1,17 +1,19 @@
 import markdown
 from markdown.extensions import Extension
 from markdown.treeprocessors import Treeprocessor
-import xml.etree.ElementTree as ET
+from xml.etree import ElementTree as etree # Use etree consistently
 import re
 from jinja2 import Environment, FileSystemLoader
 from bs4 import BeautifulSoup
 from markdown.extensions.codehilite import CodeHiliteExtension
+from markdown.blockprocessors import BlockProcessor
 
-
+# -----------------------------------------
+# Heading links generator (Your existing code - seems fine)
+# -----------------------------------------
 def generate_heading_links(html):
     soup = BeautifulSoup(html, 'html.parser')
     links = []
-    
     for tag in soup.find_all(['h2', 'h3']):
         title = tag.get_text()
         anchor = tag.get('id')
@@ -22,91 +24,176 @@ def generate_heading_links(html):
         else:
             link = f'<a href="#{anchor}">{title}</a>'
         links.append(link)
-    
     return '\n'.join(links)
 
-
-
+# -----------------------------------------
+# Slugify function for heading IDs (Your existing code - seems fine)
+# -----------------------------------------
 def slugify(text):
     text = text.lower()
-    text = re.sub(r'[^\w\s-]', '', text)  # remove non-word chars
-    text = re.sub(r'\s+', '-', text)      # replace spaces with dashes
+    text = re.sub(r'[^\w\s-]', '', text)
+    text = re.sub(r'\s+', '-', text)
     return text
 
+# -----------------------------------------
+# Custom Treeprocessor for heading IDs (Your existing code - seems fine)
+# -----------------------------------------
 class H2ClassAdder(Treeprocessor):
-    def run(self, root: ET.Element):
+    def run(self, root: etree.Element): # Changed ET.Element to etree.Element
         for element in root.iter():
             if element.tag in ('h2', 'h3') and element.text:
                 element.set('id', slugify(element.text))
-                # if element.tag == 'h3':
-                    # element.set('style', 'padding: 1rem;')
 
 class H2ClassExtension(Extension):
     def extendMarkdown(self, md):
         md.treeprocessors.register(H2ClassAdder(md), 'h2classadder', 15)
 
+# -----------------------------------------
+# CORRECTED Admonition block processor
+# -----------------------------------------
+class AdmonitionProcessorCorrected(BlockProcessor):
+    RE_START = re.compile(r'^\s*:::\s*([a-zA-Z0-9_-]+)(?:\s*(.*))?\s*$') # Start: ::: type [title]
+    RE_END = re.compile(r'^\s*:::\s*$')                                # End: :::
+
+    def test(self, parent, block):
+        # Test if the first line of the 'block' string matches the start pattern.
+        # 'block' is a string that the BlockParser has identified,
+        # potentially containing multiple lines if no blank lines separate them.
+        return bool(self.RE_START.match(block.split('\n', 1)[0]))
+
+    def run(self, parent, blocks):
+        # 'blocks' is a list of block strings for the whole document.
+        # We operate on the first one, which our test() method approved.
+        current_block_text = blocks.pop(0) # Consume the matched block
+        lines = current_block_text.split('\n')
+
+        first_line_match = self.RE_START.match(lines[0])
+        if not first_line_match: # Should not happen if test() worked
+            blocks.insert(0, current_block_text) # Put it back
+            return False 
+
+        admon_type = first_line_match.group(1).lower()
+        # Get custom title, or empty string if not present
+        custom_title_str = first_line_match.group(2).strip() if first_line_match.group(2) else ""
+
+        # Determine the display title
+        if admon_type == "details":
+            display_title = custom_title_str if custom_title_str else "Details"
+        else:
+            # Use custom title if provided, otherwise uppercase the type (e.g., INFO, TIP)
+            display_title = custom_title_str if custom_title_str else admon_type.upper()
+
+        # Collect content lines from *within* the current_block_text
+        content_lines = []
+        end_marker_found_at_index = -1
+        
+        # Start searching for content and end marker from the second line (lines[1])
+        for i in range(1, len(lines)):
+            if self.RE_END.match(lines[i]):
+                end_marker_found_at_index = i
+                break # Found the end marker
+            content_lines.append(lines[i])
+        
+        if end_marker_found_at_index == -1:
+            # No closing ':::' found within this block.
+            # Put the original block back and let other processors handle it.
+            blocks.insert(0, current_block_text)
+            return False
+
+        # If there were lines after the ':::' within the same original block string,
+        # they need to be put back for further processing.
+        remaining_lines_after_end_in_block = lines[end_marker_found_at_index + 1:]
+        if remaining_lines_after_end_in_block:
+            # Join them back into a block string and insert at the beginning of 'blocks'
+            blocks.insert(0, "\n".join(remaining_lines_after_end_in_block))
+        
+        # Create the HTML elements using etree
+        if admon_type == "details":
+            el = etree.SubElement(parent, 'details')
+            el.set('class', f'admonition {admon_type}')
+            summary_el = etree.SubElement(el, 'summary')
+            summary_el.set('class', 'admonition-title')
+            summary_el.text = display_title # Titles generally aren't further Markdown processed
+        else:
+            el = etree.SubElement(parent, 'div')
+            el.set('class', f'admonition {admon_type}')
+            title_el = etree.SubElement(el, 'p')
+            title_el.set('class', 'admonition-title')
+            title_el.text = display_title
+        
+        content_wrapper_el = etree.SubElement(el, 'div')
+        content_wrapper_el.set('class', 'admonition-content')
+
+        # Recursively parse the collected content lines as Markdown blocks
+        # The content_lines list might contain text that forms multiple paragraphs,
+        # code blocks, lists etc., hence parseBlocks is appropriate.
+        self.parser.parseBlocks(content_wrapper_el, content_lines)
+        
+        return True # Indicate success, this block was processed
+
+class AdmonitionExtensionCorrected(Extension):
+    def extendMarkdown(self, md):
+        # Register the corrected block processor
+        # Priority 105 is generally good, making it run before the default paragraph processor.
+        md.parser.blockprocessors.register(
+            AdmonitionProcessorCorrected(md.parser), 'admonition_corrected', 105
+        )
+
+# -----------------------------------------
+# Markdown to HTML converter - MODIFIED to use corrected extension
+# -----------------------------------------
 def convert_md_to_html(md_text):
-    return markdown.markdown(md_text, extensions=[H2ClassExtension(), 
-                                                  'fenced_code', 
-                                                   CodeHiliteExtension(css_class='codehilite', guess_lang=False, use_pygments=True)
-])
+    return markdown.markdown(md_text, extensions=[
+        H2ClassExtension(),
+        AdmonitionExtensionCorrected(), # Use the corrected extension
+        'fenced_code',
+        CodeHiliteExtension(css_class='codehilite', guess_lang=False, use_pygments=True)
+    ])
 
+# -----------------------------------------
+# Jinja2 Environment (Your existing code - seems fine)
+# -----------------------------------------
 env = Environment(loader=FileSystemLoader('.'))
-template = env.get_template('index.html')
+template = env.get_template('test.html') # Ensure 'test.html' is your template file name
 
-
-# Example usage
+# -----------------------------------------
+# Example usage (Your existing code - seems fine)
+# -----------------------------------------
 md_text = """
-# My Awesome Document Title
+# A Title
 
-This is an introductory paragraph. It contains some **bold** text and some *italic* text, as well as a [link to nowhere](#).
+Some text before.
 
-## First H2 Section: Simple and Clean
+::: info Testing Info Box
+This is an info box.
+It can contain **Markdown** like `code`.
+:::
 
-Content under the first H2. We expect this to appear in the TOC and have an ID like `first-h2-section-simple-and-clean`.
-
-We can have lists:
-- Item 1
-- Item 2
-    - Sub-item 2.1 (should not be in TOC)
-    - Sub-item 2.2 (should not be in TOC)
-
-And even a horizontal rule:
-
-
-### First H3: Under the First H2
-
-This is an H3. It should be in the TOC, indented, and have an ID like `first-h3-under-the-first-h2`.
-It contains `inline code`.
-
-### Second H3: Also Under First H2
-
-Another H3, to test multiple H3s under a single H2.
-ID should be `second-h3-also-under-first-h2`.
-
-## Second H2 Section: Testing Slugification CASES and Punctuation!
-
-This section tests how various characters are handled in slugification.
-ID should be `second-h2-section-testing-slugification-cases-and-punctuation`.
-
-It might contain a blockquote:
-> This is a blockquote. It shouldn't affect headings.
-
-And a code block:
-
+::: tip With a Custom Tip Title
+This is a tip.
 ```python
-def test_function():
-    # This code should not be processed for headings
-    print("Hello from code block")
-```
+# Code inside tip
+print("Hello"):::
+::: warning
+This is a warning. 
+Item 1
+Item 2
+:::
+::: danger
+This is a dangerous warning.
+:::
+::: details Click Me to See
+This is a details block.
+It can even have paragraphs inside.
+:::
+Some text after.
 """
-
 body_content = convert_md_to_html(md_text)
+print("--- Generated Body Content ---")
 print(body_content)
+print("----------------------------")
 toc_table_link = generate_heading_links(body_content)
-
-rendered = template.render(body_content=body_content,toc_table_link=toc_table_link )
+rendered = template.render(body_content=body_content, toc_table_link=toc_table_link)
 with open('output.html', 'w', encoding='utf-8') as f:
     f.write(rendered)
-
-
+print("Generated 'output.html'. Please check it in your browser.")
