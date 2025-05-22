@@ -1372,3 +1372,99 @@ body.mobile-toc-open #toc-container {
     color: var(--color-sidebar-link-text-active);
     font-weight: 600;
 }
+/* --- Ensure these styles are in your style.css --- */
+
+/* Make the code block container a positioning context */
+.codehilite {
+    position: relative;
+}
+
+/* Style for the copy button */
+.copy-code-button {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 5px;
+    background-color: transparent;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    z-index: 1;
+    line-height: 0;
+    user-select: none;
+}
+
+/* SVG icon base styles */
+.copy-code-button svg {
+    width: 18px;  /* Adjust icon size as needed */
+    height: 18px; /* Adjust icon size as needed */
+    display: block;
+    transition: transform 0.1s ease-out, fill 0.2s ease-in-out; /* Added fill transition */
+}
+
+/* --- Theme-specific icon colors --- */
+
+/* For Light Theme: Icon should be dark */
+.light-theme .copy-code-button svg {
+    fill: #333333; /* A dark gray. Adjust if your light theme text is different. */
+                   /* If currentColor (default text color) works well, you can use that: */
+                   /* fill: currentColor; */
+}
+
+/* For Dark Theme: Icon should be light */
+.dark-theme .copy-code-button svg {
+    fill: #cccccc; /* A light gray. Adjust for best contrast on your dark code blocks. */
+                   /* Examples: #d1d1d1, #e0e0e0 */
+}
+
+/* Fallback if no theme class is present (optional, could be one of the above or currentColor) */
+/* This rule would apply if body has neither .light-theme nor .dark-theme */
+/* If you always have a theme class, you might not need this specific fallback */
+/*
+*:not(.light-theme):not(.dark-theme) .copy-code-button svg {
+    fill: #555555; // A generic medium gray, or currentColor
+}
+*/
+/* More simply, if you want currentColor as the base if no theme class is matched: */
+.copy-code-button svg { /* This now acts as a base if no theme-specific rule above matches */
+    fill: currentColor; /* Or a sensible default like #555555 */
+}
+
+
+/* --- Hover and Active States --- */
+
+/* Show button on hover of the code block */
+.codehilite:hover .copy-code-button {
+    opacity: 0.75; /* Slightly more opaque for better visibility initially */
+    visibility: visible;
+}
+
+/* Optional: If the icon is still too dim on initial hover in dark mode,
+   you can give it a higher opacity specifically for dark theme */
+/*
+.dark-theme .codehilite:hover .copy-code-button {
+    opacity: 0.85;
+}
+*/
+
+/* Full opacity on direct button hover */
+.copy-code-button:hover {
+    opacity: 1;
+}
+
+/* Optional: Slightly change icon color on button hover for more feedback */
+.light-theme .copy-code-button:hover svg {
+    fill: #000000; /* Darker for light theme */
+}
+
+.dark-theme .copy-code-button:hover svg {
+    fill: #ffffff; /* Brighter for dark theme */
+}
+
+
+.copy-code-button:active svg {
+    transform: scale(0.9); /* Subtle shrink on click */
+}

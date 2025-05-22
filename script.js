@@ -347,3 +347,64 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+
+
+// --- Update this code in your script.js ---
+
+document.addEventListener('DOMContentLoaded', () => {
+    const codeBlocks = document.querySelectorAll('.codehilite');
+
+    // SVG Icon for "Copy" (Clipboard icon)
+    const copyIconSVG = `
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+        </svg>`;
+
+    // SVG Icon for "Copied" (Checkmark icon)
+    const copiedIconSVG = `
+        <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+        </svg>`;
+
+    codeBlocks.forEach(codeBlockContainer => {
+        const preElement = codeBlockContainer.querySelector('pre');
+        if (!preElement) return;
+
+        const codeElement = preElement.querySelector('code');
+        if (!codeElement) return;
+
+        const copyButton = document.createElement('button');
+        copyButton.className = 'copy-code-button';
+        copyButton.innerHTML = copyIconSVG; // Set initial icon
+        copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+        copyButton.setAttribute('title', 'Copy code'); // Tooltip
+
+        codeBlockContainer.insertBefore(copyButton, preElement);
+
+        copyButton.addEventListener('click', async () => {
+            const codeToCopy = codeElement.innerText;
+
+            try {
+                await navigator.clipboard.writeText(codeToCopy);
+                copyButton.innerHTML = copiedIconSVG; // Change to "copied" icon
+                copyButton.setAttribute('aria-label', 'Code copied to clipboard');
+                copyButton.setAttribute('title', 'Copied!');
+
+                setTimeout(() => {
+                    copyButton.innerHTML = copyIconSVG; // Revert to "copy" icon
+                    copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+                    copyButton.setAttribute('title', 'Copy code');
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy code: ', err);
+                // Optionally handle the error visually, e.g., with an error icon
+                copyButton.setAttribute('title', 'Error copying');
+                 setTimeout(() => {
+                    copyButton.innerHTML = copyIconSVG; // Revert to "copy" icon
+                    copyButton.setAttribute('aria-label', 'Copy code to clipboard');
+                    copyButton.setAttribute('title', 'Copy code');
+                }, 2000);
+            }
+        });
+    });
+});
