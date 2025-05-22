@@ -7,6 +7,7 @@ from jinja2 import Environment, FileSystemLoader
 from bs4 import BeautifulSoup
 from markdown.extensions.codehilite import CodeHiliteExtension
 from markdown.blockprocessors import BlockProcessor
+from livereload import Server
 
 # -----------------------------------------
 # Heading links generator (Your existing code - seems fine)
@@ -159,41 +160,19 @@ template = env.get_template('test.html') # Ensure 'test.html' is your template f
 # -----------------------------------------
 # Example usage (Your existing code - seems fine)
 # -----------------------------------------
-md_text = """
-# A Title
+def build():
+    with open("example.md", "r", encoding="utf-8") as f:
+        md_text = f.read()
+    body_content = convert_md_to_html(md_text)
+    toc_table_link = generate_heading_links(body_content)
+    rendered = template.render(body_content=body_content, toc_table_link=toc_table_link)
+    with open("output.html", "w", encoding="utf-8") as f:
+        f.write(rendered)
+    
 
-Some text before.
 
-::: info Testing Info Box
-This is an info box.
-It can contain **Markdown** like `code`.
-:::
 
-::: tip With a Custom Tip Title
-This is a tip.
-```python
-# Code inside tip
-print("Hello"):::
-::: warning
-This is a warning. 
-Item 1
-Item 2
-:::
-::: danger
-This is a dangerous warning.
-:::
-::: details Click Me to See
-This is a details block.
-It can even have paragraphs inside.
-:::
-Some text after.
-"""
-body_content = convert_md_to_html(md_text)
-print("--- Generated Body Content ---")
-print(body_content)
-print("----------------------------")
-toc_table_link = generate_heading_links(body_content)
-rendered = template.render(body_content=body_content, toc_table_link=toc_table_link)
-with open('output.html', 'w', encoding='utf-8') as f:
-    f.write(rendered)
-print("Generated 'output.html'. Please check it in your browser.")
+build()
+server = Server()
+server.watch('example.md', build)
+server.serve(root='.', default_filename='output.html')
