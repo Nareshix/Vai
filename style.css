@@ -1571,3 +1571,14 @@ p {
     padding-left: 3rem;
 }
 
+
+/* Add this to your style.css file */
+
+#content-area hr {
+    border: 0;                                  /* Clear any default browser borders for the <hr> element */
+    border-top: 1px solid var(--color-border-toc-line); /* This creates the visible line, using your theme variable */
+    margin-top: 2.5rem;                         /* Adjust for desired space above the line */
+    margin-bottom: 2.5rem;                      /* Adjust for desired space below the line */
+    margin-left: 3rem;                          /* This indents the <hr> to align with your h* and p content */
+    /* margin-right: 0; /* This is the default, so the line will extend to the right edge of the content-area's content box (respecting content-area's own right padding) */
+}

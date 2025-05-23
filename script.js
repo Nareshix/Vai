@@ -1,4 +1,16 @@
+
 document.addEventListener('DOMContentLoaded', () => {
+    
+    const currentHash = window.location.hash;
+    const allLinks = document.querySelectorAll('.sidebar-section-content li > a.sidebar-link');
+    
+    for (const link of allLinks) {
+      if (link.getAttribute('href') === currentHash) {
+        link.classList.add('active');
+        break; // stop at first match
+      }
+    }
+    
     // --- Element References ---
     const htmlElement = document.documentElement;
     const mainScroller = document.querySelector('.main-area-wrapper');
@@ -408,3 +420,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+

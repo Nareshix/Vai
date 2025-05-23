@@ -21,22 +21,41 @@
         </div>
         <hr class="sidebar-divider logo-divider">
         <nav class="sidebar-nav">
-            {% for section in sidebar_data %}
+            
             <div class="sidebar-nav-section is-open">
                 <button class="sidebar-section-toggle">
-                    <span>{{section.title}}</span>
+                    <span>Reference</span>
                     <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="sidebar-section-content">
                     <ul class="sidebar-nav-links">
-                        {% for title in section.files %}
-                        <li><a href="#{{ title }}" class="sidebar-link">{{ title }}</a></li>
-                        {% endfor %}
+                        
+                        <li><a href="#site_config" class="sidebar-link">site_config</a></li>
+                        
+                        <li><a href="#site_config-2" class="sidebar-link">site_config-2</a></li>
+                        
                     </ul>
                 </div>
             </div>
             <hr class="sidebar-divider section-divider">
-            {% endfor %}
+            
+            <div class="sidebar-nav-section is-open">
+                <button class="sidebar-section-toggle">
+                    <span>Guides</span>
+                    <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="sidebar-section-content">
+                    <ul class="sidebar-nav-links">
+                        
+                        <li><a href="#Getting-Started" class="sidebar-link">Getting-Started</a></li>
+                        
+                        <li><a href="#Advanced-Usage" class="sidebar-link">Advanced-Usage</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <hr class="sidebar-divider section-divider">
+            
         </nav>
     </div>
 <div class="main-area-wrapper">
@@ -126,7 +145,18 @@
             <p>Placeholder content for example section 4.</p>
             <h2 id="section-example-5">Example Section 5</h2>
             <p>Placeholder content for example section 5. This is the very last piece of main content.</p> -->
-            {{body_content | safe}}
+            <h1>header</h1>
+<p>This is a test image </p>
+<hr />
+<h2 id="installation">installation</h2>
+<p>so this is how u install it moofo</p>
+<hr />
+<h2 id="asdf">asdf</h2>
+<h3 id="inner-asdf">inner asdf</h3>
+<p><img alt="alt texasdt" src="image.png" /></p>
+<p>now all u need to do is simply lorem ipsum how?</p>
+<p>adf</p>
+<!-- <img src="image.png" alt="Alt text" width="300" height="200"> -->
             <div class="page-footer-container">
                 <div class="page-meta-row">
                     <a href="#" class="edit-page-link">
@@ -157,7 +187,9 @@
             <a href="#section-example-3">Example Section 3</a>
             <a href="#section-example-4">Example Section 4</a>
             <a href="#section-example-5">Example Section 5</a> -->
-            {{toc_table_link | safe}}
+            <a href="#installation">installation</a>
+<a href="#asdf">asdf</a>
+<a href="#inner-asdf" style="padding-left:2rem">inner asdf</a>
             
         </nav>
         

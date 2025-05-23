@@ -126,12 +126,31 @@ env = Environment(loader=FileSystemLoader('.'))
 template = env.get_template('test.html')
 
 
+
+sidebar_data = [
+    {
+        "title": "Reference",  # This will be your folder name
+        "files": [
+            'site_config',
+            'site_config-2'
+        ]
+    },
+    {
+        "title": "Guides",
+        "files": [
+            "Getting-Started",
+            "Advanced-Usage"
+        ]
+    },
+    # ... more sections
+]
+
 def build():
     with open("example.md", "r", encoding="utf-8") as f:
         md_text = f.read()
     body_content = convert_md_to_html(md_text)
     toc_table_link = generate_heading_links(body_content)
-    rendered = template.render(body_content=body_content, toc_table_link=toc_table_link)
+    rendered = template.render(body_content=body_content, toc_table_link=toc_table_link, sidebar_data=sidebar_data)
     with open("output.html", "w", encoding="utf-8") as f:
         f.write(rendered)
     
@@ -141,4 +160,8 @@ def build():
 build()
 server = Server()
 server.watch('example.md', build)
+# server.watch('src/**/*.md', build)
+
 server.serve(root='.', default_filename='output.html', port=6120)
+
+# server.serve(root='dist', default_filename='index.html', port=6120)
