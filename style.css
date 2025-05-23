@@ -1556,3 +1556,9 @@ body.mobile-toc-open #toc-container {
     border-radius: 3px;
     font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
+
+
+p img {
+    display: block;
+    margin: auto;
+}
