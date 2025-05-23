@@ -141,4 +141,4 @@ def build():
 build()
 server = Server()
 server.watch('example.md', build)
-server.serve(root='.', default_filename='output.html')
+server.serve(root='.', default_filename='output.html', port=6120)
