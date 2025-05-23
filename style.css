@@ -1558,7 +1558,16 @@ body.mobile-toc-open #toc-container {
 }
 
 
-p img {
+p:has(img:only-child) {
     display: block;
     margin: auto;
 }
+
+h1 {
+    padding-left: 3rem;
+}
+
+p {
+    padding-left: 3rem;
+}
+
