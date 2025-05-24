@@ -1,16 +1,42 @@
-
 document.addEventListener('DOMContentLoaded', () => {
-    
+    // --- START OF CODE FROM YOUR FIRST DOMContentLoaded BLOCK ---
+    const path = window.location.pathname;
+    const parts = path.split('/').filter(Boolean);
+    const lastFolder = parts[parts.length - 1];
+    console.log("Current last folder in URL:", lastFolder); // For debugging
+
+    // Ensure 'allLinks' and 'currentHash' are defined before this loop
+    // For example:
+    const allLinks = document.querySelectorAll('.sidebar-nav a.sidebar-link, #toc-links a'); // Adjust selector as needed
     const currentHash = window.location.hash;
-    const allLinks = document.querySelectorAll('.sidebar-section-content li > a.sidebar-link');
-    
-    for (const link of allLinks) {
-      if (link.getAttribute('href') === currentHash) {
-        link.classList.add('active');
-        break; // stop at first match
-      }
+
+    if (allLinks.length > 0 && currentHash) {
+        for (const link of allLinks) {
+          // Check if the link's href (relative or absolute) ends with the currentHash
+          // This is a basic check and might need refinement depending on your URL structure
+          if (link.getAttribute('href') === currentHash || link.href.endsWith(currentHash)) {
+            link.classList.add('active');
+            // If you want to make parent sidebar sections active too, add logic here
+            break; // stop at first match
+          }
+        }
     }
-    
+
+    const navButtons = document.querySelectorAll('.page-navigation-boxes .nav-box');
+    navButtons.forEach(buttonElement => {
+        if (buttonElement.tagName === 'BUTTON') {
+            const linkElement = buttonElement.querySelector('a.nav-box-link');
+            if (linkElement && linkElement.href) {
+                buttonElement.addEventListener('click', (event) => {
+                    if (!event.target.closest('a.nav-box-link')) {
+                        window.location.href = linkElement.href;
+                    }
+                });
+            }
+        }
+    });
+    // console.log('done') // We'll use a more descriptive log at the end
+
     // --- Element References ---
     const htmlElement = document.documentElement;
     const mainScroller = document.querySelector('.main-area-wrapper');
@@ -34,51 +60,47 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Configuration for Scroll Spy & Click Navigation ---
     const APP_HEADER_ELEMENT = document.querySelector('.app-header');
-    let DYNAMIC_HEADER_OFFSET = 64; // Fallback, typically 4rem * 16px/rem
-    const DESIRED_TEXT_GAP_BELOW_HEADER = 16; // e.g., 1rem, desired space below header to heading text
-    const SCROLL_SPY_ACTIVATION_LEEWAY = 20;  // Pixels "before" precise alignment to activate link
+    let DYNAMIC_HEADER_OFFSET = 64;
+    const DESIRED_TEXT_GAP_BELOW_HEADER = 16;
+    const SCROLL_SPY_ACTIVATION_LEEWAY = 20;
 
     function updateDynamicHeaderOffset() {
         if (APP_HEADER_ELEMENT) {
             DYNAMIC_HEADER_OFFSET = APP_HEADER_ELEMENT.offsetHeight;
         }
     }
-    updateDynamicHeaderOffset(); // Initial calculation
-    // Consider adding resize listener if header height can change and affect layout significantly
-    // window.addEventListener('resize', () => {
-    //     updateDynamicHeaderOffset();
-    //     updateActiveLinkAndMarker(); // Re-evaluate active link if header height changes
-    // });
-
+    updateDynamicHeaderOffset();
 
     let isSearchActive = false;
 
-    // --- Helper: Update Body Scroll & Page Overlay ---
     function updateBodyScrollAndOverlay() {
         const isSidebarOpen = document.body.classList.contains('mobile-sidebar-open');
         const isTocOpen = document.body.classList.contains('mobile-toc-open');
-        const transitionDuration = 300; 
+        const transitionDuration = 300;
 
         if (isSidebarOpen || isTocOpen) {
-            if (pageOverlay.style.display !== 'block') {
+            if (pageOverlay && pageOverlay.style.display !== 'block') { // Check if pageOverlay exists
                 pageOverlay.style.display = 'block';
                 requestAnimationFrame(() => { pageOverlay.style.opacity = '1'; });
             }
             document.body.style.overflow = 'hidden';
         } else {
-            pageOverlay.style.opacity = '0';
-            setTimeout(() => {
-                if (!document.body.classList.contains('mobile-sidebar-open') &&
-                    !document.body.classList.contains('mobile-toc-open')) {
-                    pageOverlay.style.display = 'none';
-                }
-            }, transitionDuration);
+            if (pageOverlay) { // Check if pageOverlay exists
+                pageOverlay.style.opacity = '0';
+                setTimeout(() => {
+                    if (!document.body.classList.contains('mobile-sidebar-open') &&
+                        !document.body.classList.contains('mobile-toc-open')) {
+                        pageOverlay.style.display = 'none';
+                    }
+                }, transitionDuration);
+            }
             document.body.style.overflow = '';
         }
     }
 
     // --- 1. Theme Functionality ---
     function applyTheme(theme) {
+        if (!htmlElement) return; // Guard clause
         htmlElement.classList.toggle('light-theme', theme === 'light');
         htmlElement.classList.toggle('dark-theme', theme === 'dark');
         if (themeToggleButton) themeToggleButton.setAttribute('aria-label', theme === 'light' ? 'Switch to Dark Theme' : 'Switch to Light Theme');
@@ -106,7 +128,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const sectionId = href.substring(1);
                 const sectionElement = document.getElementById(sectionId);
                 if (sectionElement) {
-                    // Store element and its computed paddingTop
                     const paddingTop = parseFloat(getComputedStyle(sectionElement).paddingTop) || 0;
                     sections[sectionId] = { element: sectionElement, paddingTop: paddingTop };
                 }
@@ -115,11 +136,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateActiveLinkAndMarker() {
-        const sectionIds = Object.keys(sections); 
-
-        if (!mainScroller || tocLinks.length === 0 || !tocActiveMarker || sectionIds.length === 0) {
-            if (tocActiveMarker) tocActiveMarker.style.opacity = '0';
-            if (tocLinksContainer) tocLinks.forEach(link => link.classList.remove('active'));
+        // Add null checks for elements at the beginning of this function
+        if (!mainScroller || !tocLinksContainer || !tocActiveMarker) {
+             if (tocActiveMarker) tocActiveMarker.style.opacity = '0';
+             if (tocLinksContainer && tocLinks) tocLinks.forEach(link => link.classList.remove('active'));
+            return;
+        }
+        const sectionIds = Object.keys(sections);
+        if (tocLinks.length === 0 || sectionIds.length === 0) {
+            tocActiveMarker.style.opacity = '0';
+            tocLinks.forEach(link => link.classList.remove('active'));
             return;
         }
 
@@ -132,39 +158,29 @@ document.addEventListener('DOMContentLoaded', () => {
             if (sectionData && sectionData.element) {
                 const sectionElement = sectionData.element;
                 const elementPaddingTop = sectionData.paddingTop;
-
-                // Calculate where the text of the section effectively starts
                 const textVisibleStartingPoint = sectionElement.offsetTop + elementPaddingTop;
-                
-                // Calculate the scrollTop value at which this section's text would be perfectly positioned
                 const targetScrollTopForSectionText = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
-
-                // Section is active if scrollTop is at or past this target position, minus a leeway
                 if (targetScrollTopForSectionText - SCROLL_SPY_ACTIVATION_LEEWAY <= contentScrollTop) {
                     currentSectionId = id;
-                    break; 
+                    break;
                 }
             }
         }
 
         if (currentSectionId === null && sectionIds.length > 0) {
-            // If scrolled above all sections' trigger points, default to the first section if its effective top is near or above current scroll.
-            // Or simply default to the first section if no other logic caught it.
              const firstSectionData = sections[sectionIds[0]];
              if (firstSectionData && firstSectionData.element) {
                 const textVisibleStartingPoint = firstSectionData.element.offsetTop + firstSectionData.paddingTop;
                 const targetScrollTopForFirstSectionText = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
-                 // If contentScrollTop is above the first section's ideal position, make first active.
                 if (contentScrollTop < targetScrollTopForFirstSectionText + SCROLL_SPY_ACTIVATION_LEEWAY) {
                      currentSectionId = sectionIds[0];
                 }
              }
-             if(currentSectionId === null) currentSectionId = sectionIds[0]; // Fallback to first if still null
+             if(currentSectionId === null) currentSectionId = sectionIds[0];
         }
-        
-        const epsilon = 2; 
+
+        const epsilon = 2;
         const isAtScrollEnd = (mainScroller.scrollTop + mainScroller.clientHeight >= mainScroller.scrollHeight - epsilon);
-        
         if (isAtScrollEnd && sectionIds.length > 0) {
             currentSectionId = sectionIds[sectionIds.length - 1];
         }
@@ -184,8 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const linkBottomInToc = linkTopInToc + linkHeight;
             const tocScrollTop = tocContainerElement.scrollTop;
             const tocClientHeight = tocContainerElement.clientHeight;
-            const scrollPadding = 30; 
-
+            const scrollPadding = 30;
             if (linkTopInToc < tocScrollTop + scrollPadding) {
                 tocContainerElement.scrollTo({ top: Math.max(0, linkTopInToc - scrollPadding), behavior: 'smooth' });
             } else if (linkBottomInToc > tocScrollTop + tocClientHeight - scrollPadding) {
@@ -208,25 +223,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetLink && targetLink.getAttribute('href')?.startsWith('#')) {
                 e.preventDefault();
                 const targetId = targetLink.getAttribute('href').substring(1);
-                const sectionData = sections[targetId]; // Get section data (element + paddingTop)
-                
+                const sectionData = sections[targetId];
                 if (sectionData && sectionData.element && mainScroller) {
                     const targetElement = sectionData.element;
                     const elementPaddingTop = sectionData.paddingTop;
-
-                    // Calculate where the text of the section effectively starts
                     const textVisibleStartingPoint = targetElement.offsetTop + elementPaddingTop;
-                    
-                    // Calculate the scrollTop value to position the text correctly below the header
                     const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
-                    
                     mainScroller.scrollTo({
-                        top: Math.max(0, scrollToPosition), // Ensure not scrolling to negative values
+                        top: Math.max(0, scrollToPosition),
                         behavior: 'smooth'
                     });
                 }
                 if (document.body.classList.contains('mobile-toc-open')) {
-                    closeMobileToc(); 
+                    closeMobileToc();
                 }
             }
         });
@@ -234,11 +243,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (mainScroller && tocLinks.length > 0) {
         mainScroller.addEventListener('scroll', updateActiveLinkAndMarker);
-        setTimeout(updateActiveLinkAndMarker, 100); 
+        setTimeout(updateActiveLinkAndMarker, 100);
     }
 
     // --- 3. Search Functionality ---
-    // ... (rest of search functionality: isEditingContent, openSearch, closeSearch, event listeners) ...
     function isEditingContent(element) {
         const tagName = element?.tagName;
         return tagName === 'INPUT' || tagName === 'TEXTAREA' || element?.isContentEditable || element?.closest('input, textarea, [contenteditable="true"], [contenteditable=""]');
@@ -249,7 +257,7 @@ document.addEventListener('DOMContentLoaded', () => {
             searchOverlayEl.classList.add('active');
             setTimeout(() => { searchInput.value = ''; searchInput.focus(); }, 60);
         });
-        document.body.style.overflow = 'hidden'; 
+        document.body.style.overflow = 'hidden';
         isSearchActive = true;
     }
     function closeSearch() {
@@ -259,26 +267,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (searchTriggerButton) searchTriggerButton.focus({ preventScroll: true });
         isSearchActive = false;
         if (!document.body.classList.contains('mobile-sidebar-open') && !document.body.classList.contains('mobile-toc-open')) {
-            document.body.style.overflow = ''; 
+            document.body.style.overflow = '';
         }
     }
     if (searchTriggerButton) searchTriggerButton.addEventListener('click', openSearch);
     if (searchCloseButton) searchCloseButton.addEventListener('click', closeSearch);
     if (searchOverlayEl) searchOverlayEl.addEventListener('click', (e) => { if (e.target === searchOverlayEl) closeSearch(); });
 
-
     // --- 4. Sidebar Accordion ---
-    // ... (rest of sidebar accordion functionality) ...
     document.querySelectorAll('.sidebar-nav .sidebar-nav-section').forEach(section => {
         const toggleButton = section.querySelector('.sidebar-section-toggle');
         const content = section.querySelector('.sidebar-section-content');
         if (toggleButton && content) {
             if (section.classList.contains('is-open')) {
                 const originalTransition = content.style.transition;
-                content.style.transition = 'none'; 
+                content.style.transition = 'none';
                 content.style.maxHeight = content.scrollHeight + "px";
-                requestAnimationFrame(() => { 
-                    requestAnimationFrame(() => { content.style.transition = originalTransition; }); 
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => { content.style.transition = originalTransition; });
                 });
             }
             toggleButton.addEventListener('click', () => {
@@ -290,10 +296,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 5. Mobile Navigation (Main Sidebar) ---
-    // ... (rest of mobile nav: openMobileSidebar, closeMobileSidebar, event listeners) ...
     function openMobileSidebar() {
         if (!leftSidebar || !mobileMenuToggle) return;
-        if (document.body.classList.contains('mobile-toc-open')) closeMobileToc(); 
+        if (document.body.classList.contains('mobile-toc-open')) closeMobileToc();
         document.body.classList.add('mobile-sidebar-open');
         mobileMenuToggle.setAttribute('aria-expanded', 'true');
         leftSidebar.querySelector('.sidebar-nav')?.scrollTo(0, 0);
@@ -319,14 +324,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 6. Mobile Table of Contents Panel ---
-    // ... (rest of mobile ToC: openMobileToc, closeMobileToc, event listeners) ...
     function openMobileToc() {
         if (!tocContainerElement || !mobileTocToggle) return;
-        if (document.body.classList.contains('mobile-sidebar-open')) closeMobileSidebar(); 
+        if (document.body.classList.contains('mobile-sidebar-open')) closeMobileSidebar();
         document.body.classList.add('mobile-toc-open');
         mobileTocToggle.setAttribute('aria-expanded', 'true');
-        tocContainerElement.scrollTo(0, 0); 
-        updateActiveLinkAndMarker(); 
+        tocContainerElement.scrollTo(0, 0);
+        updateActiveLinkAndMarker();
         updateBodyScrollAndOverlay();
     }
     function closeMobileToc() {
@@ -342,7 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 7. Global Event Listeners (Overlay, Keyboard) ---
-    // ... (rest of global event listeners) ...
     if (pageOverlay) {
         pageOverlay.addEventListener('click', () => {
             if (document.body.classList.contains('mobile-sidebar-open')) closeMobileSidebar();
@@ -358,21 +361,16 @@ document.addEventListener('DOMContentLoaded', () => {
             else if (document.body.classList.contains('mobile-toc-open')) { e.preventDefault(); closeMobileToc(); }
         }
     });
-});
+    // --- END OF CODE FROM YOUR FIRST DOMContentLoaded BLOCK ---
 
 
-// --- Update this code in your script.js ---
-
-document.addEventListener('DOMContentLoaded', () => {
+    // --- START OF CODE FROM YOUR SECOND DOMContentLoaded BLOCK (NOW MERGED) ---
     const codeBlocks = document.querySelectorAll('.codehilite');
 
-    // SVG Icon for "Copy" (Clipboard icon)
     const copyIconSVG = `
         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
         </svg>`;
-
-    // SVG Icon for "Copied" (Checkmark icon)
     const copiedIconSVG = `
         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
             <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
@@ -381,44 +379,39 @@ document.addEventListener('DOMContentLoaded', () => {
     codeBlocks.forEach(codeBlockContainer => {
         const preElement = codeBlockContainer.querySelector('pre');
         if (!preElement) return;
-
         const codeElement = preElement.querySelector('code');
         if (!codeElement) return;
 
         const copyButton = document.createElement('button');
         copyButton.className = 'copy-code-button';
-        copyButton.innerHTML = copyIconSVG; // Set initial icon
+        copyButton.innerHTML = copyIconSVG;
         copyButton.setAttribute('aria-label', 'Copy code to clipboard');
-        copyButton.setAttribute('title', 'Copy code'); // Tooltip
+        copyButton.setAttribute('title', 'Copy code');
 
         codeBlockContainer.insertBefore(copyButton, preElement);
 
         copyButton.addEventListener('click', async () => {
             const codeToCopy = codeElement.innerText;
-
             try {
                 await navigator.clipboard.writeText(codeToCopy);
-                copyButton.innerHTML = copiedIconSVG; // Change to "copied" icon
+                copyButton.innerHTML = copiedIconSVG;
                 copyButton.setAttribute('aria-label', 'Code copied to clipboard');
                 copyButton.setAttribute('title', 'Copied!');
-
                 setTimeout(() => {
-                    copyButton.innerHTML = copyIconSVG; // Revert to "copy" icon
+                    copyButton.innerHTML = copyIconSVG;
                     copyButton.setAttribute('aria-label', 'Copy code to clipboard');
                     copyButton.setAttribute('title', 'Copy code');
                 }, 2000);
             } catch (err) {
                 console.error('Failed to copy code: ', err);
-                // Optionally handle the error visually, e.g., with an error icon
                 copyButton.setAttribute('title', 'Error copying');
                  setTimeout(() => {
-                    copyButton.innerHTML = copyIconSVG; // Revert to "copy" icon
+                    copyButton.innerHTML = copyIconSVG;
                     copyButton.setAttribute('aria-label', 'Copy code to clipboard');
                     copyButton.setAttribute('title', 'Copy code');
                 }, 2000);
             }
         });
     });
+
 });
-
-
