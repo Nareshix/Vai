@@ -8,7 +8,7 @@
 <script src="/script.js" defer></script>
 
 <body>
-    <div class="left-sidebar" id="leftSidebar"> <!-- Added ID for aria-controls -->
+    <div class="left-sidebar" id="leftSidebar">
         <div class="sidebar-brand">
             <a href="/" class="left-side-bar-link">
                 <div class="left-side-bar-link-container-image-and-text">
@@ -22,13 +22,13 @@
             {% for section in sidebar_data %}
             <div class="sidebar-nav-section is-open">
                 <button class="sidebar-section-toggle">
-                    <span>{{section.title }}</span>
+                    <span>{{ section.title }}</span> {# This is now the cleaned title, e.g., "Guides" #}
                     <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="sidebar-section-content">
                     <ul class="sidebar-nav-links">
-                        {% for title in section.files %}
-                        <li><a href="/{{ section.title }}/{{ title }}" class="sidebar-link">{{ title }}</a></li>
+                        {% for file_item in section.files %} 
+                        <li><a href="/{{ section.output_folder_name }}/{{ file_item.slug }}/" class="sidebar-link">{{ file_item.title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -62,7 +62,6 @@
                 <span class="search-trigger-text">Search</span>
             </button>
             
-            <!-- NEW Mobile ToC Toggle Button -->
             <button class="icon-button mobile-toc-toggle" id="mobileTocToggle" aria-label="Open Table of Contents" aria-expanded="false" aria-controls="toc-container">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="8" y1="6" x2="21" y2="6"></line>
@@ -114,16 +113,6 @@
     <div class="content-toc-row">
         <div id="content-area" tabindex="0">
 
-            <!-- <h2 id="section-example-1">Example Section 1</h2>
-            <p>Placeholder content for example section 1 to ensure it's a target.</p>
-            <h2 id="section-example-2">c</h2>
-            <p>Placeholder content for example section 2.</p>
-            <h2 id="section-example-3">Example Section 3</h2>
-            <p>Placeholder content for example section 3.</p>
-            <h2 id="section-example-4">Example Section 4</h2>
-            <p>Placeholder content for example section 4.</p>
-            <h2 id="section-example-5">Example Section 5</h2>
-            <p>Placeholder content for example section 5. This is the very last piece of main content.</p> -->
             {{body_content | safe}}
             <div class="page-footer-container">
                 <div class="page-meta-row">
@@ -136,25 +125,25 @@
                 </div>
                 <hr class="footer-divider-line">
                 <div class="page-navigation-boxes">
-                    <div class="nav-box previous-page-box">
-                    <span class="nav-box-label">Previous page</span>
-                    <a href="#" class="nav-box-link">What is VitePress?</a>
-                    </div>
-                    <div class="nav-box next-page-box">
-                    <span class="nav-box-label">Next page</span>
-                    <a href="#" class="nav-box-link">Routing</a>
-                    </div>
+                    {% if prev_page_data %}
+                    <button class="nav-box previous-page-box">
+                        <span class="nav-box-label">Previous page</span>
+                        <a href="{{ prev_page_data.url }}" class="nav-box-link">{{ prev_page_data.title }}</a>
+                    </button>
+                    {% endif %}
+    
+                    {% if next_page_data %}
+                    <button class="nav-box next-page-box">
+                        <span class="nav-box-label">Next page</span>
+                        <a href="{{ next_page_data.url }}" class="nav-box-link">{{ next_page_data.title }}</a>
+                    </button>
+                    {% endif %}
                 </div>
             </div>
         </div>
     <div id="toc-container"> <!-- This container is now also the mobile ToC panel -->
         <nav id="toc-links">
             <div id="toc-active-marker"></div>
-            <!-- <a href="#section-example-1">Example Section 1</a>
-            <a href="#section-example-2">Example Section 2</a>
-            <a href="#section-example-3">Example Section 3</a>
-            <a href="#section-example-4">Example Section 4</a>
-            <a href="#section-example-5">Example Section 5</a> -->
             {{toc_table_link | safe}}
             
         </nav>
