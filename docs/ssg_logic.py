@@ -298,4 +298,4 @@ if __name__ == '__main__':
     server.watch('src/**/*.md', build)
     server.watch('test.html', build)
     server.watch('static/**/*', build) # Watch static assets for changes too
-    server.serve(root='dist', default_filename='index.html', port=6121)
+    server.serve(root='dist', default_filename='index.html', port=6120)

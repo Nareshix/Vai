@@ -13,12 +13,23 @@ padf
 p
 ### man
 
-`#`a
-
+python
 ```python
 
 def func():
     print('hellow world')
+```
+
+json
+```json
+
+{
+  "scripts": {
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
+  }
+}
+
 ```
 
 ## man

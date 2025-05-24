@@ -1375,11 +1375,55 @@ body.mobile-toc-open #toc-container {
 /* --- Ensure these styles are in your style.css --- */
 
 /* Make the code block container a positioning context */
-.codehilite {
+/* --- Revised Approach --- */
+
+#content-area .codehilite {
     position: relative;
+    margin-bottom: 1.5rem; /* Space below the code block */
+    border-radius: 6px;    /* Rounded corners for the visual block */
+
+    /* For centering the entire code block structure: */
+    width: auto; /* Let it be as wide as its content (<pre>) */
+    max-width: 90%; /* Don't let it get too wide on large screens, adjust as needed */
+    /* If you want it narrower than 90% and centered: */
+    /* max-width: 800px; */
+    margin-left: auto;
+    margin-right: auto;
+
+    /* Background is typically on the <pre> from Pygments */
 }
 
-/* Style for the copy button */
+#content-area .codehilite pre {
+    margin: 0; /* Remove default pre margins */
+    padding: 1em; /* Standard Pygments padding around code */
+    border-radius: 6px; /* Match .codehilite or be slightly less */
+    overflow-x: auto;
+    /* Background and text colors are applied by theme-specific Pygments styles:
+       e.g., .dark-theme .codehilite pre { background: #202020; color: #D0D0D0; }
+    */
+}
+
+.copy-code-button {
+    position: absolute;
+    top: 0.75em;  /* Position relative to <pre> padding, adjust for look */
+    right: 0.75em; /* Position relative to <pre> padding */
+    /* These values should visually place it nicely inside the top-right corner
+       of the <pre> tag's padded area. */
+
+    padding: 5px;
+    background-color: rgba(0,0,0,0.1); /* Subtle bg for button itself, or keep transparent */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+    z-index: 1;
+    line-height: 0;
+    user-select: none;
+}
+
+/* ... rest of your copy button SVG and hover styles ... *//* Style for the copy button */
 .copy-code-button {
     position: absolute;
     top: 8px;
