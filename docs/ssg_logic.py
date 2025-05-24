@@ -12,18 +12,13 @@ from livereload import Server
 from pathlib import Path
 import shutil
 
-# -----------------------------------------
-# Helper Functions for Naming and Slugs
-# -----------------------------------------
 def slugify_heading(text):
-    """Generates a slug for heading IDs."""
     text = text.lower()
     text = re.sub(r'[^\w\s-]', '', text)
     text = re.sub(r'\s+', '-', text)
     return text
 
 def generate_slug(text_to_slugify):
-    """Generates a robust slug for URL path components (folders/files)."""
     text = str(text_to_slugify).lower()
     text = re.sub(r'[^\w\s-]', '', text)
     text = re.sub(r'\s+', '-', text)
@@ -32,14 +27,10 @@ def generate_slug(text_to_slugify):
     return text
 
 def clean_display_name(name_with_potential_prefix_and_ext):
-    """Removes numeric prefix and .md extension for display purposes."""
     name_no_ext = Path(name_with_potential_prefix_and_ext).stem
     cleaned = re.sub(r"^\d+-", "", name_no_ext)
     return cleaned.strip()
 
-# -----------------------------------------
-# Markdown Extensions (Your existing code - assumed correct)
-# -----------------------------------------
 class H2ClassAdder(Treeprocessor):
     def run(self, root: etree.Element):
         for element in root.iter():
@@ -105,9 +96,6 @@ class AdmonitionExtensionCorrected(Extension):
             AdmonitionProcessorCorrected(md.parser), 'admonition_corrected', 105
         )
 
-# -----------------------------------------
-# Markdown Conversion and ToC Generation
-# -----------------------------------------
 def convert_md_to_html(md_text):
     return markdown.markdown(md_text, extensions=[
         H2ClassExtension(),
@@ -128,15 +116,9 @@ def generate_heading_links(html):
         links.append(f'<a href="#{anchor}"{link_style}>{title}</a>')
     return '\n'.join(links)
 
-# -----------------------------------------
-# Jinja2 Environment Setup
-# -----------------------------------------
 env = Environment(loader=FileSystemLoader('.'))
 template = env.get_template('test.html')
 
-# -----------------------------------------
-# Static Asset Handling
-# -----------------------------------------
 def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     static_src_path = Path(static_src_dir)
     dst_path = Path(dst_dir)
@@ -146,13 +128,10 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
         return
 
     print(f"Copying static assets from '{static_src_path}' to '{dst_path}'...")
-    # shutil.copytree with dirs_exist_ok=True is available in Python 3.8+
-    # This is the preferred method if available.
     try:
         shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
         print("Static assets copied successfully.")
     except TypeError:
-        # Fallback for Python < 3.8 or if dirs_exist_ok is not supported by the system's shutil
         print("Falling back to item-by-item copy for static assets (Python < 3.8 or other issue).")
         for item in static_src_path.rglob('*'): # rglob gets all files and dirs recursively
             relative_path = item.relative_to(static_src_path)
@@ -166,9 +145,6 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
         print("Static assets copied item by item successfully.")
 
 
-# -----------------------------------------
-# Core SSG Logic
-# -----------------------------------------
 def scan_src(src_dir_path='src'):
     src_path = Path(src_dir_path)
     temp_sections_by_cleaned_title = {}
@@ -316,9 +292,6 @@ def build():
 
     print("Build complete. Output in 'dist' directory.")
 
-# -----------------------------------------
-# Main Execution & Live Reload
-# -----------------------------------------
 if __name__ == '__main__':
     build() # Initial build
     server = Server()

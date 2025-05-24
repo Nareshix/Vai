@@ -214,7 +214,6 @@ document.addEventListener('DOMContentLoaded', () => {
         tocLinksContainer.addEventListener('click', (e) => {
             const targetLink = e.target.closest('a');
             if (targetLink && targetLink.getAttribute('href')?.startsWith('#')) {
-                e.preventDefault();
                 const targetId = targetLink.getAttribute('href').substring(1);
                 const sectionData = sections[targetId];
                 if (sectionData && sectionData.element && mainScroller) {
