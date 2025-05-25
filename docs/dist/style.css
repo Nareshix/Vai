@@ -660,7 +660,7 @@ top: 0;
 left: 0;
 width: 100%;
 height: 100%;
-background-color: var(--color-search-overlay-bg);
+background-color: transparent;
 display: flex; /* Changed from none to flex for direct alignment */
 align-items: flex-start;
 justify-content: center;
@@ -754,11 +754,6 @@ border-radius: 4px;
 font-size: 0.8em;
 box-shadow: 0 1px 1px rgba(0,0,0,0.1);
 display: inline-block; /* Ensure padding and border are respected well */
-}
-
-.search-results-container {
-min-height: 80px; /* Placeholder for results area */
-/* For actual results: max-height: 50vh; overflow-y: auto; */
 }
 
 .search-results-placeholder {
@@ -1124,7 +1119,7 @@ top: 0;
 left: 0;
 width: 100%;
 height: 100%;
-background-color: rgba(0,0,0,0.5); /* Semi-transparent black */
+background-color: transparent; /* Semi-transparent black */
 z-index: 10005; /* Below sidebar, above content */
 display: none; /* Shown by JS when sidebar is open */
 opacity: 0;
@@ -1795,3 +1790,151 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .dark-theme pre .vi { color: #40FFFF } /* Name.Variable.Instance */
 .dark-theme pre .vm { color: #40FFFF } /* Name.Variable.Magic */
 .dark-theme pre .il { color: #51B2FD } /* Literal.Number.Integer.Long */
+
+/* Add to your style.css */
+
+.search-results-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 60vh; /* Or whatever fits your modal */
+    overflow-y: auto;
+}
+
+.search-result-item {
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--color-search-border); /* Use your theme variable */
+    padding-bottom: 0.75rem;
+}
+.search-result-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.search-result-item a {
+    display: block;
+    padding: 0.5rem 0.25rem;
+    text-decoration: none;
+    color: inherit; /* Inherit from modal text color */
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.search-result-item a:hover {
+    background-color: var(--color-search-trigger-hover-bg); /* Use your theme variable */
+}
+
+.search-result-title {
+    font-weight: 600;
+    color: var(--color-text-body); /* Or a specific title color */
+    margin-bottom: 0.25rem;
+    font-size: 0.95rem;
+}
+
+.search-result-breadcrumbs {
+    font-size: 0.8rem;
+    color: var(--color-text-toc-link); /* More muted color */
+    margin-bottom: 0.35rem;
+}
+
+.search-result-snippet {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--color-text-body); /* Or slightly muted */
+}
+
+.search-result-snippet mark,
+.search-result-title mark, /* Allow highlighting in title too */
+.search-result-breadcrumbs mark {
+    background-color: var(--color-text-toc-link-active); /* Or your preferred highlight color */
+    color: var(--color-bg-body); /* Text color on top of highlight */
+    padding: 0.05em 0.15em;
+    border-radius: 3px;
+    font-weight: bold; /* Make highlighted text stand out more */
+}
+
+.search-results-placeholder {
+    color: var(--color-text-toc-link);
+    text-align: center;
+    padding: 1.5rem 0;
+    font-size: 0.9rem;
+}
+
+
+
+/* Add to your style.css */
+
+/* Search History Styling */
+.search-history-container { /* This will be hidden/shown by JS */
+    /* Styles for the container if needed, though results are put in searchResultsContainer */
+    margin-bottom: 1rem; /* Space between history and potential "no results" for search */
+}
+
+.search-results-placeholder + .search-history-list, /* When placeholder text is for history */
+.search-history-list { /* General style for history list */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.search-history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.5rem; /* Adjust padding */
+    margin-bottom: 0.25rem; /* Small gap */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.search-history-item:hover,
+.search-history-item.focused { /* Style for keyboard focus */
+    background-color: var(--color-search-trigger-hover-bg); /* Use your theme variable */
+}
+
+.search-history-query {
+    flex-grow: 1;
+    color: var(--color-text-body);
+    font-size: 0.9rem;
+}
+
+.search-history-delete {
+    background: none;
+    border: none;
+    color: var(--color-text-toc-link); /* Muted color */
+    font-size: 1.2rem; /* Make 'x' a bit bigger */
+    line-height: 1;
+    padding: 0.2rem 0.5rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.search-history-delete:hover {
+    color: var(--color-text-body);
+    background-color: rgba(255, 0, 0, 0.1); /* Faint red bg on hover */
+}
+
+/* Ensure search result items also get a focused style if you reuse the class */
+.search-result-item.focused {
+    background-color: var(--color-search-trigger-hover-bg);
+}
+
+/* Adjust placeholder text if it's for history */
+.search-results-container > p.search-results-placeholder:first-child:not(:only-child) {
+    /* This targets the placeholder when it's "Recent searches:" and there's a list after it */
+    /* You might want to style it like a subtle heading */
+    font-weight: 500;
+    color: var(--color-text-toc-link);
+    text-align: left; /* Align left for "Recent searches" */
+    padding: 0.5rem 0.25rem 0.75rem; /* Adjust padding */
+    font-size: 0.85rem;
+    border-bottom: 1px solid var(--color-search-border); /* Optional separator */
+    margin-bottom: 0.5rem;
+}
+
+.search-history-title {
+    padding-left: 0;
+    font-weight: 600;
+}

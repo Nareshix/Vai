@@ -6,6 +6,7 @@
 <title>Responsive Layout with Theme Toggle</title>
 <link rel="stylesheet" href="/style.css"></head>
 <script src="/script.js" defer></script>
+<script src="/fuse.min.js" defer></script>
 
 <body>
     <div class="left-sidebar" id="leftSidebar">
@@ -189,7 +190,7 @@
         <circle cx="11" cy="11" r="8"></circle>
         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <input type="text" id="searchInput" class="search-input" placeholder="Search documentation..." aria-label="Search input">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search documentation..." aria-label="Search input" autocomplete="off">
         <button id="searchCloseButton" class="search-close-button" aria-label="Close search">
         </button>
     </div>

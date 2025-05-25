@@ -11,6 +11,7 @@ from markdown.blockprocessors import BlockProcessor
 from livereload import Server
 from pathlib import Path
 import shutil
+import json
 
 def slugify_heading(text):
     text = text.lower()
@@ -34,7 +35,7 @@ def clean_display_name(name_with_potential_prefix_and_ext):
 class H2ClassAdder(Treeprocessor):
     def run(self, root: etree.Element):
         for element in root.iter():
-            if element.tag in ('h2', 'h3') and element.text:
+            if element.tag in ('h2', 'h3', 'h4', 'h5', 'h6') and element.text: # Extended to more heading levels
                 element.set('id', slugify_heading(element.text))
 
 class H2ClassExtension(Extension):
@@ -60,7 +61,7 @@ class AdmonitionProcessorCorrected(BlockProcessor):
         if admon_type == "details":
             display_title = custom_title_str if custom_title_str else "Details"
         else:
-            display_title = custom_title_str if custom_title_str else admon_type.upper()
+            display_title = custom_title_str if custom_title_str else admon_type.capitalize() # Capitalize for better look
         content_lines = []
         end_marker_found_at_index = -1
         for i in range(1, len(lines)):
@@ -69,11 +70,13 @@ class AdmonitionProcessorCorrected(BlockProcessor):
                 break
             content_lines.append(lines[i])
         if end_marker_found_at_index == -1:
-            blocks.insert(0, current_block_text)
+            blocks.insert(0, current_block_text) # Put back if no end marker
             return False
+        
         remaining_lines_after_end_in_block = lines[end_marker_found_at_index + 1:]
         if remaining_lines_after_end_in_block:
             blocks.insert(0, "\n".join(remaining_lines_after_end_in_block))
+
         if admon_type == "details":
             el = etree.SubElement(parent, 'details')
             el.set('class', f'admonition {admon_type}')
@@ -86,7 +89,8 @@ class AdmonitionProcessorCorrected(BlockProcessor):
             title_el = etree.SubElement(el, 'p')
             title_el.set('class', 'admonition-title')
             title_el.text = display_title
-        content_wrapper_el = etree.SubElement(el, 'div')
+        
+        content_wrapper_el = etree.SubElement(el, 'div') # Wrapper for content
         self.parser.parseBlocks(content_wrapper_el, content_lines)
         return True
 
@@ -101,7 +105,9 @@ def convert_md_to_html(md_text):
         H2ClassExtension(),
         AdmonitionExtensionCorrected(),
         'fenced_code',
-        CodeHiliteExtension(css_class='codehilite', guess_lang=False, use_pygments=True)
+        CodeHiliteExtension(css_class='codehilite', guess_lang=False, use_pygments=True),
+        'tables', # Ensure tables are processed
+        'toc' # For basic ToC data if needed, though we generate our own
     ])
 
 def generate_heading_links(html):
@@ -131,17 +137,17 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     try:
         shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
         print("Static assets copied successfully.")
-    except TypeError:
+    except TypeError: # Fallback for Python < 3.8
         print("Falling back to item-by-item copy for static assets (Python < 3.8 or other issue).")
-        for item in static_src_path.rglob('*'): # rglob gets all files and dirs recursively
-            relative_path = item.relative_to(static_src_path)
-            destination_item = dst_path / relative_path
-            if item.is_dir():
-                destination_item.mkdir(parents=True, exist_ok=True)
+        if not dst_path.exists():
+            dst_path.mkdir(parents=True, exist_ok=True)
+        for item in static_src_path.iterdir():
+            s = static_src_path / item.name
+            d = dst_path / item.name
+            if s.is_dir():
+                shutil.copytree(s, d, dirs_exist_ok=True)
             else:
-                # Ensure parent directory of the file exists in the destination
-                destination_item.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(item, destination_item) # copy2 preserves metadata
+                shutil.copy2(s, d)
         print("Static assets copied item by item successfully.")
 
 
@@ -172,7 +178,7 @@ def scan_src(src_dir_path='src'):
                 "original_path": md_file_path,
                 "original_folder_name_for_sort": original_folder_name,
                 "original_file_name_for_sort": original_file_name_with_ext,
-                "display_title": cleaned_file_display_title, # Store for easy access
+                "display_title": cleaned_file_display_title,
                 "output_file_slug": file_output_slug
             })
 
@@ -182,7 +188,7 @@ def scan_src(src_dir_path='src'):
     )
 
     sidebar_data_for_template = []
-    all_files_to_process = [] # This will store all pages in their global sorted order
+    all_files_to_process = [] 
 
     for cleaned_folder_title in sorted_cleaned_section_titles:
         section_build_data = temp_sections_by_cleaned_title[cleaned_folder_title]
@@ -197,12 +203,11 @@ def scan_src(src_dir_path='src'):
                 "title": file_info["display_title"],
                 "slug": file_info["output_file_slug"]
             })
-            # Add to the global list for processing and prev/next links
             all_files_to_process.append({
                 "original_path": file_info["original_path"],
                 "output_folder_name": section_build_data["output_folder_name"],
                 "output_file_slug": file_info["output_file_slug"],
-                "display_title": file_info["display_title"] # Needed for prev/next title
+                "display_title": file_info["display_title"]
             })
         
         if current_sidebar_section_files:
@@ -214,29 +219,117 @@ def scan_src(src_dir_path='src'):
             
     return all_files_to_process, sidebar_data_for_template
 
+def extract_searchable_text_from_html(html_content):
+    soup = BeautifulSoup(html_content, 'html.parser')
+    texts = []
+    
+    tags_to_extract_text_from = ['p', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'td', 'th', 'caption', 'dt', 'dd']
+    
+    for element in soup.find_all(True): # Iterate over all tags
+        # Skip elements inside code blocks, preformatted text, scripts, or styles
+        # Check if the element itself is one of these or if any of its parents are
+        is_inside_skipped_tag = False
+        current_check = element
+        while current_check:
+            if current_check.name in ['pre', 'code', 'script', 'style'] or \
+               (current_check.has_attr('class') and 'codehilite' in current_check['class']):
+                is_inside_skipped_tag = True
+                break
+            current_check = current_check.parent
+        
+        if is_inside_skipped_tag:
+            continue
+
+        # Extract text from specified tags, avoiding admonition titles if they are generic
+        if element.name in tags_to_extract_text_from:
+            if 'admonition-title' in element.get('class', []) and element.name == 'p':
+                pass 
+            else:
+                 texts.append(element.get_text(separator=' ', strip=True))
+        
+        if element.name == 'div' and 'admonition' in element.get('class', []):
+            content_wrapper = None
+            for child in element.children:
+                if child.name == 'div' and not (child.has_attr('class') and 'admonition-title' in child['class']):
+                    content_wrapper = child
+                    break
+            
+            if content_wrapper:
+                for sub_el in content_wrapper.find_all(['p', 'li']): # Text within admonitions
+                    # Double check sub_el is not in a nested code block
+                    is_sub_el_in_code = False
+                    sub_check = sub_el
+                    while sub_check and sub_check != content_wrapper: # Check up to the content_wrapper
+                        if sub_check.name in ['pre', 'code'] or \
+                           (sub_check.has_attr('class') and 'codehilite' in sub_check['class']):
+                            is_sub_el_in_code = True
+                            break
+                        sub_check = sub_check.parent
+                    if not is_sub_el_in_code:
+                         texts.append(sub_el.get_text(separator=' ', strip=True))
+                         
+    # Remove duplicates
+    seen = set()
+    unique_texts = [x for x in texts if x and x.strip() and not (x in seen or seen.add(x))] # Ensure x.strip() is not empty
+    return " ".join(unique_texts)
+
 def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template):
-    # all_files_to_process is already globally sorted
+    search_index_entries = [] 
+
     for i, file_item in enumerate(all_files_to_process):
         md_path = file_item["original_path"]
         output_folder_name = file_item["output_folder_name"]
         output_file_slug = file_item["output_file_slug"]
 
         md_text = md_path.read_text(encoding="utf-8")
-        body_content = convert_md_to_html(md_text)
-        toc_table_link = generate_heading_links(body_content)
+        body_content_html = convert_md_to_html(md_text) # This is the HTML of the main content
+        toc_table_link_html = generate_heading_links(body_content_html)
 
-        # Determine previous and next page data
+        # --- Search Index Generation ---
+        page_url = f"/{output_folder_name}/{output_file_slug}/"
+        
+        # Extract breadcrumbs
+        section_title_for_breadcrumbs = "Unknown Section"
+        for sec_data in sidebar_data_for_template:
+            if sec_data["output_folder_name"] == output_folder_name:
+                section_title_for_breadcrumbs = sec_data["title"]
+                break
+        breadcrumbs_str = f"{section_title_for_breadcrumbs} > {file_item['display_title']}"
+
+        # Extract headings from body_content_html
+        headings_for_index = []
+        content_soup = BeautifulSoup(body_content_html, 'html.parser')
+        for h_tag in content_soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+            tag_text = h_tag.get_text(strip=True)
+            tag_id = h_tag.get('id')
+            level_match = re.match(r'h([1-6])', h_tag.name)
+            if tag_text and tag_id and level_match:
+                headings_for_index.append({
+                    "level": int(level_match.group(1)),
+                    "text": tag_text,
+                    "slug": tag_id  # ID is already slugified by H2ClassAdder
+                })
+        
+        searchable_text = extract_searchable_text_from_html(body_content_html)
+
+        search_index_entries.append({
+            "id": page_url, # Using URL as a unique ID
+            "title": file_item["display_title"],
+            "breadcrumbs": breadcrumbs_str,
+            "url": page_url,
+            "text_content": searchable_text,
+            "headings": headings_for_index
+        })
+
         prev_page_data = None
         next_page_data = None
-
-        if i > 0: # If not the first file
+        if i > 0:
             prev_file_item = all_files_to_process[i-1]
             prev_page_data = {
                 "title": prev_file_item["display_title"], 
                 "url": f"/{prev_file_item['output_folder_name']}/{prev_file_item['output_file_slug']}/"
             }
-
-        if i < len(all_files_to_process) - 1: # If not the last file
+        if i < len(all_files_to_process) - 1:
             next_file_item = all_files_to_process[i+1]
             next_page_data = {
                 "title": next_file_item["display_title"],
@@ -244,11 +337,11 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             }
 
         rendered = template.render(
-            body_content=body_content,
-            toc_table_link=toc_table_link,
+            body_content=body_content_html,
+            toc_table_link=toc_table_link_html,
             sidebar_data=sidebar_data_for_template,
-            prev_page_data=prev_page_data, # Add to template context
-            next_page_data=next_page_data  # Add to template context
+            prev_page_data=prev_page_data,
+            next_page_data=next_page_data
         )
 
         output_dir = dist_base_path / output_folder_name / output_file_slug
@@ -257,8 +350,13 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
         output_file.write_text(rendered, encoding="utf-8")
         print(f"Generated: {output_file}")
 
-# Store sidebar_data globally for the root index.html redirect
-# This is a bit of a hack; a more robust solution might involve passing it around or re-calculating
+    # After processing all files, write the search index
+    search_index_file_path = dist_base_path / "search_index.json"
+    with open(search_index_file_path, 'w', encoding='utf-8') as f:
+        json.dump(search_index_entries, f, ensure_ascii=False, indent=None) # No indent for smaller file size
+    print(f"Generated search index: {search_index_file_path}")
+
+
 _global_sidebar_data_for_redirect = []
 
 def build():
@@ -266,22 +364,17 @@ def build():
     print("Starting build...")
     dist_path_obj = Path('dist')
 
-    # 1. Clean the dist directory
     if dist_path_obj.exists():
         shutil.rmtree(dist_path_obj)
     dist_path_obj.mkdir(parents=True, exist_ok=True)
 
-    # 2. Copy static assets from 'static/' to 'dist/'
     copy_static_assets(static_src_dir='static', dst_dir=str(dist_path_obj))
 
-    # 3. Scan source and get data for pages and sidebar
     all_files_to_process, sidebar_data = scan_src()
-    _global_sidebar_data_for_redirect = sidebar_data # Store for redirect logic
+    _global_sidebar_data_for_redirect = sidebar_data 
     
-    # 4. Process markdown files and generate HTML
-    process_md_files(all_files_to_process, dist_path_obj, sidebar_data)
+    process_md_files(all_files_to_process, dist_path_obj, sidebar_data) # This now also creates search_index.json
 
-    # 5. Create root index.html redirect (optional, but good for UX)
     if not (dist_path_obj / 'index.html').exists() and _global_sidebar_data_for_redirect:
         if _global_sidebar_data_for_redirect[0]['files']:
             first_section_slug = _global_sidebar_data_for_redirect[0]['output_folder_name']
@@ -293,9 +386,9 @@ def build():
     print("Build complete. Output in 'dist' directory.")
 
 if __name__ == '__main__':
-    build() # Initial build
+    build()
     server = Server()
     server.watch('src/**/*.md', build)
     server.watch('test.html', build)
-    server.watch('static/**/*', build) # Watch static assets for changes too
-    server.serve(root='dist', default_filename='index.html', port=6120)
+    server.watch('static/**/*', build)
+    server.serve(root='dist', default_filename='index.html', port=6123)
