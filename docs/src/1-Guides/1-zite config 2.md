@@ -1,3 +1,8 @@
++++
+title: zite config ur moma ass
+date: 1999-99-99
++++
+
 welp hope thios works lol
 nice la love it  i love IT LETSSOGOOOGOGO
 
@@ -31,5 +36,11 @@ json
 }
 
 ```
+
+
+::: info
+This is an info box.
+:::
+
 
 ## man

@@ -546,7 +546,7 @@ display: inline-flex;
 
 
     .header-nav-link {
-      padding: 0.4rem 0.8rem; /* Adjust padding as needed */
+      padding: 0.4rem 0.4rem; /* Adjust padding as needed */
       border-radius: 6px; /* Consistent with other interactive elements */
       text-decoration: none;
       color: var(--color-header-nav-link-text); /* Use variable */
