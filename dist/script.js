@@ -235,28 +235,40 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    if (tocLinksContainer) { /* ... same as previous full script ... */
+    if (tocLinksContainer) {
         tocLinksContainer.addEventListener('click', (e) => {
             const targetLink = e.target.closest('a');
-            if (targetLink?.getAttribute('href')?.startsWith('#')) {
-                e.preventDefault(); 
-                const targetId = targetLink.getAttribute('href').substring(1);
+            const href = targetLink?.getAttribute('href'); // Get href once
+
+            if (href?.startsWith('#')) {
+                e.preventDefault(); // Keep this to prevent default jump & allow smooth scroll
+                const targetId = href.substring(1); // Use href directly
                 const sectionData = tocSections[targetId];
+
                 if (sectionData?.element && mainScroller) {
                     const textVisibleStartingPoint = sectionData.element.offsetTop + sectionData.paddingTop;
                     const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
+
                     mainScroller.scrollTo({
                         top: Math.max(0, scrollToPosition),
                         behavior: 'smooth'
                     });
+
+                    // Manually update the URL hash after scrolling
+                    if (history.pushState) { // Check for browser support
+                        history.pushState(null, null, href);
+                    } else {
+                        window.location.hash = href; // Fallback for older browsers
+                    }
                 }
+                
+                // If the mobile TOC panel is open, close it after clicking a link
                 if (document.body.classList.contains('mobile-toc-open')) {
                     DMAN_closeMobileToc();
                 }
             }
         });
     }
-
     if (mainScroller && tocLinks.length > 0) { /* ... same as previous full script ... */
         mainScroller.addEventListener('scroll', updateActiveLinkAndMarker);
         setTimeout(updateActiveLinkAndMarker, 150); 
@@ -383,9 +395,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 includeScore: true,
                 includeMatches: true,
                 shouldSort: true,
-                threshold: 0.35, // Slightly more permissive
+                threshold: 0.4,
                 location: 0,
-                distance: 3000, // Increased distance
+                distance: 200, // Increased distance
                 maxPatternLength: 32,
                 minMatchCharLength: 1, // Allow searching on 1 char with Fuse
                 keys: [

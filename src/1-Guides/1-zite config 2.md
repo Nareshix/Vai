@@ -59,6 +59,16 @@ This is a dangerous warning.
 :::
 
 ::: details Read the source code
-This is a details block.
+```python
+print('hello world'):
+  def func():
+    return x
+```
+
+```python
+print('hello world'):
+  def func():
+    return x
+```
 :::
 ## man

@@ -396,6 +396,7 @@ transition: top 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-
     .admonition.tip div p,
     .admonition.danger div p {
         margin: 0;
+        margin-left: 1rem;
     }
     
     details.admonition.details > summary.admonition-title {
@@ -1386,7 +1387,7 @@ body.mobile-toc-open #toc-container {
 
 #content-area .codehilite {
     position: relative;
-    margin-bottom: 1.5rem; /* Space below the code block */
+    margin-bottom: 1rem; /* Space below the code block */
     border-radius: 6px;    /* Rounded corners for the visual block */
 
     /* For centering the entire code block structure: */
@@ -1396,6 +1397,7 @@ body.mobile-toc-open #toc-container {
     /* max-width: 800px; */
     margin-left: auto;
     margin-right: auto;
+    margin-top: 1rem;
 
     /* Background is typically on the <pre> from Pygments */
 }
@@ -1553,14 +1555,12 @@ body.mobile-toc-open #toc-container {
 
 /* General title style (used by <p> and <summary>) */
 .admonition-title {
-    margin-top: 0;
-    margin-bottom: 0;
-    font-weight: 600; /* Bold */
+    font-weight: 600; 
     text-transform: uppercase;
     font-size: 13px;
-    color: #e6edf3; /* Default title color */
+    color: #e6edf3; 
     font-size: 1rem;
-
+    margin: 0;
 }
 
 /* Paragraphs within content (assuming simple content) */
@@ -1599,8 +1599,10 @@ body.mobile-toc-open #toc-container {
 }
 
 /* Spacing for summary when details is open */
-.admonition.details[open] > summary.admonition-title {
-    margin-bottom: 12px; /* Space between summary and content when open */
+details.admonition.details[open] > summary.admonition-title + div > p:first-of-type {
+    /* Your styles here */
+    margin-top: 0.5rem;
+    margin-left: 1.5rem;
 }
 
 /* Basic styling for <code> elements within admonitions */
@@ -1624,7 +1626,7 @@ h1, h2, h3, h4, h5, h6  {
 }
 
 p {
-    padding-left: 3rem;
+    margin-left: 3rem;
 }
 
 
