@@ -42,5 +42,23 @@ json
 This is an info box.
 :::
 
+::: info
+This is an info box.
+:::
 
+::: tip
+This is a tip.
+:::
+
+::: warning
+This is a warning.
+:::
+
+::: danger
+This is a dangerous warning.
+:::
+
+::: details Read the source code
+This is a details block.
+:::
 ## man

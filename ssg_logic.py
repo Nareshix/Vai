@@ -361,4 +361,4 @@ if __name__ == '__main__':
     server.watch('src/**/*.md', build)
     server.watch('layout.html', build)
     server.watch('static/**/*', build)
-    server.serve(root='dist', default_filename='index.html', port=6124)
+    server.serve(root='dist', default_filename='index.html', port=6224)
