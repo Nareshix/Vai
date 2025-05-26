@@ -16,7 +16,12 @@ from pathlib import Path
 import shutil
 
 def setup_header_in_layout_html():
-    DOCS_DIR = Path("docs")  # Define the base path for docs content
+    """populates layout_no_heading.html in templates from the header_config.yaml file.
+    It populates it with  github_link, github_contribution_link
+    dropdowns, internals  and externals. after populating it will generate a html file
+    called layout.html and parsing will be done trhough this html file 
+    """
+    DOCS_DIR = Path("docs")
 
     with open(DOCS_DIR / "header_config.yaml", "r") as f:  
         config = yaml.safe_load(f)
@@ -66,7 +71,14 @@ def setup_header_in_layout_html():
     with open(templates_dir_in_docs / 'layout.html', 'w') as f:  
         f.write(rendered)
 
+
 def generate_slug(text_to_slugify):
+    """
+    Converts text to URL-friendly text
+
+    Example:
+        My Awesome Title!" -> "my-awesome-title"
+    """
     text = str(text_to_slugify).lower()
     text = re.sub(r'[^\w\s-]', '', text)
     text = re.sub(r'\s+', '-', text)
@@ -74,15 +86,50 @@ def generate_slug(text_to_slugify):
     text = text.strip('-')
     return text
 
-def slugify_heading(text):
-    return generate_slug(text)
 
+# 01-Introduction.md" -> "Introduction
 def clean_display_name(name_with_potential_prefix_and_ext):
+    """
+    Removes the file name numbering and extension. This is done to get the folder name
+    so that an index.html can be created in it
+
+    Example:
+        01-Introduction.md" -> "Introduction
+
+    Why:
+        Introduction will now become a folder and inside it will contain a index.html
+        to prevent showing the html extnesion in url bar. User will redirect to your/website/Introduction
+        rather than your/website/Introduction.html
+    """
     name_no_ext = Path(name_with_potential_prefix_and_ext).stem
     cleaned = re.sub(r"^\d+-", "", name_no_ext)
     return cleaned.strip()
 
+
+
 def parse_metadata_and_body_from_string(markdown_content_as_string):
+    """
+    It looks for this specific syntax
+
+    +++
+    title: My Awesome Page
+    date: 2023-01-01
+    +++
+
+    and seperates it from main body in the md file.
+    These values are used as placeholder in their website
+    The use of this specific syntax is optional
+
+    If this specific syntax is not found, it returns an empty dict.
+    if only one of those parameters are found, returns a dict with
+    that parameter only.
+
+    Returns:
+        metadata: {title, date}
+        body: rest of the md file
+
+    """
+
     metadata = {}
     body = markdown_content_as_string
     pattern = re.compile(r'^\s*\+\+\+\s*\n(.*?)\n\s*\+\+\+\s*\n?(.*)', re.DOTALL | re.MULTILINE)
@@ -100,13 +147,22 @@ def parse_metadata_and_body_from_string(markdown_content_as_string):
 
 
 class HeadingIdAdder(Treeprocessor):
+    """ Automatically add id attributes to HTML heading tags (<h1> to <h6>).
+        These IDs are used for creating anchor links (#-links).
+
+
+    Args:
+        Treeprocessor:  argument operate on the XML/ElementTree representation of the Markdown document 
+                        after it has been parsed but before it's serialized to HTML
+    """ 
+    
     def run(self, root: etree.Element):
         self.used_slugs_on_page = set()
         for element in root.iter():
             if element.tag in ('h1', 'h2', 'h3', 'h4', 'h5', 'h6'):
                 full_heading_text = "".join(element.itertext()).strip()
                 if full_heading_text:
-                    base_slug = slugify_heading(full_heading_text)
+                    base_slug = generate_slug(full_heading_text)
                     final_slug = base_slug
                     counter = 1
                     while final_slug in self.used_slugs_on_page:
@@ -116,10 +172,20 @@ class HeadingIdAdder(Treeprocessor):
                     self.used_slugs_on_page.add(final_slug)
 
 class HeadingIdExtension(Extension):
+    """register the HeadingIdAdder treeprocessor with the Markdown parser.
+    """
     def extendMarkdown(self, md):
         md.treeprocessors.register(HeadingIdAdder(md), 'headingidadder', 15)
-
+        
 class AdmonitionProcessorCorrected(BlockProcessor):
+    """ parse custom github like alert blocks, which are special highlighted boxes for notes, warnings, tips, etc.
+    The syntax looks like:
+
+    :::note warning Custom Title
+    This is the content of the note.
+    It can span multiple lines.
+    :::
+    """
     RE_START = re.compile(r'^\s*:::\s*([a-zA-Z0-9_-]+)(?:\s*(.*))?\s*$')
     RE_END = re.compile(r'^\s*:::\s*$')
 
@@ -194,6 +260,8 @@ class AdmonitionProcessorCorrected(BlockProcessor):
         return True
 
 class AdmonitionExtensionCorrected(Extension):
+    """register the AdmonitionProcessorCorrected block processor with the Markdown parser.
+    """
     def extendMarkdown(self, md):
         md.parser.blockprocessors.register(AdmonitionProcessorCorrected(md.parser), 'admonition_corrected', 105)
 
@@ -207,6 +275,10 @@ def convert_md_to_html(md_body_text):
     ])
 
 def generate_heading_links(html_body_content):
+    """
+    Creates an HTML string representing a list of links to H2 and H3 headings on the current page.
+    This is used to build an on-page Table of Contents (TOC).
+    """
     soup = BeautifulSoup(html_body_content, 'html.parser')
     links = []
     for tag in soup.find_all(['h2', 'h3']):
@@ -219,6 +291,12 @@ def generate_heading_links(html_body_content):
 
 
 def copy_static_assets(static_src_dir='static', dst_dir='dist'):
+    """
+    Copies an entire directory of static assets from the "static" folder to the "dist" folder
+    It is expected for the static assets to contain style.css, script.js, favicon and logo.
+    Note: the favicon and logo can be of any format as long as they are a valid images.
+    """
+    
     static_src_path = Path(static_src_dir)
     dst_path = Path(dst_dir)
     if not static_src_path.exists() or not static_src_path.is_dir():
@@ -236,6 +314,16 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
             else: shutil.copy2(s, d)
 
 def scan_src(src_dir_path='src'):
+    """
+    Scans the source content directory (docs/src/) to discover all Markdown files and organise them.
+    
+    It returns "all_files_to_process" where it contains info about each md file
+    it also returns "sidebar_data_for_template" which  contains data needed for  the sidebar of the page
+
+    Return:
+        all_files_to_process: {original_path, output_folder_name, output_file_slug, display_title}
+        sidebar_data_for_template: {title, output_folder_name, files}
+    """
     src_path = Path(src_dir_path)
     temp_sections_by_cleaned_title = {}
     original_top_level_dir_paths = sorted([p for p in src_path.iterdir() if p.is_dir()])
@@ -298,10 +386,13 @@ def scan_src(src_dir_path='src'):
                 "output_folder_name": section_build_data["output_folder_name"],
                 "files": current_sidebar_section_files
             })
-            
     return all_files_to_process, sidebar_data_for_template
 
 def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template, jinja_env):
+    """
+    Takes the list of md files from src and processes each one to generate the final HTML page.
+    It also builds the search index
+    """    
     search_index_entries = []
     page_template = jinja_env.get_template('layout.html')
 
@@ -393,12 +484,13 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
     with open(search_index_file_path, 'w', encoding='utf-8') as f:
         json.dump(search_index_entries, f, ensure_ascii=False, indent=None)
     
-_global_sidebar_data_for_redirect = []
-_global_root_redirect_target_url = "/" 
-
 
 def build():
-    DOCS_DIR = Path("docs") # Define the base path for docs content
+    sidebar_data_for_redirect = []
+    root_redirect_target_url = "/" 
+
+
+    DOCS_DIR = Path("docs") 
 
     setup_header_in_layout_html()
 
@@ -407,7 +499,6 @@ def build():
         autoescape=True
     )
 
-    global _global_sidebar_data_for_redirect, _global_root_redirect_target_url
 
     dist_path_obj = DOCS_DIR / 'dist'
     if dist_path_obj.exists():
@@ -417,14 +508,14 @@ def build():
     copy_static_assets(static_src_dir=str(DOCS_DIR / 'static'), dst_dir=str(dist_path_obj))
 
     all_files_to_process, sidebar_data = scan_src(src_dir_path=str(DOCS_DIR / 'src'))
-    _global_sidebar_data_for_redirect = sidebar_data
+    sidebar_data_for_redirect = sidebar_data
 
     if sidebar_data and sidebar_data[0].get('files') and len(sidebar_data[0]['files']) > 0:
         first_section_slug_for_root = sidebar_data[0]['output_folder_name']
         first_file_slug_for_root = sidebar_data[0]['files'][0]['slug']
-        _global_root_redirect_target_url = f"/{first_section_slug_for_root}/{first_file_slug_for_root}/"
+        root_redirect_target_url = f"/{first_section_slug_for_root}/{first_file_slug_for_root}/"
     else:
-        _global_root_redirect_target_url = "/"
+         root_redirect_target_url = "/"
 
     process_md_files(
         all_files_to_process,
@@ -450,10 +541,10 @@ def build():
             else:
                 print(f"WARNING: Source HTML for section index copy not found at: {source_html_for_section_index}")
                 
-    if not (dist_path_obj / 'index.html').exists() and _global_sidebar_data_for_redirect:
-        if _global_root_redirect_target_url != "/":
+    if not (dist_path_obj / 'index.html').exists() and  sidebar_data_for_redirect:
+        if  root_redirect_target_url != "/":
             try:
-                path_parts = _global_root_redirect_target_url.strip('/').split('/')
+                path_parts =  root_redirect_target_url.strip('/').split('/')
                 if len(path_parts) >= 2:
                     first_section_slug_for_copy = path_parts[0]
                     first_file_slug_for_copy = path_parts[1]
@@ -465,13 +556,24 @@ def build():
                     else:
                         print(f"WARNING: Source HTML for root index.html copy not found at: {source_html_path}")
                 else:
-                    print("WARNING: Could not determine path components from _global_root_redirect_target_url to copy for root index.html.")
+                    print("WARNING: Could not determine path components from  root_redirect_target_url to copy for root index.html.")
             except Exception as e:
                 print(f"ERROR: Occurred while trying to create root index.html by copying: {e}")
         # else:
         #     print("INFO: Could not create root index.html by copying: No valid target (first section/file) found.")
     
 def cli_init():
+    """creates docs folder with necessary metadata in it
+       The metadata includes an 
+       1. an empty dist folder
+       2. src folder with contributing.md
+       3. static folder with the necessary css and js, icon and favicon files (these image files are expected to be changed)
+       4. templates folder containing html files for the parsing of necessary data (yaml or md) to html 
+       5. a header_config.yaml that affects the top bar. This will stay consistent for all pages
+
+    Usage:
+        python main.py init (will be different in prod) 
+    """
     docs_path = Path("docs")
     dist_path = docs_path / "dist"
     src_path = docs_path / "src"
@@ -510,6 +612,8 @@ def cli_init():
 
 
 def cli_run():
+    """starts the dev server
+    """
     build() 
     server = Server()
     server.watch('docs/src/**/*.md', build)
@@ -521,6 +625,8 @@ def cli_run():
 
 
 def main():
+    """starts the main cli cmds
+    """
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command")
 
