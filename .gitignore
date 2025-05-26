@@ -1,3 +1,4 @@
 main.build/
 main.bin
 docs/
+.venv/
