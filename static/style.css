@@ -1,47 +1,41 @@
-    :root {
-        --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1);
+:root {
+    --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1);
+    --color-inline-code-bg: rgba(200, 200, 200, 0.12);
+    --color-sidebar-logo-text: var(--color-text-body);
+--color-sidebar-section-title-text: rgba(224, 224, 224, 0.93);
+--color-sidebar-link-text: rgba(224, 224, 224, 0.67);
+--color-sidebar-link-text-hover: var(--color-text-body);
+--color-sidebar-link-text-active: var(--color-text-toc-link-active);
+--color-sidebar-link-bg-hover: rgba(255, 255, 255, 0.05);
+--color-sidebar-link-bg-active: var(--color-search-trigger-hover-bg);
+    --color-sidebar-divider: var(--color-border-sidebar);
+--color-sidebar-footer-link-text: var(--color-text-toc-link);
+--color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
+--color-sidebar-logo-svg: var(--color-text-toc-link-active);
 
-        --color-inline-code-bg: rgba(200, 200, 200, 0.12);
+--color-bg-body: #1b1b1f;
+--color-text-body: #e0e0e0;
+--color-bg-sidebar: #161618;
+--color-border-sidebar: #363636;
+--color-bg-header: #252529;
+--color-border-header: #363636;
+--color-border-toc-line: #555;
+--color-text-toc-link: #aaa;
+--color-text-toc-link-hover: white;
+--color-text-toc-link-active: #a8b1ff;
+--color-button-bg: #444;
+--color-button-text: #e0e0e0;
+--color-button-border: #555;
 
-        --color-sidebar-logo-text: var(--color-text-body);
-    --color-sidebar-section-title-text: rgba(224, 224, 224, 0.93); /* Brighter than links */
-    --color-sidebar-link-text: rgba(224, 224, 224, 0.67);
-    --color-sidebar-link-text-hover: var(--color-text-body); /* Brighter on hover */
-    --color-sidebar-link-text-active: var(--color-text-toc-link-active); /* Active color, e.g., dodgerblue */
-    --color-sidebar-link-bg-hover: rgba(255, 255, 255, 0.05); /* Very subtle hover background */
-    --color-sidebar-link-bg-active: var(--color-search-trigger-hover-bg);
-        --color-sidebar-divider: var(--color-border-sidebar);
-    --color-sidebar-footer-link-text: var(--color-text-toc-link);
-    --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
-    --color-sidebar-logo-svg: var(--color-text-toc-link-active); /* Color for the SVG logo lines */
-
-    /* Dark */
-    --color-bg-body: #1b1b1f;
-    --color-text-body: #e0e0e0;
-    --color-bg-sidebar: #161618;
-    --color-border-sidebar: #363636;
-    --color-bg-header: #252529;
-    --color-border-header: #363636;
-    --color-border-toc-line: #555;
-    --color-text-toc-link: #aaa;
-    --color-text-toc-link-hover: white;
-    --color-text-toc-link-active: #a8b1ff;
-    --color-button-bg: #444;
-    --color-button-text: #e0e0e0;
-    --color-button-border: #555;
-
-
-    /* Footer specific colors - Dark Theme */
-    --color-footer-link: hsl(240, 100%, 81%); /* #a3a3ff */
-    --color-footer-meta-text: hsl(240, 10%, 60%); /* #9494a3 */
-    --color-footer-divider: hsl(240, 10%, 27%); /* #404045 */
-    --color-footer-nav-box-border: hsl(240, 10%, 30%); /* #484852 */
-    --color-footer-nav-box-bg: transparent;
-    /* --- NEW HOVER STATE COLORS FOR NAV BOX --- */
-    --color-footer-nav-box-border-hover: hsl(240, 10%, 50%); /* Brighter border, e.g., #757585 */
-    --color-footer-nav-box-bg-hover: hsl(240, 10%, 20%);    /* Subtle background fill, e.g., #2e2e33 */
-    --color-search-overlay-bg: rgba(10, 10, 10, 0.75); /* Darker overlay for dark theme */
---color-search-modal-bg: #2f2f33; /* Slightly offset from header for depth */
+--color-footer-link: hsl(240, 100%, 81%);
+--color-footer-meta-text: hsl(240, 10%, 60%);
+--color-footer-divider: hsl(240, 10%, 27%);
+--color-footer-nav-box-border: hsl(240, 10%, 30%);
+--color-footer-nav-box-bg: transparent;
+--color-footer-nav-box-border-hover: hsl(240, 10%, 50%);
+--color-footer-nav-box-bg-hover: hsl(240, 10%, 20%);
+--color-search-overlay-bg: rgba(10, 10, 10, 0.75);
+--color-search-modal-bg: #2f2f33;
 --color-search-text: var(--color-text-body);
 --color-search-placeholder-text: var(--color-text-toc-link);
 --color-search-border: #4a4a4f;
@@ -54,82 +48,72 @@
 --color-search-kbd-text: var(--color-text-body);
 --color-search-kbd-border: var(--color-border-sidebar);
 
-/* --- NEW: Header Navigation Link Colors - Dark Theme --- */
---color-header-nav-link-text: #d8d8de; /* Default color for header nav links */
---color-header-nav-link-text-hover: var(--color-text-body); /* Brighter on hover */
---color-header-nav-link-bg-hover: var(--color-search-trigger-hover-bg); /* Consistent hover bg */
---color-header-nav-link-text-active: var(--color-text-toc-link-active); /* For active/current page link */
---color-header-nav-link-hover-text-blue: var(--color-text-toc-link-active); /* dodgerblue */
+--color-header-nav-link-text: #d8d8de;
+--color-header-nav-link-text-hover: var(--color-text-body);
+--color-header-nav-link-bg-hover: var(--color-search-trigger-hover-bg);
+--color-header-nav-link-text-active: var(--color-text-toc-link-active);
+--color-header-nav-link-hover-text-blue: var(--color-text-toc-link-active);
 
-/* --- NEW: Dropdown Specific Colors - Dark Theme --- */
---color-dropdown-bg: var(--color-search-modal-bg); /* e.g., #2f2f33 */
---color-dropdown-shadow: 0 4px 12px rgba(0,0,0,0.4), 0 0 0 1px var(--color-border-sidebar); /* Shadow similar to search modal */
+--color-dropdown-bg: var(--color-search-modal-bg);
+--color-dropdown-shadow: 0 4px 12px rgba(0,0,0,0.4), 0 0 0 1px var(--color-border-sidebar);
 --color-dropdown-item-text: var(--color-text-body);
---color-dropdown-item-text-hover: var(--color-text-body); /* Text color might not change, bg does */
---color-dropdown-item-bg-hover: var(--color-search-trigger-hover-bg); /* e.g., #38383c */
+--color-dropdown-item-text-hover: var(--color-text-body);
+--color-dropdown-item-bg-hover: var(--color-search-trigger-hover-bg);
 --color-dropdown-item-icon: var(--color-text-toc-link);
 --color-dropdown-trigger-text: var(--color-header-nav-link-text);
 --color-dropdown-trigger-arrow: var(--color-header-nav-link-text);
 --color-dropdown-trigger-hover-text: var(--color-header-nav-link-text-hover);
 --color-dropdown-trigger-hover-bg: var(--color-header-nav-link-bg-hover);
---color-dropdown-trigger-active-bg: var(--color-header-nav-link-bg-hover); /* When dropdown is open */
+--color-dropdown-trigger-active-bg: var(--color-header-nav-link-bg-hover);
 --color-header-nav-link-text-active: var(--color-text-toc-link-active);
 
-/* --- NEW: Scrollbar Colors for TOC - Dark Theme --- */
---toc-scrollbar-track-bg: hsl(240, 6%, 17%);    /* A bit lighter than TOC bg (#202020 is ~11% lightness) */
---toc-scrollbar-thumb-bg: hsl(240, 6%, 40%);    /* A noticeable but dark grey */
---toc-scrollbar-thumb-hover-bg: hsl(240, 6%, 50%); /* Slightly lighter for hover */
-
-
+--toc-scrollbar-track-bg: hsl(240, 6%, 17%);
+--toc-scrollbar-thumb-bg: hsl(240, 6%, 40%);
+--toc-scrollbar-thumb-hover-bg: hsl(240, 6%, 50%);
 
 --main-scrollbar-track-bg: hsl(240, 6%, 17%);
 --main-scrollbar-thumb-bg: hsl(240, 6%, 40%);
 --main-scrollbar-thumb-hover-bg: hsl(240, 6%, 50%);
-
 }
 
+html.light-theme {
+    --color-inline-code-bg: rgba(50, 50, 50, 0.08);
+    --shadow-header-subtle: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --color-text-toc-link-active: rgb(14, 41, 129);
+    --color-sidebar-logo-text: var(--color-text-body);
+--color-sidebar-section-title-text: rgba(51, 51, 51, 0.93);
+--color-sidebar-link-text: rgba(51, 51, 51, 0.67);
+--color-sidebar-link-text-hover: var(--color-text-body);
+--color-sidebar-link-text-active: var(--color-text-toc-link-active);
+--color-sidebar-link-bg-hover: rgba(0, 0, 0, 0.04);
+--color-sidebar-link-bg-active: var(--color-search-trigger-hover-bg);
+--color-sidebar-divider: var(--color-border-sidebar);
+--color-sidebar-footer-link-text: var(--color-text-toc-link);
+--color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
+--color-sidebar-logo-svg: var(--color-text-toc-link-active);
 
+--color-bg-body: #f4f4f4;
+--color-text-body: #333333;
+--color-bg-sidebar: #e9e9e9;
+--color-border-sidebar: #cccccc;
+--color-bg-header: #e0e0e0;
+--color-border-header: #cccccc;
+--color-border-toc-line: #bbbbbb;
+--color-text-toc-link: #555555;
+--color-text-toc-link-hover: #222222;
+--color-button-bg: #e0e0e0;
+--color-button-text: #333;
+--color-button-border: #ccc;
 
+--color-footer-link: hsl(210, 70%, 50%);
+--color-footer-meta-text: hsl(220, 10%, 45%);
+--color-footer-divider: hsl(210, 20%, 88%);
+--color-footer-nav-box-border: hsl(210, 20%, 85%);
+--color-footer-nav-box-bg: transparent;
 
-    html.light-theme { /* light-theme */
-        --color-inline-code-bg: rgba(50, 50, 50, 0.08);
-        --shadow-header-subtle: 0 1px 2px rgba(0, 0, 0, 0.04); /* offset-x | offset-y | blur-radius | color (black with 4% opacity) */
-
-        --color-text-toc-link-active: rgb(14, 41, 129);
-        --color-sidebar-logo-text: var(--color-text-body);
-    --color-sidebar-section-title-text: rgba(51, 51, 51, 0.93);
-    --color-sidebar-link-text: rgba(51, 51, 51, 0.67);
-    --color-sidebar-link-text-hover: var(--color-text-body);
-    --color-sidebar-link-text-active: var(--color-text-toc-link-active);
-    --color-sidebar-link-bg-hover: rgba(0, 0, 0, 0.04);
-    --color-sidebar-link-bg-active: var(--color-search-trigger-hover-bg);
-    --color-sidebar-divider: var(--color-border-sidebar);
-    --color-sidebar-footer-link-text: var(--color-text-toc-link);
-    --color-sidebar-footer-link-text-hover: var(--color-text-toc-link-hover);
-    --color-sidebar-logo-svg: var(--color-text-toc-link-active);
-
-    --color-bg-body: #f4f4f4;
-    --color-text-body: #333333;
-    --color-bg-sidebar: #e9e9e9;
-    --color-border-sidebar: #cccccc;
-    --color-bg-header: #e0e0e0;
-    --color-border-header: #cccccc;
-    --color-border-toc-line: #bbbbbb;
-    --color-text-toc-link: #555555;
-    --color-text-toc-link-hover: #222222;
-    --color-button-bg: #e0e0e0;
-    --color-button-text: #333;
-    --color-button-border: #ccc;
-
-    --color-footer-link: hsl(210, 70%, 50%);
-    --color-footer-meta-text: hsl(220, 10%, 45%);
-    --color-footer-divider: hsl(210, 20%, 88%);
-    --color-footer-nav-box-border: hsl(210, 20%, 85%);
-    --color-footer-nav-box-bg: transparent;
-
-    --color-footer-nav-box-border-hover: hsl(210, 20%, 70%);
-    --color-footer-nav-box-bg-hover: hsl(210, 20%, 94%);
-    --color-search-overlay-bg: rgba(60, 60, 70, 0.4); /* Semi-transparent dark overlay for light theme provides contrast */
+--color-footer-nav-box-border-hover: hsl(210, 20%, 70%);
+--color-footer-nav-box-bg-hover: hsl(210, 20%, 94%);
+--color-search-overlay-bg: rgba(60, 60, 70, 0.4);
 --color-search-modal-bg: #ffffff;
 --color-search-text: var(--color-text-body);
 --color-search-placeholder-text: var(--color-text-toc-link);
@@ -143,8 +127,6 @@
 --color-search-kbd-text: var(--color-text-body);
 --color-search-kbd-border: var(--color-border-sidebar);
 
-/* --- NEW: Header Navigation Link Colors - Light Theme (can reuse dark if appropriate) --- */
-/* These will correctly use the light theme's --color-text-toc-link, etc. */
 --color-header-nav-link-text: var(--color-text-toc-link);
 --color-header-nav-link-text-hover: var(--color-text-body);
 --color-header-nav-link-bg-hover: var(--color-search-trigger-hover-bg);
@@ -152,12 +134,11 @@
 
 --color-header-nav-link-hover-text-blue: var(--color-text-toc-link-active);
 
-/* --- NEW: Dropdown Specific Colors - Light Theme --- */
---color-dropdown-bg: var(--color-search-modal-bg); /* e.g., #ffffff */
+--color-dropdown-bg: var(--color-search-modal-bg);
 --color-dropdown-shadow: 0 4px 12px rgba(0,0,0,0.1), 0 0 0 1px var(--color-border-sidebar);
 --color-dropdown-item-text: var(--color-text-body);
 --color-dropdown-item-text-hover: var(--color-text-body);
---color-dropdown-item-bg-hover: var(--color-search-trigger-hover-bg); /* e.g., #d8d8de */
+--color-dropdown-item-bg-hover: var(--color-search-trigger-hover-bg);
 --color-dropdown-item-icon: var(--color-text-toc-link);
 --color-dropdown-trigger-text: var(--color-header-nav-link-text);
 --color-dropdown-trigger-arrow: var(--color-header-nav-link-text);
@@ -166,67 +147,63 @@
 --color-dropdown-trigger-active-bg: var(--color-header-nav-link-bg-hover);
 --color-header-nav-link-text-active: var(--color-text-toc-link-active);
 
-/* --- NEW: Scrollbar Colors for TOC - Light Theme --- */
---toc-scrollbar-track-bg: hsl(210, 15%, 94%);    /* Slightly darker than TOC bg (#e9e9e9 is ~91% lightness) */
---toc-scrollbar-thumb-bg: hsl(210, 12%, 75%);    /* A noticeable but light grey */
---toc-scrollbar-thumb-hover-bg: hsl(210, 12%, 65%); /* Slightly darker for hover */
-
+--toc-scrollbar-track-bg: hsl(210, 15%, 94%);
+--toc-scrollbar-thumb-bg: hsl(210, 12%, 75%);
+--toc-scrollbar-thumb-hover-bg: hsl(210, 12%, 65%);
 
 --main-scrollbar-track-bg: hsl(210, 15%, 94%);
 --main-scrollbar-thumb-bg: hsl(210, 12%, 75%);
 --main-scrollbar-thumb-hover-bg: hsl(210, 12%, 65%);
 }
 
-/* ... (rest of your existing CSS) ... */
-
 html{
-    box-sizing: border-box;
-    height: 100%;
-    }
-    *, *:before, *:after {
-    box-sizing: inherit;
-    }
-    body {
-    height: 100%;
-    margin: 0;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
-        Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--color-bg-body);
-    color: var(--color-text-body);
-    font-size: 16px;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    }
+box-sizing: border-box;
+height: 100%;
+}
+*, *:before, *:after {
+box-sizing: inherit;
+}
+body {
+height: 100%;
+margin: 0;
+font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Helvetica, Arial, sans-serif;
+background-color: var(--color-bg-body);
+color: var(--color-text-body);
+font-size: 16px;
+display: flex;
+flex-direction: row;
+width: 100%;
+transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-    .left-sidebar {
-    flex-basis: 16rem;
-    flex-grow: 0;
-    flex-shrink: 0;
-    border-right: 1px solid var(--color-border-sidebar);
-    background-color: var(--color-bg-sidebar);
-    transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease-in-out;
-    overflow: hidden; /* Prevent this from scrolling, sidebar-nav will scroll */
-    padding: 0; /* Remove previous padding, will control internally */
-    display: flex;
-    flex-direction: column;
-    }
+.left-sidebar {
+flex-basis: 16rem;
+flex-grow: 0;
+flex-shrink: 0;
+border-right: 1px solid var(--color-border-sidebar);
+background-color: var(--color-bg-sidebar);
+transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease-in-out;
+overflow: hidden;
+padding: 0;
+display: flex;
+flex-direction: column;
+}
 
-    .main-area-wrapper {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    overflow-y: auto; /* <<< KEY: This makes this wrapper scrollable */
-height: 100vh; /* <<< KEY: Ensure it has a defined height to enable scrolling within it */
+.main-area-wrapper {
+flex-grow: 1;
+display: flex;
+flex-direction: column;
+overflow: hidden;
+overflow-y: auto;
+height: 100vh;
 scrollbar-width: thin;
-scrollbar-color: var(--main-scrollbar-thumb-bg) var(--color-bg-body); /* Use your existing variables */
+scrollbar-color: var(--main-scrollbar-thumb-bg) var(--color-bg-body);
 
-    }
+}
 
-    .main-area-wrapper::-webkit-scrollbar {
-width: 10px; /* Increased from 8px to make more room for the gap */
+.main-area-wrapper::-webkit-scrollbar {
+width: 10px;
 }
 
 .main-area-wrapper::-webkit-scrollbar-track {
@@ -235,90 +212,79 @@ background: var(--main-scrollbar-track-bg);
 
 .main-area-wrapper::-webkit-scrollbar-thumb {
 background-color: var(--main-scrollbar-thumb-bg);
-border-radius: 10px; /* Or your preferred radius, e.g., 6px for consistency */
-/* This border IS the "gap". Its color is the track's background. */
-border: 3px solid var(--main-scrollbar-track-bg); /* Increased from 2px */
+border-radius: 10px;
+border: 3px solid var(--main-scrollbar-track-bg);
 }
 
 .main-area-wrapper::-webkit-scrollbar-thumb:hover {
 background-color: var(--main-scrollbar-thumb-hover-bg);
 }
 
-/* Ensure content-toc-row and its children can expand naturally */
 .content-toc-row {
-flex-grow: 1; /* Allows content-area and toc-container to fill space */
+flex-grow: 1;
 display: flex;
 flex-direction: row;
-/* REMOVE: overflow: hidden; if it was here, to allow vertical expansion */
 }
 
 .left-side-bar-link {
-    text-decoration: none;
-     color: inert
+text-decoration: none;
+ color: inert
 }
 
 .left-side-bar-link-container-image-and-text {
-    display: flex;
-    align-items: center;
-    color: var(--color-text-toc-link-hover);
-    font-weight: 600;    
+display: flex;
+align-items: center;
+color: var(--color-text-toc-link-hover);
+font-weight: 600;
 }
 
 a {
-    font-weight: 500;
-    color: var(--color-text-toc-link-active);
-    text-underline-offset: 0.125rem;
-    
+font-weight: 500;
+color: var(--color-text-toc-link-active);
+text-underline-offset: 0.125rem;
 }
 .app-header {
 height: 4rem;
 flex-shrink: 0;
-padding: 0 1rem; /* Adjusted padding for mobile */
-background-color: var(--color-bg-body);       /* Changed in the previous step */
-border-bottom: 0px solid var(--color-border-header); /* This remains the primary distinguishable line */
-box-shadow: var(--shadow-header-subtle);      /* ADDED: Applies the new subtle shadow */
+padding: 0 1rem;
+background-color: var(--color-bg-body);
+border-bottom: 0px solid var(--color-border-header);
+box-shadow: var(--shadow-header-subtle);
 display: flex;
 align-items: center;
-/* MODIFIED: Ensure box-shadow is included in the transition for theme changes */
 transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 position: sticky;
 top: 0;
-z-index: 990; /* Ensure it's above content but below mobile sidebar/overlay */
+z-index: 990;
 }
-/* Desktop: Space between logo (if it were a direct child) and header-actions */
-.app-header > div:not(.header-actions):not(.mobile-menu-button):not(.mobile-header-logo) { /* MODIFIED */
+.app-header > div:not(.header-actions):not(.mobile-menu-button):not(.mobile-header-logo) {
 margin-right: 1rem;
 }
 
-
-    #content-area {
-    flex-grow: 3;
-    flex-basis: 0;
-    padding: 1.5rem;
-    }
+#content-area {
+flex-grow: 3;
+flex-basis: 0;
+padding: 1.5rem;
+}
 #content-area::-webkit-scrollbar {
-width: 8px; /* Or your preferred width */
+width: 8px;
 }
 
-
-
 #toc-container {
-flex-basis: 13rem; /* Narrower ToC */
+flex-basis: 13rem;
 flex-shrink: 0;
-padding: 1.5rem 1rem; /* Reduced padding */
+padding: 1.5rem 1rem;
 overflow-y: auto; overflow-x: hidden;
 height: calc(100vh - 3.75rem);
-position: sticky; 
+position: sticky;
 top: 3.75rem;
-/* border-left: 1px solid var(--color-border-sidebar); */ /* Removed left border for cleaner look */
-scrollbar-width: none;  /* For Firefox: hides the scrollbar completely */
-/* --- SCROLLBAR STYLING --- */
+scrollbar-width: none;
 }
 #toc-container::-webkit-scrollbar {
 width: 6px;
 }
 #toc-container::-webkit-scrollbar-track {
-background: transparent; /* Or var(--color-bg-sidebar) if you want it visible */
+background: transparent;
 }
 #toc-container::-webkit-scrollbar-thumb {
 background-color: var(--toc-scrollbar-thumb-bg);
@@ -327,329 +293,280 @@ border-radius: 3px;
 #toc-container::-webkit-scrollbar-thumb:hover {
 background-color: var(--toc-scrollbar-thumb-hover-bg);
 }
-/* --- END SCROLLBAR STYLING --- */
-
 
 #toc-links {
-position: relative; /* CRITICAL for marker positioning */
-border-left: 2px solid var(--color-border-toc-line); /* The faint guide line */
+position: relative;
+border-left: 2px solid var(--color-border-toc-line);
 display: flex;
 flex-direction: column;
 transition: border-color 0.3s ease;
-/* NO padding-left on #toc-links itself */
 }
 
 #toc-links a {
-    display: block;
-    padding-top: 0.65rem;
-    padding-bottom: 0.65rem;
-    padding-left: 1rem;
-    padding-right: 0.5rem; /* MODIFIED: Added some right padding for breathing room */
-    color: var(--color-text-toc-link);
-    text-decoration: none;
-    margin-bottom: 0;
-    white-space: normal;      /* GOOD: Allows wrapping at spaces by default */
-    font-size: 0.9rem;
-    position: relative;
-
-    /* --- ADD/MODIFY THESE LINES FOR LONG TEXT WRAPPING --- */
-    overflow-wrap: break-word; /* Standard property: allows unbreakable words to be broken */
-    word-break: break-word;    /* More comprehensive word breaking, often good for URLs/code */
-                               /* If 'break-word' isn't enough, you could try 'break-all',
-                                  but 'break-word' is generally preferred as it tries to
-                                  break at better points first. */
-    line-height: 1.4;          /* ADDED: Ensure wrapped lines have adequate spacing */
-    /* --- END OF ADDITIONS/MODIFICATIONS --- */
+display: block;
+padding-top: 0.65rem;
+padding-bottom: 0.65rem;
+padding-left: 1rem;
+padding-right: 0.5rem;
+color: var(--color-text-toc-link);
+text-decoration: none;
+margin-bottom: 0;
+white-space: normal;
+font-size: 0.9rem;
+position: relative;
+overflow-wrap: break-word;
+word-break: break-word;
+line-height: 1.4;
 }
 
 #toc-links a.active {
-color: var(--color-text-toc-link-active); /* Adjusted for better visibility against default link color */
-/* It will inherit the padding-left: 1rem; from the general 'a' rule, which is what we want */
+color: var(--color-text-toc-link-active);
 }
 
 #toc-active-marker {
 position: absolute;
-top: 0; /* JavaScript will update this */
-left: -2px; /* <<< THIS IS THE KEY CHANGE */
-            /* Moves the marker 2px to the left, covering the parent's border-left */
-width: 2px; /* Match the width of #toc-links's border-left */
-height: 0; /* JavaScript will update this */
-background-color: var(--color-text-toc-link-active); /* Active color */
+top: 0;
+left: -2px;
+width: 2px;
+height: 0;
+background-color: var(--color-text-toc-link-active);
 transition: top 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-out;
 }
 #toc-links a:hover {
-    color: var(--color-text-toc-link-hover);
-    }
-    #content-area h2 {
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    padding-top: 5rem; /* Considers 4rem header + 1rem buffer */
-    color: var(--color-text-body);
-    }
-    #content-area h2:first-of-type {
-        margin-top: 0;
-    }
-
-
-    #content-area p {
-    line-height: 1.6;
-    color: var(--color-text-body);
-    padding: 0;
-    margin-bottom: 0;
-    /* margin-top: 0.5rem; */
-    }
-   
-    .theme-toggle-button {
-    padding: 0.4rem; /* Keep padding for click area and icon spacing */
-    background-color: transparent; /* Make background transparent by default */
-    color: var(--color-text-toc-link); /* Use a more subdued color, like ToC links */
-    border: 1px solid transparent;   /* Make border transparent by default */
-    border-radius: 6px; /* Slightly rounder for a softer look, optional */
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease; /* Smoother, quicker transition */
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    line-height: 0;
-
-
+color: var(--color-text-toc-link-hover);
+}
+#content-area h2 {
+margin-top: 2rem;
+margin-bottom: 1rem;
+padding-top: 5rem;
+color: var(--color-text-body);
+}
+#content-area h2:first-of-type {
+    margin-top: 0;
 }
 
+#content-area p {
+line-height: 1.6;
+color: var(--color-text-body);
+padding: 0;
+margin-bottom: 0;
+}
 
+.theme-toggle-button {
+padding: 0.4rem;
+background-color: transparent;
+color: var(--color-text-toc-link);
+border: 1px solid transparent;
+border-radius: 6px;
+cursor: pointer;
+transition: background-color 0.2s ease, color 0.2s ease;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+line-height: 0;
+}
 
 .theme-toggle-button:hover,
 .theme-toggle-button:focus-visible {
-    color: var(--color-text-body); /* Make icon more prominent on hover/focus */
+color: var(--color-text-body);
 }
 
-
-/* If you want a very subtle outline for focus-visible on top of the background change: */
-/*
-.theme-toggle-button:focus-visible {
-    outline: 1px solid var(--color-text-toc-link-active);
-    outline-offset: 2px;
-}
-*/    .theme-toggle-button .theme-icon {
-display: none; /* Hide both icons by default */
+.theme-toggle-button .theme-icon {
+display: none;
 }
 
-/* When dark theme is active (default, or html.dark-theme) */
-/* Show the MOON icon, because the current theme is dark. */
 html:not(.light-theme) .theme-toggle-button .theme-icon-moon,
-html.dark-theme .theme-toggle-button .theme-icon-moon { /* If you also use .dark-theme class */
+html.dark-theme .theme-toggle-button .theme-icon-moon {
 display: inline-flex;
 }
 
-/* When light theme is active */
-/* Show the SUN icon, because the current theme is light. */
 html.light-theme .theme-toggle-button .theme-icon-sun {
 display: inline-flex;
 }
 
-
-    .page-meta-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 3rem;
-    font-size: 0.875rem;
-    flex-wrap: wrap; /* Allow items to wrap on small screens */
-    gap: 0.5rem; /* Add gap for wrapped items */
-    
-    }
-
-    .edit-page-link {
-    color: var(--color-footer-link);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    transition: color 0.2s ease;
-    }
-    .edit-page-link:hover {
-    text-decoration: underline;
-    }
-    .edit-page-link svg {
-    width: 1.1em;
-    height: 1.1em;
-    margin-right: 0.4em;
-    vertical-align: middle;
-    }
-
-    .last-updated-text {
-    color: var(--color-footer-meta-text);
-    transition: color 0.3s ease;
-    }
-
-    .footer-divider-line {
-    border: none;
-    border-top: 1px solid var(--color-footer-divider);
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
-    transition: border-color 0.3s ease;
-    }
-
-    .page-navigation-boxes {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    }
-
-    .nav-box {
-    flex: 1;
-    padding: 1rem;
-    border: 1px solid var(--color-footer-nav-box-border);
-    border-radius: 8px;
-    background-color: var(--color-footer-nav-box-bg);
-    transition: border-color 0.2s ease, background-color 0.2s ease;
-    cursor: pointer;
-    min-width: 0; /* Allow flex items to shrink properly */
-    }
-    .nav-box:hover {
-         border-color: var(--color-text-toc-link-active); /* Use active color for consistency */
+.page-meta-row {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-top: 3rem;
+font-size: 0.875rem;
+flex-wrap: wrap;
+gap: 0.5rem;
 }
 
-    .nav-box-label {
-    display: block;
-    font-size: 0.875rem;
-    color: var(--color-footer-meta-text);
-    margin-bottom: 0.25rem;
-    transition: color 0.3s ease;
-    }
+.edit-page-link {
+color: var(--color-footer-link);
+text-decoration: none;
+display: inline-flex;
+align-items: center;
+transition: color 0.2s ease;
+}
+.edit-page-link:hover {
+text-decoration: underline;
+}
+.edit-page-link svg {
+width: 1.1em;
+height: 1.1em;
+margin-right: 0.4em;
+vertical-align: middle;
+}
 
-    .nav-box-link {
-    display: block;
-    font-size: 1rem;
-    color: var(--color-footer-link);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.2s ease;
-    word-break: break-word; /* Prevent long links from breaking layout */
-    }
+.last-updated-text {
+color: var(--color-footer-meta-text);
+transition: color 0.3s ease;
+}
 
+.footer-divider-line {
+border: none;
+border-top: 1px solid var(--color-footer-divider);
+margin-top: 1rem;
+margin-bottom: 1.5rem;
+transition: border-color 0.3s ease;
+}
 
-    .next-page-box {
+.page-navigation-boxes {
+display: flex;
+justify-content: space-between;
+gap: 1rem;
+}
+
+.nav-box {
+flex: 1;
+padding: 1rem;
+border: 1px solid var(--color-footer-nav-box-border);
+border-radius: 8px;
+background-color: var(--color-footer-nav-box-bg);
+transition: border-color 0.2s ease, background-color 0.2s ease;
+cursor: pointer;
+min-width: 0;
+}
+.nav-box:hover {
+     border-color: var(--color-text-toc-link-active);
+}
+
+.nav-box-label {
+display: block;
+font-size: 0.875rem;
+color: var(--color-footer-meta-text);
+margin-bottom: 0.25rem;
+transition: color 0.3s ease;
+}
+
+.nav-box-link {
+display: block;
+font-size: 1rem;
+color: var(--color-footer-link);
+text-decoration: none;
+font-weight: 500;
+transition: color 0.2s ease;
+word-break: break-word;
+}
+
+.next-page-box {
+text-align: right;
+}
+.next-page-box .nav-box-label,
+.next-page-box .nav-box-link {
     text-align: right;
-    }
-    .next-page-box .nav-box-label,
-    .next-page-box .nav-box-link {
-        text-align: right;
-    }
-    .previous-page-box .nav-box-label,
-    .previous-page-box .nav-box-link {
-        text-align: left;
-    }
-    /* Header Actions Wrapper */
-    .header-actions {
-      display: flex;
-      align-items: center;
-      flex-grow: 1; /* Desktop: take remaining space */
-      justify-content: flex-end; /* Desktop: align items to the right */
-      gap: 0.75rem; /* Desktop: gap between search and right group */
-    }
+}
+.previous-page-box .nav-box-label,
+.previous-page-box .nav-box-link {
+    text-align: left;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
 
-    .header-actions-right { /* Contains desktop links, theme, github */
-      display: flex;
-      align-items: center;
-      gap: 0.5rem; 
-    }
+.header-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
 
-
-    .header-nav-link {
-      padding: 0.4rem 0.4rem; /* Adjust padding as needed */
-      border-radius: 6px; /* Consistent with other interactive elements */
-      text-decoration: none;
-      color: var(--color-header-nav-link-text); /* Use variable */
-      font-weight: 500; /* A common weight for nav items */
-      font-size: 0.9rem; /* Slightly smaller than body text, adjust as needed */
-      line-height: 1.5; /* Ensure consistent line height */
-      transition: color 0.2s ease, background-color 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      white-space: nowrap; /* Prevent wrapping if text is long */
-    }
+.header-nav-link {
+  padding: 0.4rem 0.4rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--color-header-nav-link-text);
+  font-weight: 500;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
 
 .header-nav-link:hover,
 .header-nav-link:focus-visible {
-  color: var(--color-header-nav-link-hover-text-blue) !important; /* Explicitly use variable */
-  background-color: transparent; /* Explicitly transparent */
-  text-decoration: none;
-  outline: none;
+color: var(--color-header-nav-link-hover-text-blue) !important;
+background-color: transparent;
+text-decoration: none;
+outline: none;
 }
 
 .header-nav-link.active {
-    color: var(--color-header-nav-link-text-active);
+color: var(--color-header-nav-link-text-active);
 }
 
-    /* Ensure visited links don't turn purple/blue by default browser styles */
-    .header-nav-link:visited {
-        color: var(--color-header-nav-link-text);
-    }
-
+.header-nav-link:visited {
+    color: var(--color-header-nav-link-text);
+}
 
 #themeToggle.theme-toggle-button::before,
 #themeToggle.theme-toggle-button::after {
 content: '';
 display: inline-block;
 width: 1px;
-height: 1rem; /* Adjust height as needed */
-background-color: var(--color-border-sidebar); /* Separator color */
-vertical-align: middle; /* Helps with alignment */
+height: 1rem;
+background-color: var(--color-border-sidebar);
+vertical-align: middle;
 }
 
-/* --- Separator BEFORE the Theme Toggle icon --- */
 #themeToggle.theme-toggle-button::before {
-/* margin-left: 0.5rem; /* Only if there's an element before this group */
-margin-right: 0.75rem; /* Space between this first separator and the Theme Toggle icon */
+margin-right: 0.75rem;
 }
 
-/* --- Separator AFTER Theme Toggle icon (which is BETWEEN Theme Toggle and GitHub) --- */
 #themeToggle.theme-toggle-button::after {
-margin-left: 0.75rem;  /* Space between Theme Toggle icon and this second separator */
+margin-left: 0.75rem;
 }
 
-/* Search Trigger Button in Header */
 .search-trigger-button {
-    display: flex;
-    align-items: center;
-    padding: 0.4rem 0.8rem;
-    background-color: transparent; /* Use button bg for consistency or keep transparent */
-    color: var(--color-text-toc-link); /* More subtle than body text */
-    border: 1px solid var(--color-search-shortcut-border);
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-    margin-right: auto;
+display: flex;
+align-items: center;
+padding: 0.4rem 0.8rem;
+background-color: transparent;
+color: var(--color-text-toc-link);
+border: 1px solid var(--color-search-shortcut-border);
+border-radius: 6px;
+cursor: pointer;
+font-size: 0.9rem;
+transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+margin-right: auto;
 }
 
 .search-trigger-button:hover {
-    border-color: var(--color-search-border); /* Brighter border on hover */
-    color: var(--color-text-body);       /* Brighter text on hover */
-    /* No outline style here, it will inherit from the base or browser default */
+border-color: var(--color-search-border);
+color: var(--color-text-body);
 }
 
 .search-trigger-button:focus-visible {
-    /* When focused via keyboard (or programmatically like after ESC): */
-    /* Revert color and border to the button's default state */
-    color: var(--color-text-toc-link);
-    border-color: var(--color-search-shortcut-border);
-
-    outline: none; /* This removes the blue outline as per your first request */
+color: var(--color-text-toc-link);
+border-color: var(--color-search-shortcut-border);
+outline: none;
 }
 
-/* --- ADD THIS NEW RULE --- */
-/* Ensures hover styles apply even when focus-visible is also active */
 .search-trigger-button:focus-visible:hover {
-    border-color: var(--color-search-border); /* Brighter (same as :hover) */
-    color: var(--color-text-body);       /* Brighter (same as :hover) */
-    /* outline: none; (implicitly, it will still have no outline from the rule above) */
+border-color: var(--color-search-border);
+color: var(--color-text-body);
 }
-/* --- END OF NEW RULE --- */
-
 .search-trigger-icon-svg {
-    margin-right: 0.5em;
-    stroke: currentColor; /* Inherits color from button */
+margin-right: 0.5em;
+stroke: currentColor;
 }
 .search-shortcut-hint {
 margin-left: 0.75rem;
@@ -662,8 +579,6 @@ color: var(--color-search-shortcut-text);
 line-height: 1.2;
 }
 
-
-/* Search Overlay */
 .search-overlay {
 position: fixed;
 top: 0;
@@ -671,38 +586,33 @@ left: 0;
 width: 100%;
 height: 100%;
 background-color: transparent;
-display: flex; /* Changed from none to flex for direct alignment */
+display: flex;
 align-items: flex-start;
 justify-content: center;
-padding-top: 15vh; /* Position modal from top, gives space to "fall" into */
-z-index: 10000; /* High z-index */
-
+padding-top: 15vh;
+z-index: 10000;
 opacity: 0;
-visibility: hidden; /* Hidden by default */
-/* Smooth transition for opacity, visibility changes instantly based on active class */
+visibility: hidden;
 transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 0.3s;
 }
 
 .search-overlay.active {
 opacity: 1;
 visibility: visible;
-transition-delay: 0s; /* Apply visibility change immediately when .active is added */
+transition-delay: 0s;
 }
 
-/* Search Modal */
 .search-modal {
 background-color: var(--color-search-modal-bg);
-padding: 1rem; /* Adjusted for potentially smaller screens */
+padding: 1rem;
 border-radius: 8px;
-box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 0 1px var(--color-search-border); /* Softer shadow + border */
+box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 0 1px var(--color-search-border);
 width: 90%;
-max-width: 560px; /* Slightly narrower */
-
-/* Animation: Starts slightly scaled down and offset upwards, fades in */
+max-width: 560px;
 opacity: 0;
 transform: translateY(-25px) scale(0.98);
 transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-transition-delay: 0.05s; /* Modal animation starts slightly after overlay fades in */
+transition-delay: 0.05s;
 }
 
 .search-overlay.active .search-modal {
@@ -726,22 +636,22 @@ flex-shrink: 0;
 
 .search-input {
 flex-grow: 1;
-font-size: 1rem; /* Slightly smaller for mobile */
+font-size: 1rem;
 border: none;
 outline: none;
 background-color: transparent;
 color: var(--color-search-text);
-height: 2.5rem; /* Explicit height for better alignment */
+height: 2.5rem;
 }
 
 .search-input::placeholder {
 color: var(--color-search-placeholder-text);
-opacity: 1; /* Ensure placeholder is fully visible */
+opacity: 1;
 }
 
 .search-close-button {
 background: transparent;
-border: 1px solid transparent; /* Keep space but hide border */
+border: 1px solid transparent;
 color: var(--color-text-toc-link);
 padding: 0.4rem 0.6rem;
 font-size: 0.9rem;
@@ -751,8 +661,8 @@ margin-left: 0.75rem;
 transition: background-color 0.2s ease, color 0.2s ease;
 }
 .search-close-button:hover {
-    background-color: var(--color-search-trigger-hover-bg);
-    color: var(--color-text-body);
+background-color: var(--color-search-trigger-hover-bg);
+color: var(--color-text-body);
 }
 
 .search-close-button kbd {
@@ -763,7 +673,7 @@ padding: 0.2rem 0.45rem;
 border-radius: 4px;
 font-size: 0.8em;
 box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-display: inline-block; /* Ensure padding and border are respected well */
+display: inline-block;
 }
 
 .search-results-placeholder {
@@ -773,11 +683,11 @@ padding: 1.5rem 0;
 font-size: 0.9rem;
 }
 
-.icon-button, /* General styles if used on <button> */
-a.icon-button   /* Specific styles for <a> tags with this class */ {
+.icon-button,
+a.icon-button {
 padding: 0.4rem;
 background-color: transparent;
-color: var(--color-text-toc-link); /* THIS SETS THE GREY COLOR */
+color: var(--color-text-toc-link);
 border: 1px solid transparent;
 border-radius: 6px;
 cursor: pointer;
@@ -786,146 +696,128 @@ display: inline-flex;
 align-items: center;
 justify-content: center;
 line-height: 0;
-text-decoration: none !important; /* REMOVES THE UNDERSCORE */
-}
-
-/* Hover and Focus states for the <a> tag */
-a.icon-button:hover,
-a.icon-button:focus-visible {
-color: var(--color-text-body); /* Changes color on hover/focus */
-/* background: transparent; /* This was overriding the bg color change */
-}
-
-/* Explicitly style visited state for <a> tag to prevent purple/blue */
-a.icon-button:visited {
-color: var(--color-text-toc-link); /* Keep visited same color as normal */
 text-decoration: none !important;
 }
 
-/* Style for the SVG inside the icon button */
+a.icon-button:hover,
+a.icon-button:focus-visible {
+color: var(--color-text-body);
+}
+
+a.icon-button:visited {
+color: var(--color-text-toc-link);
+text-decoration: none !important;
+}
+
 .icon-button svg {
 width: 24px;
 height: 24px;
-/* The fill="currentColor" in your SVG path will use the 'color' from a.icon-button */
 }
 
 .header-dropdown-container {
 position: relative;
-display: inline-block; /* or inline-flex if that's what you use */
+display: inline-block;
 }
 
 .header-dropdown-trigger {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.4rem 0.8rem;
-    border-radius: 6px;
-    background-color: transparent;
-    color: var(--color-header-nav-link-text); /* Use variable */
-    border: none;
-    font-family: inherit;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer; /* Still good to have a pointer */
-    transition: background-color 0.2s ease, color 0.2s ease;
-    white-space: nowrap;
-
+display: inline-flex;
+align-items: center;
+padding: 0.4rem 0.8rem;
+border-radius: 6px;
+background-color: transparent;
+color: var(--color-header-nav-link-text);
+border: none;
+font-family: inherit;
+font-size: 0.9rem;
+font-weight: 500;
+cursor: pointer;
+transition: background-color 0.2s ease, color 0.2s ease;
+white-space: nowrap;
 }
-
-/* MODIFIED: Header Navigation Link Hover Effect */
 
 .header-dropdown-trigger .dropdown-arrow-icon {
-    margin-left: 0.35rem;
-    transition: transform 0.2s ease-out, stroke 0.2s ease-out; /* MODIFIED: Added stroke to transition */
-    transform: rotate(90deg); /* ADDED: Makes the default ">" arrow point DOWN "v" */
-    stroke: var(--color-header-nav-link-text);
-    width: 1em; /* Adjust size */
-    height: 1em;
-    
+margin-left: 0.35rem;
+transition: transform 0.2s ease-out, stroke 0.2s ease-out;
+transform: rotate(90deg);
+stroke: var(--color-header-nav-link-text);
+width: 1em;
+height: 1em;
 }
 
- .header-dropdown-container:hover .header-dropdown-trigger .dropdown-arrow-icon,
+.header-dropdown-container:hover .header-dropdown-trigger .dropdown-arrow-icon,
 .header-dropdown-trigger[aria-expanded="true"] .dropdown-arrow-icon {
-    transform: rotate(-90deg); /* Change to -90 degrees for UP arrow */
-    stroke: var(--color-sidebar-link-text);           ; /* Match text color when open/hover */
+transform: rotate(-90deg);
+stroke: var(--color-sidebar-link-text);           ;
 }
 
 .header-dropdown-trigger:focus-visible .dropdown-arrow-icon {
-    transform: rotate(-90deg); /* Pointing UP */
+transform: rotate(-90deg);
 }
 
 .header-dropdown-menu {
 position: absolute;
-top: 100%; 
-left: 50%;              /* <<< ADD: Position the left edge of the menu at the center of the container */
-transform: translateX(-50%) translateY(-10px); /* <<< MODIFY: Pull menu left by half its own width, keep existing Y transform */
-                                            /* If the menu is visible (on hover), transform will be translateX(-50%) translateY(0) */
+top: 100%;
+left: 50%;
+transform: translateX(-50%) translateY(-10px);
 background-color: var(--color-dropdown-bg);
 border-radius: 8px;
 box-shadow: var(--color-dropdown-shadow);
 padding: 0.5rem;
-min-width: 180px; /* Adjust as needed */
+min-width: 180px;
 z-index: 1000;
 list-style: none;
 margin: 0;
-
 opacity: 0;
 visibility: hidden;
-/* The Y transform is part of the open/close animation */
 transition: opacity 0.15s ease-out,
-            transform 0.15s ease-out, /* Ensure transform is part of the transition */
-            visibility 0s linear 0.15s;
+        transform 0.15s ease-out,
+        visibility 0s linear 0.15s;
 pointer-events: none;
 }
 
-
-
 .header-dropdown-container:hover .header-dropdown-trigger {
-    color: var(--color-sidebar-link-text);           /* Ensures text color matches hover state */
+color: var(--color-sidebar-link-text);
 }
 
-
-/* --- THIS IS THE KEY CHANGE FOR HOVER --- */
 .header-dropdown-container:hover .header-dropdown-menu,
 .header-dropdown-menu:hover {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(-50%) translateY(0);
-    transition-delay: 0s;
-    pointer-events: auto;
+opacity: 1;
+visibility: visible;
+transform: translateX(-50%) translateY(0);
+transition-delay: 0s;
+pointer-events: auto;
 }
 
-
 .header-dropdown-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between; /* Pushes icon to the right */
-    padding: 0.6rem 0.75rem;
-    color: var(--color-dropdown-item-text);
-    text-decoration: none;
-    border-radius: 6px; /* Rounded corners for items too */
-    font-size: 0.9rem;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    white-space: nowrap;
+display: flex;
+align-items: center;
+justify-content: space-between;
+padding: 0.6rem 0.75rem;
+color: var(--color-dropdown-item-text);
+text-decoration: none;
+border-radius: 6px;
+font-size: 0.9rem;
+transition: background-color 0.2s ease, color 0.2s ease;
+white-space: nowrap;
 }
 
 .header-dropdown-item:hover,
 .header-dropdown-item:focus-visible {
-    background-color: var(--color-dropdown-item-bg-hover);
-    color: var(--color-dropdown-item-text-hover); /* Though might be same as default */
-    outline: none;
+background-color: var(--color-dropdown-item-bg-hover);
+color: var(--color-dropdown-item-text-hover);
+outline: none;
 }
 
 .header-dropdown-item .external-link-icon {
-    margin-left: 0.75rem;
-    stroke: var(--color-dropdown-item-icon);
-    opacity: 0.7; /* Make it slightly less prominent */
+margin-left: 0.75rem;
+stroke: var(--color-dropdown-item-icon);
+opacity: 0.7;
 }
 .header-dropdown-item:hover .external-link-icon,
 .header-dropdown-item:focus-visible .external-link-icon {
-    opacity: 1;
+opacity: 1;
 }
 
-/* --- Left Sidebar Enhanced Styles --- */
 .sidebar-brand {
 padding-left: 1rem;
 padding-top: 1rem;
@@ -934,21 +826,19 @@ padding-top: 1rem;
 color: var(--color-text-body);
 }
 
-
 .sidebar-logo-link .logo-svg {
 width: 28px;
 height: 28px;
 margin-right: 0.65rem;
-color: var(--color-sidebar-logo-svg); /* Uses the CSS variable for stroke */
+color: var(--color-sidebar-logo-svg);
 }
 
-/* Sidebar Dividers */
 .sidebar-divider {
 border: none;
 height: 1px;
 background-color: var(--color-sidebar-divider);
-margin: 0 1.25rem; /* Horizontal padding to match content */
-flex-shrink: 0; /* Prevent shrinking */
+margin: 0 1.25rem;
+flex-shrink: 0;
 }
 .logo-divider {
 margin-top: 0.6rem;
@@ -958,18 +848,14 @@ margin-bottom: 0.75rem;
 margin-top: 0.75rem;
 margin-bottom: 0.75rem;
 }
-/* Hide divider if it's the very last child after a nav section, before the footer */
 .sidebar-nav > .sidebar-nav-section:last-of-type + .section-divider {
 display: none;
 }
 
-
-
-/* Sidebar Navigation Area */
 .sidebar-nav {
-flex-grow: 1; /* Allows nav to take up available space, pushing footer down */
-overflow-y: auto; /* This part scrolls if content is too long */
-padding: 0 0 0.75rem; /* Bottom padding before footer or end of sidebar */
+flex-grow: 1;
+overflow-y: auto;
+padding: 0 0 0.75rem;
 scrollbar-width: thin;
 scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--color-bg-sidebar);
 }
@@ -977,7 +863,7 @@ scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--color-bg-sidebar);
 width: 6px;
 }
 .sidebar-nav::-webkit-scrollbar-track {
-background: transparent; /* Track often transparent in sidebars */
+background: transparent;
 }
 .sidebar-nav::-webkit-scrollbar-thumb {
 background-color: var(--toc-scrollbar-thumb-bg);
@@ -987,33 +873,30 @@ border-radius: 3px;
 background-color: var(--toc-scrollbar-thumb-hover-bg);
 }
 
-
 .sidebar-nav-section {
-padding: 0 1.25rem; /* Horizontal padding for section content */
-/* is-open class will be handled by JS */
+padding: 0 1.25rem;
 }
 
-/* REPLACED .sidebar-section-title with .sidebar-section-toggle */
 .sidebar-section-toggle {
 display: flex;
 justify-content: space-between;
 align-items: center;
 width: 100%;
-padding: 0.5rem 0; /* Adjust padding for better click area */
+padding: 0.5rem 0;
 margin-top: 0.75rem;
-margin-bottom: 0; /* Content div will handle spacing */
-font-size: 0.9375rem; /* ~15px */
+margin-bottom: 0;
+font-size: 0.9375rem;
 font-weight: 600;
 color: var(--color-sidebar-section-title-text);
 background-color: transparent;
 border: none;
 text-align: left;
 cursor: pointer;
-font-family: inherit; /* Ensure button inherits font */
+font-family: inherit;
 transition: color 0.2s ease;
 }
 .sidebar-section-toggle:hover {
-color: var(--color-text-body); /* Or a specific hover color for title */
+color: var(--color-text-body);
 }
 .sidebar-nav-section:first-child > .sidebar-section-toggle {
 margin-top: 0.25rem;
@@ -1022,92 +905,85 @@ margin-top: 0.25rem;
 .sidebar-section-arrow {
 width: 1em;
 height: 1em;
-stroke: currentColor; /* Inherits color from button */
+stroke: currentColor;
 transition: transform 0.25s ease-out;
-/* Default (collapsed state): Rotate the "down arrow" to point RIGHT */
 transform: rotate(-90deg);
 }
 .sidebar-nav-section.is-open > .sidebar-section-toggle .sidebar-section-arrow {
-/* Expanded state: Rotate the "down arrow" to point DOWN (no effective rotation) */
 transform: rotate(0deg);
 }
 
-
-/* Collapsible Content Area */
 .sidebar-section-content {
 overflow: hidden;
-max-height: 0; /* Collapsed by default (JS will add is-open to parent to override) */
+max-height: 0;
 transition: max-height 0.3s ease-out,
-            padding-top 0.3s ease-out,
-            padding-bottom 0.3s ease-out;
+        padding-top 0.3s ease-out,
+        padding-bottom 0.3s ease-out;
 padding-top: 0;
 padding-bottom: 0;
 }
 .sidebar-nav-section.is-open > .sidebar-section-content {
-/* Estimate a large enough max-height or calculate dynamically if needed */
-max-height: 1000px; /* Adjust if you have very long sections */
-padding-top: 0.4rem; /* Space between title and links when open */
-padding-bottom: 0.2rem; /* Space after links when open */
+max-height: 1000px;
+padding-top: 0.4rem;
+padding-bottom: 0.2rem;
 }
 
 .sidebar-nav-links {
 list-style: none;
-padding-left: 0em; /* Indent for the links under a title */
+padding-left: 0em;
 margin: 0;
 }
 .sidebar-nav-links li {
-margin: 0; /* Remove default li margin if any */
+margin: 0;
 }
 .sidebar-link {
 display: block;
 padding-top: 0.4rem;
 padding-bottom: 0.4rem;
-font-size: 0.875rem; /* ~14px */
+font-size: 0.875rem;
 color: var(--color-sidebar-link-text);
 text-decoration: none;
 border-radius: 6px;
 transition: color 0.2s ease, background-color 0.2s ease, font-weight 0.2s ease;
 font-weight: 500;
 line-height: 1.4;
-margin-bottom: 0.1rem; /* Small gap between links */
+margin-bottom: 0.1rem;
 padding-left: 1rem;
 font-weight: 600;
 }
 .sidebar-link:hover {
-    color: var(--color-sidebar-link-text-hover); /* Use theme-aware hover text color */
-    background-color: var(--color-search-trigger-hover-bg);
+color: var(--color-sidebar-link-text-hover);
+background-color: var(--color-search-trigger-hover-bg);
 }
 
-/* Sidebar Footer Link Area */
 .sidebar-footer {
 padding: 0.75rem 1.25rem 1.25rem;
-margin-top: auto; /* Pushes to bottom if .sidebar-nav doesn't fill space */
+margin-top: auto;
 border-top: 1px solid var(--color-sidebar-divider);
-flex-shrink: 0; /* Prevent shrinking */
+flex-shrink: 0;
 }
 .sidebar-footer a {
-font-size: 0.8125rem; /* ~13px */
+font-size: 0.8125rem;
 color: var(--color-sidebar-footer-link-text);
 text-decoration: none;
 transition: color 0.2s ease;
-display: block; /* Make the link take full width for easier clicking */
+display: block;
 }
 .sidebar-footer a:hover {
 color: var(--color-sidebar-footer-link-text-hover);
 text-decoration: underline;
 }
 
-/* --- Mobile Menu Button --- */
 .mobile-menu-button {
-display: none; /* Hidden by default, shown in media query */
+display: none;
 padding: 0.4rem;
 background-color: transparent;
 color: var(--color-text-body);
 border: 1px solid transparent;
 border-radius: 6px;
 cursor: pointer;
-line-height: 0; /* For icon alignment */
-margin-right: 0.75rem; /* Space from other header items */
+line-height: 0;
+margin-right: 0.75rem;
 }
 .mobile-menu-button svg {
 width: 24px;
@@ -1118,468 +994,382 @@ stroke: currentColor;
 background-color: var(--color-search-trigger-hover-bg);
 }
 
-/* Mobile ToC Toggle Button */
 .mobile-toc-toggle {
-    display: none; /* Hidden by default */
+display: none;
 }
-/* Page Overlay for Mobile Sidebar / ToC */
 .page-overlay {
 position: fixed;
 top: 0;
 left: 0;
 width: 100%;
 height: 100%;
-background-color: transparent; /* Semi-transparent black */
-z-index: 10005; /* Below sidebar, above content */
-display: none; /* Shown by JS when sidebar is open */
+background-color: transparent;
+z-index: 10005;
+display: none;
 opacity: 0;
 transition: opacity 0.3s ease-in-out;
 }
-/* No need for .mobile-sidebar-open .page-overlay here, JS handles display and opacity directly */
 
-
-/* Prevent body scroll when mobile sidebar is open */
 body.mobile-sidebar-open,
-body.mobile-toc-open { /* ADDED: Also prevent scroll if ToC panel is open */
+body.mobile-toc-open {
 overflow: hidden;
 }
 
 .mobile-header-logo {
-    display: none; /* Hidden by default on desktop */
-    align-items: center; /* Vertically align content if logo div is flex */
+display: none;
+align-items: center;
 }
-
 
 .mobile-header-logo .sidebar-logo-link {
-    display: inline-flex;
-    align-items: center;
-    text-decoration: none;
-    color: var(--color-text-body); /* Use body text color for header logo, or var(--color-sidebar-logo-text) if preferred */
-    font-size: 1.125rem; /* Consistent with sidebar logo */
-    font-weight: 600;
-    padding: 0; /* Remove padding that might come from .sidebar-logo-link */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+display: inline-flex;
+align-items: center;
+text-decoration: none;
+color: var(--color-text-body);
+font-size: 1.125rem;
+font-weight: 600;
+padding: 0;
+white-space: nowrap;
+overflow: hidden;
+text-overflow: ellipsis;
 }
 
-.mobile-header-logo .sidebar-logo-link .logo-svg { /* If you use an SVG logo */
-    width: 28px;
-    height: 28px;
-    margin-right: 0.65rem;
-    color: var(--color-text-body); /* Or var(--color-sidebar-logo-svg) */
+.mobile-header-logo .sidebar-logo-link .logo-svg {
+width: 28px;
+height: 28px;
+margin-right: 0.65rem;
+color: var(--color-text-body);
 }
 
-
-/* --- Media Query for Responsiveness (e.g., Tablets and Phones) --- */
 @media (max-width: 992px) {
 .app-header {
-    padding: 0 0.75rem; 
-    justify-content: flex-start; /* Align items to the start, logo will grow */
+padding: 0 0.75rem;
+justify-content: flex-start;
 }
 .app-header > div:not(.header-actions):not(.mobile-menu-button):not(.mobile-header-logo) {
-  margin-right: 0.5rem;
+margin-right: 0.5rem;
 }
-
 
 .mobile-menu-button {
-    display: inline-flex; 
-    flex-shrink: 0;
-    margin-right: 0.5rem; /* Space between hamburger and logo */
+display: inline-flex;
+flex-shrink: 0;
+margin-right: 0.5rem;
 }
 .mobile-header-logo {
-    display: inline-flex;
-    flex-grow: 1; /* Logo takes available space */
-    justify-content: flex-start; /* Logo content (text/svg) aligns left within its container */
-    margin-right: 0.5rem; /* Space before action icons */
-    overflow: hidden;
+display: inline-flex;
+flex-grow: 1;
+justify-content: flex-start;
+margin-right: 0.5rem;
+overflow: hidden;
 }
 
 .left-sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh; 
-    width: 280px; 
-    transform: translateX(-100%);
-    z-index: 10010; 
-    flex-basis: auto; 
-    border-right: 1px solid var(--color-border-sidebar); 
-    box-shadow: 2px 0 8px rgba(0,0,0,0.15); 
+position: fixed;
+top: 0;
+left: 0;
+height: 100vh;
+width: 280px;
+transform: translateX(-100%);
+z-index: 10010;
+flex-basis: auto;
+border-right: 1px solid var(--color-border-sidebar);
+box-shadow: 2px 0 8px rgba(0,0,0,0.15);
 }
 
 body.mobile-sidebar-open .left-sidebar {
-    transform: translateX(0);
+transform: translateX(0);
 }
 
-/* Header Actions - container for search, toc-toggle, theme, github */
 .header-actions {
-    flex-grow: 0; /* Don't let it grow, size by content */
-    flex-shrink: 0; /* Don't let it shrink */
-    margin-left: auto; /* Push action group to the right */
-    gap: 0.25rem; /* Gap between items: search, toc-toggle, theme/github group */
-    justify-content: flex-end; /* This was for desktop, override for mobile if needed */
+flex-grow: 0;
+flex-shrink: 0;
+margin-left: auto;
+gap: 0.25rem;
+justify-content: flex-end;
 }
 
-.header-actions-right { /* Contains theme, github, and DESKTOP nav links */
-    gap: 0; /* Was 0.25rem, but theme/github are hidden */
+.header-actions-right {
+gap: 0;
 }
 
-.header-actions-right > .header-nav-link, 
-.header-actions-right > .header-dropdown-container { 
-    display: none;
+.header-actions-right > .header-nav-link,
+.header-actions-right > .header-dropdown-container {
+display: none;
 }
 
-/* Search trigger adjustments */
 #searchTrigger .search-trigger-text,
 #searchTrigger .search-shortcut-hint {
-    display: none; 
+display: none;
 }
 #themeToggle,
 #githubLink {
-    display: none !important;
+display: none !important;
 }
-/* Ensure separators for theme toggle are also hidden */
 #themeToggle.theme-toggle-button::before,
 #themeToggle.theme-toggle-button::after {
-    display: none;
+display: none;
 }
 
 #searchTrigger {
-    padding: 0.4rem; 
-    border-color: transparent; 
-    margin-right: 0; /* Rely on parent gap */
+padding: 0.4rem;
+border-color: transparent;
+margin-right: 0;
 }
- #searchTrigger .search-trigger-icon-svg {
-    margin-right: 0;
+#searchTrigger .search-trigger-icon-svg {
+margin-right: 0;
 }
 #searchTrigger:hover {
-    border-color: var(--color-search-border); 
-    background-color: var(--color-search-trigger-hover-bg); 
+border-color: var(--color-search-border);
+background-color: var(--color-search-trigger-hover-bg);
 }
 
-/* Mobile ToC Toggle Button */
 .mobile-toc-toggle {
-    display: inline-flex; /* Show ToC toggle on mobile */
-    /* Inherits .icon-button styles (padding, border-radius etc) */
-    /* color, hover color are from .icon-button */
+display: inline-flex;
 }
 .mobile-toc-toggle svg {
-    width: 22px; /* Slightly adjust if needed */
-    height: 22px;
+width: 22px;
+height: 22px;
 }
 
-/* Mobile ToC Panel */
 #toc-container {
-    position: fixed;
-    top: 0;
-    right: -280px; /* Start off-screen */
-    width: 280px; /* Or your preferred width */
-    height: 100vh;
-    background-color: var(--color-bg-sidebar);
-    z-index: 10008; /* Below main sidebar, above overlay if both open (but one closes other) */
-    padding: 1.25rem 1rem; /* Consistent padding */
-    box-shadow: -2px 0 8px rgba(0,0,0,0.15);
-    transition: transform 0.3s ease-in-out;
-    flex-basis: auto; /* Override desktop flex-basis */
-    overflow-y: auto; /* Enable scrolling for ToC content */
-    /* Desktop sticky/height/top/right properties are overridden here */
-    /* scrollbar styling already applied globally to #toc-container */
+position: fixed;
+top: 0;
+right: -280px;
+width: 280px;
+height: 100vh;
+background-color: var(--color-bg-sidebar);
+z-index: 10008;
+padding: 1.25rem 1rem;
+box-shadow: -2px 0 8px rgba(0,0,0,0.15);
+transition: transform 0.3s ease-in-out;
+flex-basis: auto;
+overflow-y: auto;
 }
 body.mobile-toc-open #toc-container {
-    transform: translateX(-100%); /* Slide in from right */
+transform: translateX(-100%);
 }
-/* Ensure ToC links are visible and styled appropriately in the mobile panel */
 #toc-container #toc-links a {
-    /* Adjust if needed, but existing styles might be fine */
-    font-size: 0.9rem;
+font-size: 0.9rem;
 }
 
-
-/* Main content adjustments */
 .content-toc-row {
-    flex-direction: column; 
+flex-direction: column;
 }
-/* #toc-container is handled above for mobile panel, no longer display:none here */
 
 #content-area {
-    flex-basis: auto; 
-    padding: 1.25rem; 
+flex-basis: auto;
+padding: 1.25rem;
 }
- #content-area h2 {
-    padding-top: calc(4rem + 1rem); 
+#content-area h2 {
+padding-top: calc(4rem + 1rem);
 }
 
-
-/* Footer nav boxes */
 .page-navigation-boxes {
-    flex-direction: column;
-    gap: 0.75rem;
+flex-direction: column;
+gap: 0.75rem;
 }
 .nav-box {
-    text-align: left !important; 
+text-align: left !important;
 }
 .next-page-box .nav-box-label,
 .next-page-box .nav-box-link,
 .previous-page-box .nav-box-label,
 .previous-page-box .nav-box-link {
-    text-align: left !important;
+text-align: left !important;
 }
 }
 
-@media (max-width: 480px) { /* Smaller phone adjustments */
+@media (max-width: 480px) {
 .app-header {
-    padding: 0 0.5rem;
+padding: 0 0.5rem;
 }
 .mobile-menu-button {
-    margin-right: 0.25rem; /* Tighter space */
+margin-right: 0.25rem;
 }
 .mobile-header-logo {
-    /* flex-grow: 1; by default from 992px */
-    justify-content: center; /* Center logo text if it's short */
-    margin: 0 0.25rem; /* Tighter space */
+justify-content: center;
+margin: 0 0.25rem;
 }
 
 .header-actions {
-    gap: 0.1rem; /* Tighter gap between search, toc, theme/github */
+gap: 0.1rem;
 }
 #searchTrigger, .mobile-toc-toggle, .theme-toggle-button, a.icon-button {
-    padding: 0.3rem; 
+padding: 0.3rem;
 }
 .icon-button svg, .theme-toggle-button svg, #searchTrigger svg, .mobile-toc-toggle svg {
-    width: 20px;
-    height: 20px;
+width: 20px;
+height: 20px;
 }
 #themeToggle.theme-toggle-button::before,
 #themeToggle.theme-toggle-button::after {
-    display: none; 
+display: none;
 }
-.header-actions-right { /* contains theme/github */
-    gap: 0.05rem; /* very tight */
+.header-actions-right {
+gap: 0.05rem;
 }
 
 #content-area {
-    padding: 1rem;
+padding: 1rem;
 }
 #content-area h1 {
-    font-size: 1.75rem;
+font-size: 1.75rem;
 }
 #content-area h2 {
-    font-size: 1.4rem;
-    padding-top: calc(4rem + 0.5rem); 
+font-size: 1.4rem;
+padding-top: calc(4rem + 0.5rem);
 }
- .page-meta-row .last-updated-text {
-    font-size: 0.8rem; 
+.page-meta-row .last-updated-text {
+font-size: 0.8rem;
 }
 }
 
 .sidebar-link.active {
-    color: var(--color-sidebar-link-text-active);
-    font-weight: 600;
+color: var(--color-sidebar-link-text-active);
+font-weight: 600;
 }
-/* --- Ensure these styles are in your style.css --- */
-
-/* Make the code block container a positioning context */
-/* --- Revised Approach --- */
 
 #content-area .codehilite {
-    position: relative;
-    margin-bottom: 1rem; /* Space below the code block */
-    border-radius: 6px;    /* Rounded corners for the visual block */
-
-    /* For centering the entire code block structure: */
-    width: auto; /* Let it be as wide as its content (<pre>) */
-    max-width: 90%; /* Don't let it get too wide on large screens, adjust as needed */
-    /* If you want it narrower than 90% and centered: */
-    /* max-width: 800px; */
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 1rem;
-
-    /* Background is typically on the <pre> from Pygments */
+position: relative;
+margin-bottom: 1rem;
+border-radius: 6px;
+width: auto;
+max-width: 90%;
+margin-left: auto;
+margin-right: auto;
+margin-top: 1rem;
 }
 
 #content-area .codehilite pre {
-    margin: 0; /* Remove default pre margins */
-    padding: 1em; /* Standard Pygments padding around code */
-    border-radius: 6px; /* Match .codehilite or be slightly less */
-    overflow-x: auto;
-    /* Background and text colors are applied by theme-specific Pygments styles:
-       e.g., .dark-theme .codehilite pre { background: #202020; color: #D0D0D0; }
-    */
+margin: 0;
+padding: 1em;
+border-radius: 6px;
+overflow-x: auto;
 }
 
 .copy-code-button {
-    position: absolute;
-    top: 0.75em;  /* Position relative to <pre> padding, adjust for look */
-    right: 0.75em; /* Position relative to <pre> padding */
-    /* These values should visually place it nicely inside the top-right corner
-       of the <pre> tag's padded area. */
-
-    padding: 5px;
-    background-color: rgba(0,0,0,0.1); /* Subtle bg for button itself, or keep transparent */
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-    z-index: 1;
-    line-height: 0;
-    user-select: none;
+position: absolute;
+top: 0.75em;
+right: 0.75em;
+padding: 5px;
+background-color: rgba(0,0,0,0.1);
+border: none;
+border-radius: 4px;
+cursor: pointer;
+opacity: 0;
+visibility: hidden;
+transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+z-index: 1;
+line-height: 0;
+user-select: none;
 }
 
-/* ... rest of your copy button SVG and hover styles ... *//* Style for the copy button */
 .copy-code-button {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    padding: 5px;
-    background-color: transparent;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-    z-index: 1;
-    line-height: 0;
-    user-select: none;
+position: absolute;
+top: 8px;
+right: 8px;
+padding: 5px;
+background-color: transparent;
+border: none;
+border-radius: 4px;
+cursor: pointer;
+opacity: 0;
+visibility: hidden;
+transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
+z-index: 1;
+line-height: 0;
+user-select: none;
 }
 
-/* SVG icon base styles */
 .copy-code-button svg {
-    width: 18px;  /* Adjust icon size as needed */
-    height: 18px; /* Adjust icon size as needed */
-    display: block;
-    transition: transform 0.1s ease-out, fill 0.2s ease-in-out; /* Added fill transition */
+width: 18px;
+height: 18px;
+display: block;
+transition: transform 0.1s ease-out, fill 0.2s ease-in-out;
 }
 
-/* --- Theme-specific icon colors --- */
-
-/* For Light Theme: Icon should be dark */
 .light-theme .copy-code-button svg {
-    fill: #333333; /* A dark gray. Adjust if your light theme text is different. */
-                   /* If currentColor (default text color) works well, you can use that: */
-                   /* fill: currentColor; */
+fill: #333333;
 }
 
-/* For Dark Theme: Icon should be light */
 .dark-theme .copy-code-button svg {
-    fill: #cccccc; /* A light gray. Adjust for best contrast on your dark code blocks. */
-                   /* Examples: #d1d1d1, #e0e0e0 */
+fill: #cccccc;
 }
 
-/* Fallback if no theme class is present (optional, could be one of the above or currentColor) */
-/* This rule would apply if body has neither .light-theme nor .dark-theme */
-/* If you always have a theme class, you might not need this specific fallback */
-/*
-*:not(.light-theme):not(.dark-theme) .copy-code-button svg {
-    fill: #555555; // A generic medium gray, or currentColor
-}
-*/
-/* More simply, if you want currentColor as the base if no theme class is matched: */
-.copy-code-button svg { /* This now acts as a base if no theme-specific rule above matches */
-    fill: currentColor; /* Or a sensible default like #555555 */
+.copy-code-button svg {
+fill: currentColor;
 }
 
-
-/* --- Hover and Active States --- */
-
-/* Show button on hover of the code block */
 .codehilite:hover .copy-code-button {
-    opacity: 0.75; /* Slightly more opaque for better visibility initially */
-    visibility: visible;
+opacity: 0.75;
+visibility: visible;
 }
 
-/* Optional: If the icon is still too dim on initial hover in dark mode,
-   you can give it a higher opacity specifically for dark theme */
-/*
-.dark-theme .codehilite:hover .copy-code-button {
-    opacity: 0.85;
-}
-*/
-
-/* Full opacity on direct button hover */
 .copy-code-button:hover {
-    opacity: 1;
+opacity: 1;
 }
 
-/* Optional: Slightly change icon color on button hover for more feedback */
 .light-theme .copy-code-button:hover svg {
-    fill: #000000; /* Darker for light theme */
+fill: #000000;
 }
 
 .dark-theme .copy-code-button:hover svg {
-    fill: #ffffff; /* Brighter for dark theme */
+fill: #ffffff;
 }
-
 
 .copy-code-button:active svg {
-    transform: scale(0.9); /* Subtle shrink on click */
+transform: scale(0.9);
 }
-
 
 @media (max-width: 992px) {
-    .codehilite pre {
-        overflow-x: auto;
-        white-space: pre;
-    }
-
+.codehilite pre {
+    overflow-x: auto;
+    white-space: pre;
+}
 }
 
-
-@media (max-width: 767px) { 
-    .codehilite pre {
-        overflow-x: auto;
-        white-space: pre;
-    }
-
+@media (max-width: 767px) {
+.codehilite pre {
+    overflow-x: auto;
+    white-space: pre;
 }
-
+}
 
 .admonition {
-    
-    margin-left: 3rem;
-    margin-right: 3rem;
-    padding: 1rem 1.25rem;
-    margin-bottom: 1rem;
-    border-radius: 0.375rem;
-    color: #e6edf3; /* Default text color for content */
-    font-size: 14px;
-    line-height: 1.5;
-    margin-top: 1rem;
+margin-left: 3rem;
+margin-right: 3rem;
+padding: 1rem 1.25rem;
+margin-bottom: 1rem;
+border-radius: 0.375rem;
+color: #e6edf3;
+font-size: 14px;
+line-height: 1.5;
+margin-top: 1rem;
 }
 
-/* General title style (used by <p> and <summary>) */
 .admonition-title {
-    font-weight: 600; 
-    text-transform: uppercase;
-    font-size: 13px;
-    color: #e6edf3; 
-    font-size: 1rem;
-    margin: 0;
+font-weight: 600;
+text-transform: uppercase;
+font-size: 13px;
+color: #e6edf3;
+font-size: 1rem;
+margin: 0;
 }
 
-/* Paragraphs within content (assuming simple content) */
 .admonition-content > p {
-    margin-top: 0;
-    margin-bottom: 0;
+margin-top: 0;
+margin-bottom: 0;
 }
-/* Ensure last child in content has no bottom margin if it's not a p or if more elements are added */
 .admonition-content > *:last-child {
-    margin-bottom: 0;
+margin-bottom: 0;
 }
 
-/* Background colors for different types */
 .admonition.note     { background-color: #2160b3; }
 .admonition.tip     { background-color: #139024; }
 .admonition.warning { background-color: #d29922; }
 .admonition.danger  { background-color: #f85149; }
-.admonition.details { background-color: #3A414A; } 
-.admonition.info { background-color: #62758d; } 
+.admonition.details { background-color: #3A414A; }
+.admonition.info { background-color: #62758d; }
 .admonition.important { background-color: #7d60b1; }
-
 
 .admonition.info div p,
 .admonition.warning div p,
@@ -1588,73 +1378,63 @@ body.mobile-toc-open #toc-container {
 .admonition.details div p,
 .admonition.important div p,
 .admonition.danger div p {
-    margin: 0;
-    margin-left: 1rem;
+margin: 0;
+margin-left: 1rem;
 }
 
 details.admonition.details > summary.admonition-title {
-    font-size: 1rem;
+font-size: 1rem;
 }
 
-/* Specifics for <summary> when it's an admonition title (overrides .admonition-title) */
 .admonition.details > summary.admonition-title {
-    font-weight: bold;
-    color: #ADBAC7;     /* Lighter grey for "Details" text */
-    text-transform: none;/* "Details" is not uppercase */
-    font-size: 14px;      /* Match content font size */
-    margin-bottom: 0;     /* Base margin before opening */
-    cursor: pointer;
-    display: list-item;   /* Essential for <summary> to show marker */
-    padding-left: 0;      /* Normalize display */
+font-weight: bold;
+color: #ADBAC7;
+text-transform: none;
+font-size: 14px;
+margin-bottom: 0;
+cursor: pointer;
+display: list-item;
+padding-left: 0;
 }
 
-/* Styling disclosure marker for <summary> */
 .admonition.details > summary.admonition-title::marker,
 .admonition.details > summary.admonition-title::-webkit-details-marker {
-    color: #ADBAC7;
+color: #ADBAC7;
 }
 
-/* Spacing for summary when details is open */
 details.admonition.details[open] > summary.admonition-title + div > p:first-of-type {
-    /* Your styles here */
-    margin-top: 0.5rem;
-    margin-left: 1.5rem;
+margin-top: 0.5rem;
+margin-left: 1.5rem;
 }
 
-/* Basic styling for <code> elements within admonitions */
 .admonition-content code {
-    background-color: rgba(175, 184, 193, 0.15); /* Subtle highlight, slightly darker than GitHub */
-    padding: .15em .3em; /* Reduced padding */
-    margin: 0 .1em;      /* Minimal margin */
-    font-size: 85%;
-    border-radius: 3px;
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+background-color: rgba(175, 184, 193, 0.15);
+padding: .15em .3em;
+margin: 0 .1em;
+font-size: 85%;
+border-radius: 3px;
+font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
-
 
 p:has(img:only-child) {
-    display: block;
-    margin: auto;
+display: block;
+margin: auto;
 }
 
 h1, h2, h3, h4, h5, h6  {
-    padding-left: 3rem;
+padding-left: 3rem;
 }
 
 p {
-    margin-left: 3rem;
+margin-left: 3rem;
 }
 
-
-/* Add this to your style.css file */
-
 #content-area hr {
-    border: 0;                                  /* Clear any default browser borders for the <hr> element */
-    border-top: 1px solid var(--color-border-toc-line); /* This creates the visible line, using your theme variable */
-    margin-top: 2.5rem;                         /* Adjust for desired space above the line */
-    margin-bottom: 2.5rem;                      /* Adjust for desired space below the line */
-    margin-left: 3rem;                          /* This indents the <hr> to align with your h* and p content */
-    /* margin-right: 0; /* This is the default, so the line will extend to the right edge of the content-area's content box (respecting content-area's own right padding) */
+border: 0;
+border-top: 1px solid var(--color-border-toc-line);
+margin-top: 2.5rem;
+margin-bottom: 2.5rem;
+margin-left: 3rem;
 }
 pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1663,83 +1443,83 @@ td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5
 span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .light-theme pre .hll { background-color: #ffffcc }
 .light-theme pre { background: #f8f8f8; }
-.light-theme pre .c { color: #8F5902; font-style: italic } /* Comment */
-.light-theme pre .err { color: #A40000; border: 1px solid #EF2929 } /* Error */
-.light-theme pre .g { color: #000 } /* Generic */
-.light-theme pre .k { color: #204A87; font-weight: bold } /* Keyword */
-.light-theme pre .l { color: #000 } /* Literal */
-.light-theme pre .n { color: #000 } /* Name */
-.light-theme pre .o { color: #CE5C00; font-weight: bold } /* Operator */
-.light-theme pre .x { color: #000 } /* Other */
-.light-theme pre .p { color: #000; font-weight: bold } /* Punctuation */
-.light-theme pre .ch { color: #8F5902; font-style: italic } /* Comment.Hashbang */
-.light-theme pre .cm { color: #8F5902; font-style: italic } /* Comment.Multiline */
-.light-theme pre .cp { color: #8F5902; font-style: italic } /* Comment.Preproc */
-.light-theme pre .cpf { color: #8F5902; font-style: italic } /* Comment.PreprocFile */
-.light-theme pre .c1 { color: #8F5902; font-style: italic } /* Comment.Single */
-.light-theme pre .cs { color: #8F5902; font-style: italic } /* Comment.Special */
-.light-theme pre .gd { color: #A40000 } /* Generic.Deleted */
-.light-theme pre .ge { color: #000; font-style: italic } /* Generic.Emph */
-.light-theme pre .ges { color: #000; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.light-theme pre .gr { color: #EF2929 } /* Generic.Error */
-.light-theme pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
-.light-theme pre .gi { color: #00A000 } /* Generic.Inserted */
-.light-theme pre .go { color: #000; font-style: italic } /* Generic.Output */
-.light-theme pre .gp { color: #8F5902 } /* Generic.Prompt */
-.light-theme pre .gs { color: #000; font-weight: bold } /* Generic.Strong */
-.light-theme pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
-.light-theme pre .gt { color: #A40000; font-weight: bold } /* Generic.Traceback */
-.light-theme pre .kc { color: #204A87; font-weight: bold } /* Keyword.Constant */
-.light-theme pre .kd { color: #204A87; font-weight: bold } /* Keyword.Declaration */
-.light-theme pre .kn { color: #204A87; font-weight: bold } /* Keyword.Namespace */
-.light-theme pre .kp { color: #204A87; font-weight: bold } /* Keyword.Pseudo */
-.light-theme pre .kr { color: #204A87; font-weight: bold } /* Keyword.Reserved */
-.light-theme pre .kt { color: #204A87; font-weight: bold } /* Keyword.Type */
-.light-theme pre .ld { color: #000 } /* Literal.Date */
-.light-theme pre .m { color: #0000CF; font-weight: bold } /* Literal.Number */
-.light-theme pre .s { color: #4E9A06 } /* Literal.String */
-.light-theme pre .na { color: #C4A000 } /* Name.Attribute */
-.light-theme pre .nb { color: #204A87 } /* Name.Builtin */
-.light-theme pre .nc { color: #000 } /* Name.Class */
-.light-theme pre .no { color: #000 } /* Name.Constant */
-.light-theme pre .nd { color: #5C35CC; font-weight: bold } /* Name.Decorator */
-.light-theme pre .ni { color: #CE5C00 } /* Name.Entity */
-.light-theme pre .ne { color: #C00; font-weight: bold } /* Name.Exception */
-.light-theme pre .nf { color: #000 } /* Name.Function */
-.light-theme pre .nl { color: #F57900 } /* Name.Label */
-.light-theme pre .nn { color: #000 } /* Name.Namespace */
-.light-theme pre .nx { color: #000 } /* Name.Other */
-.light-theme pre .py { color: #000 } /* Name.Property */
-.light-theme pre .nt { color: #204A87; font-weight: bold } /* Name.Tag */
-.light-theme pre .nv { color: #000 } /* Name.Variable */
-.light-theme pre .ow { color: #204A87; font-weight: bold } /* Operator.Word */
-.light-theme pre .pm { color: #000; font-weight: bold } /* Punctuation.Marker */
-.light-theme pre .w { color: #F8F8F8 } /* Text.Whitespace */
-.light-theme pre .mb { color: #0000CF; font-weight: bold } /* Literal.Number.Bin */
-.light-theme pre .mf { color: #0000CF; font-weight: bold } /* Literal.Number.Float */
-.light-theme pre .mh { color: #0000CF; font-weight: bold } /* Literal.Number.Hex */
-.light-theme pre .mi { color: #0000CF; font-weight: bold } /* Literal.Number.Integer */
-.light-theme pre .mo { color: #0000CF; font-weight: bold } /* Literal.Number.Oct */
-.light-theme pre .sa { color: #4E9A06 } /* Literal.String.Affix */
-.light-theme pre .sb { color: #4E9A06 } /* Literal.String.Backtick */
-.light-theme pre .sc { color: #4E9A06 } /* Literal.String.Char */
-.light-theme pre .dl { color: #4E9A06 } /* Literal.String.Delimiter */
-.light-theme pre .sd { color: #8F5902; font-style: italic } /* Literal.String.Doc */
-.light-theme pre .s2 { color: #4E9A06 } /* Literal.String.Double */
-.light-theme pre .se { color: #4E9A06 } /* Literal.String.Escape */
-.light-theme pre .sh { color: #4E9A06 } /* Literal.String.Heredoc */
-.light-theme pre .si { color: #4E9A06 } /* Literal.String.Interpol */
-.light-theme pre .sx { color: #4E9A06 } /* Literal.String.Other */
-.light-theme pre .sr { color: #4E9A06 } /* Literal.String.Regex */
-.light-theme pre .s1 { color: #4E9A06 } /* Literal.String.Single */
-.light-theme pre .ss { color: #4E9A06 } /* Literal.String.Symbol */
-.light-theme pre .bp { color: #3465A4 } /* Name.Builtin.Pseudo */
-.light-theme pre .fm { color: #000 } /* Name.Function.Magic */
-.light-theme pre .vc { color: #000 } /* Name.Variable.Class */
-.light-theme pre .vg { color: #000 } /* Name.Variable.Global */
-.light-theme pre .vi { color: #000 } /* Name.Variable.Instance */
-.light-theme pre .vm { color: #000 } /* Name.Variable.Magic */
-.light-theme pre .il { color: #0000CF; font-weight: bold } /* Literal.Number.Integer.Long */
+.light-theme pre .c { color: #8F5902; font-style: italic }
+.light-theme pre .err { color: #A40000; border: 1px solid #EF2929 }
+.light-theme pre .g { color: #000 }
+.light-theme pre .k { color: #204A87; font-weight: bold }
+.light-theme pre .l { color: #000 }
+.light-theme pre .n { color: #000 }
+.light-theme pre .o { color: #CE5C00; font-weight: bold }
+.light-theme pre .x { color: #000 }
+.light-theme pre .p { color: #000; font-weight: bold }
+.light-theme pre .ch { color: #8F5902; font-style: italic }
+.light-theme pre .cm { color: #8F5902; font-style: italic }
+.light-theme pre .cp { color: #8F5902; font-style: italic }
+.light-theme pre .cpf { color: #8F5902; font-style: italic }
+.light-theme pre .c1 { color: #8F5902; font-style: italic }
+.light-theme pre .cs { color: #8F5902; font-style: italic }
+.light-theme pre .gd { color: #A40000 }
+.light-theme pre .ge { color: #000; font-style: italic }
+.light-theme pre .ges { color: #000; font-weight: bold; font-style: italic }
+.light-theme pre .gr { color: #EF2929 }
+.light-theme pre .gh { color: #000080; font-weight: bold }
+.light-theme pre .gi { color: #00A000 }
+.light-theme pre .go { color: #000; font-style: italic }
+.light-theme pre .gp { color: #8F5902 }
+.light-theme pre .gs { color: #000; font-weight: bold }
+.light-theme pre .gu { color: #800080; font-weight: bold }
+.light-theme pre .gt { color: #A40000; font-weight: bold }
+.light-theme pre .kc { color: #204A87; font-weight: bold }
+.light-theme pre .kd { color: #204A87; font-weight: bold }
+.light-theme pre .kn { color: #204A87; font-weight: bold }
+.light-theme pre .kp { color: #204A87; font-weight: bold }
+.light-theme pre .kr { color: #204A87; font-weight: bold }
+.light-theme pre .kt { color: #204A87; font-weight: bold }
+.light-theme pre .ld { color: #000 }
+.light-theme pre .m { color: #0000CF; font-weight: bold }
+.light-theme pre .s { color: #4E9A06 }
+.light-theme pre .na { color: #C4A000 }
+.light-theme pre .nb { color: #204A87 }
+.light-theme pre .nc { color: #000 }
+.light-theme pre .no { color: #000 }
+.light-theme pre .nd { color: #5C35CC; font-weight: bold }
+.light-theme pre .ni { color: #CE5C00 }
+.light-theme pre .ne { color: #C00; font-weight: bold }
+.light-theme pre .nf { color: #000 }
+.light-theme pre .nl { color: #F57900 }
+.light-theme pre .nn { color: #000 }
+.light-theme pre .nx { color: #000 }
+.light-theme pre .py { color: #000 }
+.light-theme pre .nt { color: #204A87; font-weight: bold }
+.light-theme pre .nv { color: #000 }
+.light-theme pre .ow { color: #204A87; font-weight: bold }
+.light-theme pre .pm { color: #000; font-weight: bold }
+.light-theme pre .w { color: #F8F8F8 }
+.light-theme pre .mb { color: #0000CF; font-weight: bold }
+.light-theme pre .mf { color: #0000CF; font-weight: bold }
+.light-theme pre .mh { color: #0000CF; font-weight: bold }
+.light-theme pre .mi { color: #0000CF; font-weight: bold }
+.light-theme pre .mo { color: #0000CF; font-weight: bold }
+.light-theme pre .sa { color: #4E9A06 }
+.light-theme pre .sb { color: #4E9A06 }
+.light-theme pre .sc { color: #4E9A06 }
+.light-theme pre .dl { color: #4E9A06 }
+.light-theme pre .sd { color: #8F5902; font-style: italic }
+.light-theme pre .s2 { color: #4E9A06 }
+.light-theme pre .se { color: #4E9A06 }
+.light-theme pre .sh { color: #4E9A06 }
+.light-theme pre .si { color: #4E9A06 }
+.light-theme pre .sx { color: #4E9A06 }
+.light-theme pre .sr { color: #4E9A06 }
+.light-theme pre .s1 { color: #4E9A06 }
+.light-theme pre .ss { color: #4E9A06 }
+.light-theme pre .bp { color: #3465A4 }
+.light-theme pre .fm { color: #000 }
+.light-theme pre .vc { color: #000 }
+.light-theme pre .vg { color: #000 }
+.light-theme pre .vi { color: #000 }
+.light-theme pre .vm { color: #000 }
+.light-theme pre .il { color: #0000CF; font-weight: bold }
 pre { line-height: 125%; }
 td.linenos .normal { color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: #aaaaaa; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1747,357 +1527,309 @@ td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5
 span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .dark-theme pre .hll { background-color: #404040 }
 .dark-theme pre { background: #202020; color: #D0D0D0 }
-.dark-theme pre .c { color: #ABABAB; font-style: italic } /* Comment */
-.dark-theme pre .err { color: #A61717; background-color: #E3D2D2 } /* Error */
-.dark-theme pre .esc { color: #D0D0D0 } /* Escape */
-.dark-theme pre .g { color: #D0D0D0 } /* Generic */
-.dark-theme pre .k { color: #6EBF26; font-weight: bold } /* Keyword */
-.dark-theme pre .l { color: #D0D0D0 } /* Literal */
-.dark-theme pre .n { color: #D0D0D0 } /* Name */
-.dark-theme pre .o { color: #D0D0D0 } /* Operator */
-.dark-theme pre .x { color: #D0D0D0 } /* Other */
-.dark-theme pre .p { color: #D0D0D0 } /* Punctuation */
-.dark-theme pre .ch { color: #ABABAB; font-style: italic } /* Comment.Hashbang */
-.dark-theme pre .cm { color: #ABABAB; font-style: italic } /* Comment.Multiline */
-.dark-theme pre .cp { color: #FF3A3A; font-weight: bold } /* Comment.Preproc */
-.dark-theme pre .cpf { color: #ABABAB; font-style: italic } /* Comment.PreprocFile */
-.dark-theme pre .c1 { color: #ABABAB; font-style: italic } /* Comment.Single */
-.dark-theme pre .cs { color: #E50808; font-weight: bold; background-color: #520000 } /* Comment.Special */
-.dark-theme pre .gd { color: #FF3A3A } /* Generic.Deleted */
-.dark-theme pre .ge { color: #D0D0D0; font-style: italic } /* Generic.Emph */
-.dark-theme pre .ges { color: #D0D0D0; font-weight: bold; font-style: italic } /* Generic.EmphStrong */
-.dark-theme pre .gr { color: #FF3A3A } /* Generic.Error */
-.dark-theme pre .gh { color: #FFF; font-weight: bold } /* Generic.Heading */
-.dark-theme pre .gi { color: #589819 } /* Generic.Inserted */
-.dark-theme pre .go { color: #CCC } /* Generic.Output */
-.dark-theme pre .gp { color: #AAA } /* Generic.Prompt */
-.dark-theme pre .gs { color: #D0D0D0; font-weight: bold } /* Generic.Strong */
-.dark-theme pre .gu { color: #FFF; text-decoration: underline } /* Generic.Subheading */
-.dark-theme pre .gt { color: #FF3A3A } /* Generic.Traceback */
-.dark-theme pre .kc { color: #6EBF26; font-weight: bold } /* Keyword.Constant */
-.dark-theme pre .kd { color: #6EBF26; font-weight: bold } /* Keyword.Declaration */
-.dark-theme pre .kn { color: #6EBF26; font-weight: bold } /* Keyword.Namespace */
-.dark-theme pre .kp { color: #6EBF26 } /* Keyword.Pseudo */
-.dark-theme pre .kr { color: #6EBF26; font-weight: bold } /* Keyword.Reserved */
-.dark-theme pre .kt { color: #6EBF26; font-weight: bold } /* Keyword.Type */
-.dark-theme pre .ld { color: #D0D0D0 } /* Literal.Date */
-.dark-theme pre .m { color: #51B2FD } /* Literal.Number */
-.dark-theme pre .s { color: #ED9D13 } /* Literal.String */
-.dark-theme pre .na { color: #BBB } /* Name.Attribute */
-.dark-theme pre .nb { color: #2FBCCD } /* Name.Builtin */
-.dark-theme pre .nc { color: #71ADFF; text-decoration: underline } /* Name.Class */
-.dark-theme pre .no { color: #40FFFF } /* Name.Constant */
-.dark-theme pre .nd { color: #FFA500 } /* Name.Decorator */
-.dark-theme pre .ni { color: #D0D0D0 } /* Name.Entity */
-.dark-theme pre .ne { color: #BBB } /* Name.Exception */
-.dark-theme pre .nf { color: #71ADFF } /* Name.Function */
-.dark-theme pre .nl { color: #D0D0D0 } /* Name.Label */
-.dark-theme pre .nn { color: #71ADFF; text-decoration: underline } /* Name.Namespace */
-.dark-theme pre .nx { color: #D0D0D0 } /* Name.Other */
-.dark-theme pre .py { color: #D0D0D0 } /* Name.Property */
-.dark-theme pre .nt { color: #6EBF26; font-weight: bold } /* Name.Tag */
-.dark-theme pre .nv { color: #40FFFF } /* Name.Variable */
-.dark-theme pre .ow { color: #6EBF26; font-weight: bold } /* Operator.Word */
-.dark-theme pre .pm { color: #D0D0D0 } /* Punctuation.Marker */
-.dark-theme pre .w { color: #666 } /* Text.Whitespace */
-.dark-theme pre .mb { color: #51B2FD } /* Literal.Number.Bin */
-.dark-theme pre .mf { color: #51B2FD } /* Literal.Number.Float */
-.dark-theme pre .mh { color: #51B2FD } /* Literal.Number.Hex */
-.dark-theme pre .mi { color: #51B2FD } /* Literal.Number.Integer */
-.dark-theme pre .mo { color: #51B2FD } /* Literal.Number.Oct */
-.dark-theme pre .sa { color: #ED9D13 } /* Literal.String.Affix */
-.dark-theme pre .sb { color: #ED9D13 } /* Literal.String.Backtick */
-.dark-theme pre .sc { color: #ED9D13 } /* Literal.String.Char */
-.dark-theme pre .dl { color: #ED9D13 } /* Literal.String.Delimiter */
-.dark-theme pre .sd { color: #ED9D13 } /* Literal.String.Doc */
-.dark-theme pre .s2 { color: #ED9D13 } /* Literal.String.Double */
-.dark-theme pre .se { color: #ED9D13 } /* Literal.String.Escape */
-.dark-theme pre .sh { color: #ED9D13 } /* Literal.String.Heredoc */
-.dark-theme pre .si { color: #ED9D13 } /* Literal.String.Interpol */
-.dark-theme pre .sx { color: #FFA500 } /* Literal.String.Other */
-.dark-theme pre .sr { color: #ED9D13 } /* Literal.String.Regex */
-.dark-theme pre .s1 { color: #ED9D13 } /* Literal.String.Single */
-.dark-theme pre .ss { color: #ED9D13 } /* Literal.String.Symbol */
-.dark-theme pre .bp { color: #2FBCCD } /* Name.Builtin.Pseudo */
-.dark-theme pre .fm { color: #71ADFF } /* Name.Function.Magic */
-.dark-theme pre .vc { color: #40FFFF } /* Name.Variable.Class */
-.dark-theme pre .vg { color: #40FFFF } /* Name.Variable.Global */
-.dark-theme pre .vi { color: #40FFFF } /* Name.Variable.Instance */
-.dark-theme pre .vm { color: #40FFFF } /* Name.Variable.Magic */
-.dark-theme pre .il { color: #51B2FD } /* Literal.Number.Integer.Long */
-
-/* Add to your style.css */
+.dark-theme pre .c { color: #ABABAB; font-style: italic }
+.dark-theme pre .err { color: #A61717; background-color: #E3D2D2 }
+.dark-theme pre .esc { color: #D0D0D0 }
+.dark-theme pre .g { color: #D0D0D0 }
+.dark-theme pre .k { color: #6EBF26; font-weight: bold }
+.dark-theme pre .l { color: #D0D0D0 }
+.dark-theme pre .n { color: #D0D0D0 }
+.dark-theme pre .o { color: #D0D0D0 }
+.dark-theme pre .x { color: #D0D0D0 }
+.dark-theme pre .p { color: #D0D0D0 }
+.dark-theme pre .ch { color: #ABABAB; font-style: italic }
+.dark-theme pre .cm { color: #ABABAB; font-style: italic }
+.dark-theme pre .cp { color: #FF3A3A; font-weight: bold }
+.dark-theme pre .cpf { color: #ABABAB; font-style: italic }
+.dark-theme pre .c1 { color: #ABABAB; font-style: italic }
+.dark-theme pre .cs { color: #E50808; font-weight: bold; background-color: #520000 }
+.dark-theme pre .gd { color: #FF3A3A }
+.dark-theme pre .ge { color: #D0D0D0; font-style: italic }
+.dark-theme pre .ges { color: #D0D0D0; font-weight: bold; font-style: italic }
+.dark-theme pre .gr { color: #FF3A3A }
+.dark-theme pre .gh { color: #FFF; font-weight: bold }
+.dark-theme pre .gi { color: #589819 }
+.dark-theme pre .go { color: #CCC }
+.dark-theme pre .gp { color: #AAA }
+.dark-theme pre .gs { color: #D0D0D0; font-weight: bold }
+.dark-theme pre .gu { color: #FFF; text-decoration: underline }
+.dark-theme pre .gt { color: #FF3A3A }
+.dark-theme pre .kc { color: #6EBF26; font-weight: bold }
+.dark-theme pre .kd { color: #6EBF26; font-weight: bold }
+.dark-theme pre .kn { color: #6EBF26; font-weight: bold }
+.dark-theme pre .kp { color: #6EBF26 }
+.dark-theme pre .kr { color: #6EBF26; font-weight: bold }
+.dark-theme pre .kt { color: #6EBF26; font-weight: bold }
+.dark-theme pre .ld { color: #D0D0D0 }
+.dark-theme pre .m { color: #51B2FD }
+.dark-theme pre .s { color: #ED9D13 }
+.dark-theme pre .na { color: #BBB }
+.dark-theme pre .nb { color: #2FBCCD }
+.dark-theme pre .nc { color: #71ADFF; text-decoration: underline }
+.dark-theme pre .no { color: #40FFFF }
+.dark-theme pre .nd { color: #FFA500 }
+.dark-theme pre .ni { color: #D0D0D0 }
+.dark-theme pre .ne { color: #BBB }
+.dark-theme pre .nf { color: #71ADFF }
+.dark-theme pre .nl { color: #D0D0D0 }
+.dark-theme pre .nn { color: #71ADFF; text-decoration: underline }
+.dark-theme pre .nx { color: #D0D0D0 }
+.dark-theme pre .py { color: #D0D0D0 }
+.dark-theme pre .nt { color: #6EBF26; font-weight: bold }
+.dark-theme pre .nv { color: #40FFFF }
+.dark-theme pre .ow { color: #6EBF26; font-weight: bold }
+.dark-theme pre .pm { color: #D0D0D0 }
+.dark-theme pre .w { color: #666 }
+.dark-theme pre .mb { color: #51B2FD }
+.dark-theme pre .mf { color: #51B2FD }
+.dark-theme pre .mh { color: #51B2FD }
+.dark-theme pre .mi { color: #51B2FD }
+.dark-theme pre .mo { color: #51B2FD }
+.dark-theme pre .sa { color: #ED9D13 }
+.dark-theme pre .sb { color: #ED9D13 }
+.dark-theme pre .sc { color: #ED9D13 }
+.dark-theme pre .dl { color: #ED9D13 }
+.dark-theme pre .sd { color: #ED9D13 }
+.dark-theme pre .s2 { color: #ED9D13 }
+.dark-theme pre .se { color: #ED9D13 }
+.dark-theme pre .sh { color: #ED9D13 }
+.dark-theme pre .si { color: #ED9D13 }
+.dark-theme pre .sx { color: #FFA500 }
+.dark-theme pre .sr { color: #ED9D13 }
+.dark-theme pre .s1 { color: #ED9D13 }
+.dark-theme pre .ss { color: #ED9D13 }
+.dark-theme pre .bp { color: #2FBCCD }
+.dark-theme pre .fm { color: #71ADFF }
+.dark-theme pre .vc { color: #40FFFF }
+.dark-theme pre .vg { color: #40FFFF }
+.dark-theme pre .vi { color: #40FFFF }
+.dark-theme pre .vm { color: #40FFFF }
+.dark-theme pre .il { color: #51B2FD }
 
 .search-results-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    max-height: 60vh; /* Or whatever fits your modal */
-    overflow-y: auto;
+list-style: none;
+padding: 0;
+margin: 0;
+max-height: 60vh;
+overflow-y: auto;
 }
 
 .search-result-item {
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid var(--color-search-border); /* Use your theme variable */
-    padding-bottom: 0.75rem;
+margin-bottom: 0.5rem;
+border-bottom: 1px solid var(--color-search-border);
+padding-bottom: 0.75rem;
 }
 .search-result-item:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
+border-bottom: none;
+margin-bottom: 0;
 }
 
 .search-result-item a {
-    display: block;
-    padding: 0.5rem 0.25rem;
-    text-decoration: none;
-    color: inherit; /* Inherit from modal text color */
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
+display: block;
+padding: 0.5rem 0.25rem;
+text-decoration: none;
+color: inherit;
+border-radius: 4px;
+transition: background-color 0.2s ease;
 }
 
 .search-result-item a:hover {
-    background-color: var(--color-search-trigger-hover-bg); /* Use your theme variable */
+background-color: var(--color-search-trigger-hover-bg);
 }
 
 .search-result-title {
-    font-weight: 600;
-    color: var(--color-text-body); /* Or a specific title color */
-    margin-bottom: 0.25rem;
-    font-size: 0.95rem;
+font-weight: 600;
+color: var(--color-text-body);
+margin-bottom: 0.25rem;
+font-size: 0.95rem;
 }
 
 .search-result-breadcrumbs {
-    font-size: 0.8rem;
-    color: var(--color-text-toc-link); /* More muted color */
-    margin-bottom: 0.35rem;
+font-size: 0.8rem;
+color: var(--color-text-toc-link);
+margin-bottom: 0.35rem;
 }
 
 .search-result-snippet {
-    font-size: 0.85rem;
-    line-height: 1.4;
-    color: var(--color-text-body); /* Or slightly muted */
+font-size: 0.85rem;
+line-height: 1.4;
+color: var(--color-text-body);
 }
 
 .search-result-snippet mark,
-.search-result-title mark, /* Allow highlighting in title too */
+.search-result-title mark,
 .search-result-breadcrumbs mark {
-    background-color: var(--color-text-toc-link-active); /* Or your preferred highlight color */
-    color: var(--color-bg-body); /* Text color on top of highlight */
-    padding: 0.05em 0.15em;
-    border-radius: 3px;
-    font-weight: bold; /* Make highlighted text stand out more */
+background-color: var(--color-text-toc-link-active);
+color: var(--color-bg-body);
+padding: 0.05em 0.15em;
+border-radius: 3px;
+font-weight: bold;
 }
 
 .search-results-placeholder {
-    color: var(--color-text-toc-link);
-    text-align: center;
-    padding: 1.5rem 0;
-    font-size: 0.9rem;
+color: var(--color-text-toc-link);
+text-align: center;
+padding: 1.5rem 0;
+font-size: 0.9rem;
 }
 
-
-
-/* Add to your style.css */
-
-/* Search History Styling */
-.search-history-container { /* This will be hidden/shown by JS */
-    /* Styles for the container if needed, though results are put in searchResultsContainer */
-    margin-bottom: 1rem; /* Space between history and potential "no results" for search */
+.search-history-container {
+margin-bottom: 1rem;
 }
 
-.search-results-placeholder + .search-history-list, /* When placeholder text is for history */
-.search-history-list { /* General style for history list */
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.search-results-placeholder + .search-history-list,
+.search-history-list {
+list-style: none;
+padding: 0;
+margin: 0;
 }
 
 .search-history-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.6rem 0.5rem; /* Adjust padding */
-    margin-bottom: 0.25rem; /* Small gap */
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 0.6rem 0.5rem;
+margin-bottom: 0.25rem;
+border-radius: 4px;
+cursor: pointer;
+transition: background-color 0.2s ease;
 }
 
 .search-history-item:hover,
-.search-history-item.focused { /* Style for keyboard focus */
-    background-color: var(--color-search-trigger-hover-bg); /* Use your theme variable */
+.search-history-item.focused {
+background-color: var(--color-search-trigger-hover-bg);
 }
 
 .search-history-query {
-    flex-grow: 1;
-    color: var(--color-text-body);
-    font-size: 0.9rem;
+flex-grow: 1;
+color: var(--color-text-body);
+font-size: 0.9rem;
 }
 
 .search-history-delete {
-    background: none;
-    border: none;
-    color: var(--color-text-toc-link); /* Muted color */
-    font-size: 1.2rem; /* Make 'x' a bit bigger */
-    line-height: 1;
-    padding: 0.2rem 0.5rem;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: color 0.2s ease, background-color 0.2s ease;
+background: none;
+border: none;
+color: var(--color-text-toc-link);
+font-size: 1.2rem;
+line-height: 1;
+padding: 0.2rem 0.5rem;
+cursor: pointer;
+border-radius: 4px;
+transition: color 0.2s ease, background-color 0.2s ease;
 }
 
 .search-history-delete:hover {
-    color: var(--color-text-body);
-    background-color: rgba(255, 0, 0, 0.1); /* Faint red bg on hover */
+color: var(--color-text-body);
+background-color: rgba(255, 0, 0, 0.1);
 }
 
-/* Ensure search result items also get a focused style if you reuse the class */
 .search-result-item.focused {
-    background-color: var(--color-search-trigger-hover-bg);
+background-color: var(--color-search-trigger-hover-bg);
 }
 
-/* Adjust placeholder text if it's for history */
 .search-results-container > p.search-results-placeholder:first-child:not(:only-child) {
-    /* This targets the placeholder when it's "Recent searches:" and there's a list after it */
-    /* You might want to style it like a subtle heading */
-    font-weight: 500;
-    color: var(--color-text-toc-link);
-    text-align: left; /* Align left for "Recent searches" */
-    padding: 0.5rem 0.25rem 0.75rem; /* Adjust padding */
-    font-size: 0.85rem;
-    border-bottom: 1px solid var(--color-search-border); /* Optional separator */
-    margin-bottom: 0.5rem;
+font-weight: 500;
+color: var(--color-text-toc-link);
+text-align: left;
+padding: 0.5rem 0.25rem 0.75rem;
+font-size: 0.85rem;
+border-bottom: 1px solid var(--color-search-border);
+margin-bottom: 0.5rem;
 }
 
 .search-history-title {
-    padding-left: 0;
-    font-weight: 600;
+padding-left: 0;
+font-weight: 600;
 }
-/* In your style.css */
 
 .search-modal {
-    background-color: var(--color-search-modal-bg);
-    padding: 1rem; /* Keep general padding for top, left, bottom */
-    /* We will effectively "negate" the right padding for the scrollable area */
-    border-radius: 8px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 0 1px var(--color-search-border);
-    width: 90%;
-    max-width: 560px;
-    /* ... other styles ... */
-    display: flex; /* Useful for structuring content if needed */
-    flex-direction: column; /* Stack input, history, results */
+background-color: var(--color-search-modal-bg);
+padding: 1rem;
+border-radius: 8px;
+box-shadow: 0 15px 40px rgba(0,0,0,0.3), 0 0 0 1px var(--color-search-border);
+width: 90%;
+max-width: 560px;
+display: flex;
+flex-direction: column;
 }
 
 .search-input-container {
-    /* ... existing styles ... */
-    /* No change needed here typically, it respects modal padding */
-    margin-bottom: 1rem; /* Ensure space before results/history */
+margin-bottom: 1rem;
 }
 .search-history-container {
-    /* ... existing styles ... */
-    /* No change needed here typically */
 }
 
-
-/* This is the container that holds the ul.search-results-list */
 #searchResultsContainer {
-    flex-grow: 1; /* Allow it to take available vertical space if modal has fixed height */
-    overflow: hidden; /* Important: This will contain the negatively margined list */
-    /* We make this container go edge-to-edge *within* the modal's horizontal space
-       by negating the modal's horizontal padding for this specific container.
-       However, a simpler approach might be to adjust the list itself.
-       Let's try adjusting the list first.
-    */
+flex-grow: 1;
+overflow: hidden;
 }
-
 
 .search-results-list {
-    list-style: none;
-    padding: 0; /* NO right padding here for the scrollbar itself */
-    margin: 0; 
-    max-height: 60vh; 
-    overflow-y: auto;
-    scrollbar-width: thin; 
-    /* Track is transparent or matches modal BG for seamless edge appearance */
-    scrollbar-color: var(--main-scrollbar-thumb-bg) transparent; 
+list-style: none;
+padding: 0;
+margin: 0;
+max-height: 60vh;
+overflow-y: auto;
+scrollbar-width: thin;
+scrollbar-color: var(--main-scrollbar-thumb-bg) transparent;
 }
 
-
 .search-results-list::-webkit-scrollbar {
-    width: 8px; 
+width: 8px;
 }
 
 .search-results-list::-webkit-scrollbar-track {
-    background: transparent; 
+background: transparent;
 }
 
 .search-results-list::-webkit-scrollbar-thumb {
-    background-color: var(--main-scrollbar-thumb-bg); 
-    border-radius: 4px; 
-    border: none; 
+background-color: var(--main-scrollbar-thumb-bg);
+border-radius: 4px;
+border: none;
 }
 
 .search-results-list::-webkit-scrollbar-thumb:hover {
-    background-color: var(--main-scrollbar-thumb-hover-bg); 
+background-color: var(--main-scrollbar-thumb-hover-bg);
 }
 
-/* Ensure list items don't get cut off by the negative margin visually */
 .search-result-item a {
-    display: block;
-    /* The padding-right on .search-results-list will create space for the scrollbar.
-       The content of 'a' should naturally fit within the space before this padding. */
-    padding: 0.5rem 0.25rem; /* Left/Right padding on 'a' should be fine */
-    /* ... other styles ... */
+display: block;
+padding: 0.5rem 0.25rem;
 }
-
 
 p img {
-    display: block;
-    margin: auto;
-    margin-bottom: 1rem;
+display: block;
+margin: auto;
+margin-bottom: 1rem;
 }
 
-
-/* General styling for inline <code> elements within #content-area */
-/* This will apply to <p><code>...</code></p>, <li><code>...</code></li>, etc. */
 #content-area code {
-    background-color: var(--color-inline-code-bg);
-    font-size: 0.875em; /* Makes inline code slightly smaller than surrounding text */
-    padding: 0.2em 0.45em; /* Vertical and horizontal padding */
-    margin: 0 0.1em;       /* Small horizontal margin to separate from surrounding text */
-    border-radius: 5px;    /* Rounded corners */
-    word-wrap: break-word; /* Allows long inline code strings to wrap */
-    /* border: 1px solid var(--color-inline-code-border); /* Uncomment if you want a border */
+background-color: var(--color-inline-code-bg);
+font-size: 0.875em;
+padding: 0.2em 0.45em;
+margin: 0 0.1em;
+border-radius: 5px;
+word-wrap: break-word;
 }
 
-/*
-  Reset/override styles for <code> elements within <pre> tags.
-  These are typically part of larger code blocks styled by Pygments,
-  and the <pre> tag itself usually has the background color.
-*/
 #content-area pre code {
-    background-color: transparent !important; /* Crucial: must be transparent to show <pre> background */
-    color: inherit !important;               /* Color is handled by Pygments syntax highlighting spans or <pre> */
-    font-family: inherit !important;         /* Inherit from <pre> or Pygments base font for code blocks */
-    font-size: 1em !important;               /* Font size should be relative to its <pre> parent */
-    padding: 0 !important;                   /* No padding for the <code> itself inside <pre> */
-    margin: 0 !important;                    /* No margin for the <code> itself inside <pre> */
-    border-radius: 0 !important;             /* No border-radius for <code> inside <pre> */
-    border: none !important;                 /* No border for <code> inside <pre> */
-    word-wrap: normal !important;            /* <pre> handles wrapping/scrolling for block code */
+background-color: transparent !important;
+color: inherit !important;
+font-family: inherit !important;
+font-size: 1em !important;
+padding: 0 !important;
+margin: 0 !important;
+border-radius: 0 !important;
+border: none !important;
+word-wrap: normal !important;
 }
 
-/*
-  Ensure admonition-specific code styling takes precedence.
-  If your .admonition-content is always within #content-area,
-  this selector increases specificity to ensure these styles apply correctly.
-*/
 #content-area .admonition-content code {
-    background-color: rgba(175, 184, 193, 0.15); /* Your existing admonition code background */
-    color: var(--color-text-body); /* Or a specific color for admonition code text, inheriting body text is often fine */
-    padding: .15em .3em; /* Your existing padding */
-    margin: 0 .1em;      /* Your existing margin */
-    font-size: 85%;      /* Your existing font-size (0.85em) */
-    border-radius: 3px;  /* Your existing border-radius */
-    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; /* Ensure monospace */
+background-color: rgba(175, 184, 193, 0.15);
+color: var(--color-text-body);
+padding: .15em .3em;
+margin: 0 .1em;
+font-size: 85%;
+border-radius: 3px;
+font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
