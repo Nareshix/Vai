@@ -21,12 +21,29 @@ def setup_header_in_layout_html():
     dropdowns = config['dropdowns']
     internals = config['internals']
     externals = config['externals']
+
+    project_root = Path(__file__).resolve().parent
+    static_dir = project_root / 'static'
+    wanted_basenames = {'favicon', 'logo'}
+
+    found = {}
+    for file_path in static_dir.rglob('*'):
+        if file_path.is_file():
+            stem = file_path.stem
+            if stem in wanted_basenames:
+                found[stem] = file_path.name
+
+    logo = found.get('logo', '')
+    favicon = found.get('favicon', '')
+    
     env = Environment(loader=FileSystemLoader('templates'))
     template = env.get_template('layout_no_header.html')
     rendered = template.render(
         dropdowns=dropdowns,
         internals=internals,
         externals=externals,
+        logo=logo,
+        favicon=favicon,
         github_link=github_link,
     )
 
