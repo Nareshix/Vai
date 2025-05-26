@@ -5,6 +5,7 @@ Markdown==3.8
 MarkupSafe==3.0.2
 Nuitka==2.7.3
 ordered-set==4.1.0
+Pygments==2.19.1
 PyYAML==6.0.2
 soupsieve==2.7
 tornado==6.5.1
