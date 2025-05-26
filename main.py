@@ -438,29 +438,18 @@ def build():
             section_slug = section['output_folder_name']
             first_file_in_section_slug = section['files'][0]['slug']
 
-            # Path to the actual content of the first file in this section
             source_html_for_section_index = dist_path_obj / section_slug / first_file_in_section_slug / "index.html"
 
-            # Path for the section's index.html (e.g., docs/dist/introduction/index.html)
             section_index_output_path = dist_path_obj / section_slug / "index.html"
 
             if source_html_for_section_index.exists():
-                # Ensure the section directory itself exists (e.g., docs/dist/introduction/)
                 (dist_path_obj / section_slug).mkdir(parents=True, exist_ok=True)
 
-                # Read the content of the first page's HTML in this section
                 content_of_first_page_in_section = source_html_for_section_index.read_text(encoding='utf-8')
-                # Write this content to the section's index.html
                 section_index_output_path.write_text(content_of_first_page_in_section, encoding='utf-8')
-                print(f"INFO: Created section index {section_index_output_path} as a copy of content from: {source_html_for_section_index}")
             else:
                 print(f"WARNING: Source HTML for section index copy not found at: {source_html_for_section_index}")
-                print(f"INFO: Section index for '{section_slug}' will not be created by copying.")
-    # --- END OF MODIFIED SECTION INDEX PAGES ---
-
-
-    # --- CODE FOR ROOT index.html (COPYING CONTENT) ---
-    # This part remains the same as your previous correct version
+                
     if not (dist_path_obj / 'index.html').exists() and _global_sidebar_data_for_redirect:
         if _global_root_redirect_target_url != "/":
             try:
@@ -473,17 +462,14 @@ def build():
                     if source_html_path.exists():
                         content_of_first_page = source_html_path.read_text(encoding='utf-8')
                         (dist_path_obj / 'index.html').write_text(content_of_first_page, encoding='utf-8')
-                        print(f"INFO: Created root index.html as a copy of content from: {source_html_path}")
                     else:
                         print(f"WARNING: Source HTML for root index.html copy not found at: {source_html_path}")
-                        print("INFO: Root index.html will not be created by copying. Ensure 'src' structure is valid or create a 'src/index.md'.")
                 else:
                     print("WARNING: Could not determine path components from _global_root_redirect_target_url to copy for root index.html.")
             except Exception as e:
                 print(f"ERROR: Occurred while trying to create root index.html by copying: {e}")
-        else:
-            print("INFO: Could not create root index.html by copying: No valid target (first section/file) found.")
-    # --- END OF ROOT index.html CODE ---
+        # else:
+        #     print("INFO: Could not create root index.html by copying: No valid target (first section/file) found.")
     
 def cli_init():
     docs_path = Path("docs")
