@@ -1,7 +1,7 @@
     :root {
         --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1);
 
-
+        --color-inline-code-bg: rgba(200, 200, 200, 0.12);
 
         --color-sidebar-logo-text: var(--color-text-body);
     --color-sidebar-section-title-text: rgba(224, 224, 224, 0.93); /* Brighter than links */
@@ -92,7 +92,7 @@
 
 
     html.light-theme { /* light-theme */
-
+        --color-inline-code-bg: rgba(50, 50, 50, 0.08);
         --shadow-header-subtle: 0 1px 2px rgba(0, 0, 0, 0.04); /* offset-x | offset-y | blur-radius | color (black with 4% opacity) */
 
         --color-text-toc-link-active: rgb(14, 41, 129);
@@ -341,18 +341,25 @@ transition: border-color 0.3s ease;
 
 #toc-links a {
     display: block;
-    /* Distribute the total vertical padding equally */
     padding-top: 0.65rem;
     padding-bottom: 0.65rem;
-    /* Keep horizontal padding and other properties as they were */
     padding-left: 1rem;
-    padding-right: 0; /* Assuming it was 0 or not set, based on original calc */
+    padding-right: 0.5rem; /* MODIFIED: Added some right padding for breathing room */
     color: var(--color-text-toc-link);
     text-decoration: none;
-    margin-bottom: 0; /* Crucial: keep this at 0 */
-    white-space: normal;
+    margin-bottom: 0;
+    white-space: normal;      /* GOOD: Allows wrapping at spaces by default */
     font-size: 0.9rem;
-    position: relative; /* Good practice */
+    position: relative;
+
+    /* --- ADD/MODIFY THESE LINES FOR LONG TEXT WRAPPING --- */
+    overflow-wrap: break-word; /* Standard property: allows unbreakable words to be broken */
+    word-break: break-word;    /* More comprehensive word breaking, often good for URLs/code */
+                               /* If 'break-word' isn't enough, you could try 'break-all',
+                                  but 'break-word' is generally preferred as it tries to
+                                  break at better points first. */
+    line-height: 1.4;          /* ADDED: Ensure wrapped lines have adequate spacing */
+    /* --- END OF ADDITIONS/MODIFICATIONS --- */
 }
 
 #toc-links a.active {
@@ -390,17 +397,6 @@ transition: top 0.2s ease-in-out, height 0.2s ease-in-out, opacity 0.2s ease-in-
     padding: 0;
     margin-bottom: 0;
     /* margin-top: 0.5rem; */
-    }
-    .admonition.info div p,
-    .admonition.warning div p,
-    .admonition.tip div p,
-    .admonition.danger div p {
-        margin: 0;
-        margin-left: 1rem;
-    }
-    
-    details.admonition.details > summary.admonition-title {
-        font-size: 1rem;
     }
    
     .theme-toggle-button {
@@ -456,10 +452,11 @@ display: inline-flex;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 1rem;
+    margin-top: 3rem;
     font-size: 0.875rem;
     flex-wrap: wrap; /* Allow items to wrap on small screens */
     gap: 0.5rem; /* Add gap for wrapped items */
+    
     }
 
     .edit-page-link {
@@ -1574,11 +1571,29 @@ body.mobile-toc-open #toc-container {
 }
 
 /* Background colors for different types */
-.admonition.info    { background-color: #3A414A; }
-.admonition.tip     { background-color: #2E325C; }
-.admonition.warning { background-color: #6F602A; }
-.admonition.danger  { background-color: #5E2F36; }
-.admonition.details { background-color: #3A414A; } /* Same as info for consistency */
+.admonition.note     { background-color: #2160b3; }
+.admonition.tip     { background-color: #139024; }
+.admonition.warning { background-color: #d29922; }
+.admonition.danger  { background-color: #f85149; }
+.admonition.details { background-color: #3A414A; } 
+.admonition.info { background-color: #3A414A; } 
+.admonition.important { background-color: #7d60b1; }
+
+
+.admonition.info div p,
+.admonition.warning div p,
+.admonition.tip div p,
+.admonition.note div p,
+.admonition.details div p,
+.admonition.important div p,
+.admonition.danger div p {
+    margin: 0;
+    margin-left: 1rem;
+}
+
+details.admonition.details > summary.admonition-title {
+    font-size: 1rem;
+}
 
 /* Specifics for <summary> when it's an admonition title (overrides .admonition-title) */
 .admonition.details > summary.admonition-title {
@@ -2032,4 +2047,56 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
        The content of 'a' should naturally fit within the space before this padding. */
     padding: 0.5rem 0.25rem; /* Left/Right padding on 'a' should be fine */
     /* ... other styles ... */
+}
+
+
+p img {
+    display: block;
+    margin: auto;
+    margin-bottom: 1rem;
+}
+
+
+/* General styling for inline <code> elements within #content-area */
+/* This will apply to <p><code>...</code></p>, <li><code>...</code></li>, etc. */
+#content-area code {
+    background-color: var(--color-inline-code-bg);
+    font-size: 0.875em; /* Makes inline code slightly smaller than surrounding text */
+    padding: 0.2em 0.45em; /* Vertical and horizontal padding */
+    margin: 0 0.1em;       /* Small horizontal margin to separate from surrounding text */
+    border-radius: 5px;    /* Rounded corners */
+    word-wrap: break-word; /* Allows long inline code strings to wrap */
+    /* border: 1px solid var(--color-inline-code-border); /* Uncomment if you want a border */
+}
+
+/*
+  Reset/override styles for <code> elements within <pre> tags.
+  These are typically part of larger code blocks styled by Pygments,
+  and the <pre> tag itself usually has the background color.
+*/
+#content-area pre code {
+    background-color: transparent !important; /* Crucial: must be transparent to show <pre> background */
+    color: inherit !important;               /* Color is handled by Pygments syntax highlighting spans or <pre> */
+    font-family: inherit !important;         /* Inherit from <pre> or Pygments base font for code blocks */
+    font-size: 1em !important;               /* Font size should be relative to its <pre> parent */
+    padding: 0 !important;                   /* No padding for the <code> itself inside <pre> */
+    margin: 0 !important;                    /* No margin for the <code> itself inside <pre> */
+    border-radius: 0 !important;             /* No border-radius for <code> inside <pre> */
+    border: none !important;                 /* No border for <code> inside <pre> */
+    word-wrap: normal !important;            /* <pre> handles wrapping/scrolling for block code */
+}
+
+/*
+  Ensure admonition-specific code styling takes precedence.
+  If your .admonition-content is always within #content-area,
+  this selector increases specificity to ensure these styles apply correctly.
+*/
+#content-area .admonition-content code {
+    background-color: rgba(175, 184, 193, 0.15); /* Your existing admonition code background */
+    color: var(--color-text-body); /* Or a specific color for admonition code text, inheriting body text is often fine */
+    padding: .15em .3em; /* Your existing padding */
+    margin: 0 .1em;      /* Your existing margin */
+    font-size: 85%;      /* Your existing font-size (0.85em) */
+    border-radius: 3px;  /* Your existing border-radius */
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; /* Ensure monospace */
 }

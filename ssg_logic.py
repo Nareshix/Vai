@@ -49,24 +49,32 @@ def parse_metadata_and_body_from_string(markdown_content_as_string):
 
 # --- Markdown Extensions ---
 # --- Markdown Extensions ---
-class HeadingIdAdder(Treeprocessor): # Renamed and updated
-    def run(self, root: etree.Element):
-        # Treeprocessors are instantiated per Markdown instance (i.e., per file).
-        # So, this set will be fresh for each file processed.
-        self.used_slugs_on_page = set() # Keep track of slugs used on the current page
+# In your Python script (e.g., build.py)
 
+from xml.etree import ElementTree as etree # Ensure this is imported
+
+# ... other imports ...
+
+class HeadingIdAdder(Treeprocessor):
+    def run(self, root: etree.Element):
+        self.used_slugs_on_page = set() # Keep track of slugs used on the current page
         for element in root.iter():
             # Process h1 through h6
-            if element.tag in ('h1', 'h2', 'h3', 'h4', 'h5', 'h6') and element.text:
-                base_slug = slugify_heading(element.text) # slugify_heading already calls generate_slug
-                final_slug = base_slug
-                counter = 1
-                # Ensure the slug is unique on the page
-                while final_slug in self.used_slugs_on_page:
-                    final_slug = f"{base_slug}-{counter}"
-                    counter += 1
-                element.set('id', final_slug)
-                self.used_slugs_on_page.add(final_slug)
+            if element.tag in ('h1', 'h2', 'h3', 'h4', 'h5', 'h6'):
+                # MODIFIED: Get all text from the element and its children
+                full_heading_text = "".join(element.itertext()).strip()
+
+                if full_heading_text: # Check if there's any text content at all
+                    base_slug = slugify_heading(full_heading_text) # Use the full extracted text for slug
+                    final_slug = base_slug
+                    counter = 1
+                    # Ensure the slug is unique on the page
+                    while final_slug in self.used_slugs_on_page:
+                        final_slug = f"{base_slug}-{counter}"
+                        counter += 1
+                    element.set('id', final_slug)
+                    self.used_slugs_on_page.add(final_slug)
+
 
 class HeadingIdExtension(Extension): # Renamed
     def extendMarkdown(self, md):
@@ -490,4 +498,4 @@ if __name__ == '__main__':
     server.watch('src/**/*.md', build)
     server.watch('layout.html', build)
     server.watch('static/**/*', build) # Watch all files and subdirectories in static
-    server.serve(root='dist', default_filename='index.html', port=6224)
+    server.serve(root='dist', default_filename='index.html', port=6454)

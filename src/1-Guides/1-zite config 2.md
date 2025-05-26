@@ -37,9 +37,14 @@ json
 
 ```
 
+::: important
+asd
+:::
 
-::: info
-This is an info box.
+
+
+::: note
+asd
 :::
 
 ::: info
@@ -72,3 +77,10 @@ print('hello world'):
 ```
 :::
 ## man
+
+
+```
+
+Hello World!
+
+```
