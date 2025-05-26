@@ -13,6 +13,10 @@ import shutil
 import json
 import datetime
 
+# Assuming setup_header_in_layout_html is in a file named header_config.py
+# in the same directory, or your Python path is set up correctly.
+from header_config import setup_header_in_layout_html
+
 
 def generate_slug(text_to_slugify):
     text = str(text_to_slugify).lower()
@@ -165,8 +169,9 @@ def generate_heading_links(html_body_content):
         links.append(f'<a href="#{anchor}"{link_style}>{title}</a>')
     return '\n'.join(links)
 
-env = Environment(loader=FileSystemLoader('.'))
-template = env.get_template('layout.html')
+# REMOVED global 'env' and 'template' initializations
+# env = Environment(loader=FileSystemLoader('.'))
+# template = env.get_template('layout.html')
 
 def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     static_src_path = Path(static_src_dir)
@@ -177,13 +182,13 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     print(f"Copying static assets from '{static_src_path}' to '{dst_path}'...")
     try:
         shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
-    except TypeError:
+    except TypeError: # For Python < 3.8
         print("Falling back to item-by-item copy for static assets (Python < 3.8 or other issue).")
         if not dst_path.exists(): dst_path.mkdir(parents=True, exist_ok=True)
         for item in static_src_path.iterdir():
             s = static_src_path / item.name
             d = dst_path / item.name
-            if s.is_dir(): shutil.copytree(s, d, dirs_exist_ok=True)
+            if s.is_dir(): shutil.copytree(s, d, dirs_exist_ok=True) # Ensure dirs_exist_ok here too if nesting
             else: shutil.copy2(s, d)
     print("Static assets copied successfully.")
 
@@ -191,39 +196,47 @@ def scan_src(src_dir_path='src'):
     src_path = Path(src_dir_path)
     temp_sections_by_cleaned_title = {}
     original_top_level_dir_paths = sorted([p for p in src_path.iterdir() if p.is_dir()])
+
     for dir_path in original_top_level_dir_paths:
         original_folder_name = dir_path.name
         cleaned_section_display_title = clean_display_name(original_folder_name)
         section_output_folder_slug = generate_slug(cleaned_section_display_title)
+
         if cleaned_section_display_title not in temp_sections_by_cleaned_title:
             temp_sections_by_cleaned_title[cleaned_section_display_title] = {
                 "original_sort_key": original_folder_name,
                 "output_folder_name": section_output_folder_slug,
                 "files": []
             }
+
         md_files_in_dir = sorted(dir_path.glob("*.md"))
         for md_file_path in md_files_in_dir:
             original_file_name_with_ext = md_file_path.name
             cleaned_file_display_title = clean_display_name(original_file_name_with_ext)
             file_output_slug = generate_slug(cleaned_file_display_title)
+            
             temp_sections_by_cleaned_title[cleaned_section_display_title]["files"].append({
                 "original_path": md_file_path,
-                "original_folder_name_for_sort": original_folder_name,
-                "original_file_name_for_sort": original_file_name_with_ext,
+                "original_folder_name_for_sort": original_folder_name, # For multi-level sort if needed
+                "original_file_name_for_sort": original_file_name_with_ext, # For sorting files
                 "display_title": cleaned_file_display_title,
                 "output_file_slug": file_output_slug
             })
+
+    # Sort sections based on original folder names (e.g., "01-Introduction", "02-Setup")
     sorted_cleaned_section_titles = sorted(
         temp_sections_by_cleaned_title.keys(),
         key=lambda title: temp_sections_by_cleaned_title[title]["original_sort_key"]
     )
+
     sidebar_data_for_template = []
     all_files_to_process = []
+
     for cleaned_folder_title in sorted_cleaned_section_titles:
         section_build_data = temp_sections_by_cleaned_title[cleaned_folder_title]
-        section_build_data["files"].sort(key=lambda f: (
-            f["original_folder_name_for_sort"], f["original_file_name_for_sort"]
-        ))
+        # Sort files within each section based on original file names
+        section_build_data["files"].sort(key=lambda f: f["original_file_name_for_sort"])
+        
         current_sidebar_section_files = []
         for file_info in section_build_data["files"]:
             current_sidebar_section_files.append({
@@ -235,16 +248,21 @@ def scan_src(src_dir_path='src'):
                 "output_file_slug": file_info["output_file_slug"],
                 "display_title": file_info["display_title"]
             })
-        if current_sidebar_section_files:
+        
+        if current_sidebar_section_files: # Only add section if it has files
             sidebar_data_for_template.append({
                 "title": cleaned_folder_title,
                 "output_folder_name": section_build_data["output_folder_name"],
                 "files": current_sidebar_section_files
             })
+            
     return all_files_to_process, sidebar_data_for_template
 
-def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template, root_redirect_target_url_for_template):
+# MODIFIED: Added jinja_env parameter
+def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template, root_redirect_target_url_for_template, jinja_env):
     search_index_entries = []
+    # MODIFIED: Get template from the passed jinja_env
+    page_template = jinja_env.get_template('layout.html')
 
     for i, file_item in enumerate(all_files_to_process):
         md_path = file_item["original_path"]
@@ -264,7 +282,7 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
         page_title_from_meta_or_file = page_meta.get('title', file_item["display_title"])
         base_page_url = f"/{output_folder_name}/{output_file_slug}/"
         
-        section_title_for_breadcrumbs = "Unknown Section"
+        section_title_for_breadcrumbs = "Unknown Section" # Default
         for sec_data in sidebar_data_for_template:
             if sec_data["output_folder_name"] == output_folder_name:
                 section_title_for_breadcrumbs = sec_data["title"]
@@ -275,7 +293,7 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             "type": "page", "id": base_page_url, "page_title": page_title_from_meta_or_file,
             "display_title": page_title_from_meta_or_file, "breadcrumbs": page_breadcrumbs_base,
             "url": base_page_url, "searchable_text": f"{page_title_from_meta_or_file} {page_breadcrumbs_base}".lower(),
-            "date": page_meta.get('date', None)
+            "date": page_meta.get('date', None) # Keep date from metadata if present
         })
 
         content_soup = BeautifulSoup(body_content_html, 'html.parser')
@@ -293,32 +311,36 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
                     "heading_text": heading_text, "heading_level": heading_level,
                     "display_title": heading_display_title, "breadcrumbs": heading_breadcrumbs,
                     "url": heading_url, "searchable_text": f"{page_title_from_meta_or_file} {heading_breadcrumbs} {heading_text}".lower(),
-                    "date": page_meta.get('date', None)
+                    "date": page_meta.get('date', None) # Keep date from metadata if present
                 })
 
         today = datetime.datetime.today()
-        day_suffix = "th" if today.day not in [1, 2, 3, 21, 22, 23, 31] else ("st" if today.day in [1, 21, 31] else ("nd" if today.day in [2, 22] else "rd"))
-        default_date = f"{str(today.day)}{day_suffix} {today.strftime('%B %Y')}"
+        day_val = today.day
+        if 4 <= day_val <= 20 or 24 <= day_val <= 30:
+            day_suffix = "th"
+        else:
+            day_suffix = ["st", "nd", "rd"][day_val % 10 - 1]
+        default_date = f"{str(day_val)}{day_suffix} {today.strftime('%B %Y')}"
         render_date = page_meta.get('date', default_date)
 
         prev_page_data = None
         if i > 0:
             prev_item = all_files_to_process[i-1]
             prev_page_data = {"title": prev_item["display_title"], "url": f"/{prev_item['output_folder_name']}/{prev_item['output_file_slug']}/"}
+        
         next_page_data = None
         if i < len(all_files_to_process) - 1:
             next_item = all_files_to_process[i+1]
             next_page_data = {"title": next_item["display_title"], "url": f"/{next_item['output_folder_name']}/{next_item['output_file_slug']}/"}
-            
-        rendered = template.render(
+        
+        # MODIFIED: Use local page_template
+        rendered = page_template.render(
             body_content=body_content_html,
             toc_table_link=toc_table_link_html,
             sidebar_data=sidebar_data_for_template,
             title=page_title_from_meta_or_file,
             date=render_date,
-
             prev_page_data=prev_page_data,
-            
             next_page_data=next_page_data,
             root_redirect_target_url=root_redirect_target_url_for_template
         )
@@ -330,32 +352,44 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
 
     search_index_file_path = dist_base_path / "search_index.json"
     with open(search_index_file_path, 'w', encoding='utf-8') as f:
-        json.dump(search_index_entries, f, ensure_ascii=False, indent=None)
+        json.dump(search_index_entries, f, ensure_ascii=False, indent=None) # indent=None for smaller file
     print(f"Generated search index: {search_index_file_path}")
     
 _global_sidebar_data_for_redirect = []
 _global_root_redirect_target_url = "/" 
 
-# --- IMPORTANT: Define your theme colors here ---
-# Replace these with the exact colors from your style.css for dark and light themes
-DARK_THEME_BG = '#202124' # Example: A common dark grey
-DARK_THEME_TEXT = '#e8eaed' # Example: A light grey/off-white
-LIGHT_THEME_BG = '#ffffff' # Example: White
-LIGHT_THEME_TEXT = '#202124' # Example: Dark grey/black
+DARK_THEME_BG = '#202124' 
+DARK_THEME_TEXT = '#e8eaed' 
+LIGHT_THEME_BG = '#ffffff' 
+LIGHT_THEME_TEXT = '#202124'
 
 MINIFIED_THEME_SCRIPT_TEMPLATE = """<script>(function(){{const t=localStorage.getItem('user-preferred-theme')||(window.matchMedia?.('(prefers-color-scheme: light)').matches?'light':'dark');if(t==='dark'){{document.documentElement.style.backgroundColor='{dark_bg}';document.documentElement.style.color='{dark_text}';}}else{{document.documentElement.style.backgroundColor='{light_bg}';document.documentElement.style.color='{light_text}';}}}})();</script>"""
 
 def build():
+    print(f"--- BUILD STARTED at {datetime.datetime.now()} ---")
+    print("Running setup_header_in_layout_html...")
+    setup_header_in_layout_html() # This generates/updates layout.html
+    print("setup_header_in_layout_html complete.")
+
+    # Create a new Jinja environment AFTER layout.html is (re)generated
+    current_env = Environment(
+        loader=FileSystemLoader('.'),
+        autoescape=True # Good practice, though might not be strictly needed if all content is safe
+    )
+    print(f"Fresh Jinja environment created at {datetime.datetime.now()}")
+
     global _global_sidebar_data_for_redirect, _global_root_redirect_target_url
-    print("Starting build...")
+    
     dist_path_obj = Path('dist')
-    if dist_path_obj.exists(): shutil.rmtree(dist_path_obj)
+    if dist_path_obj.exists(): 
+        print(f"Cleaning old 'dist' directory: {dist_path_obj}")
+        shutil.rmtree(dist_path_obj)
     dist_path_obj.mkdir(parents=True, exist_ok=True)
     
     copy_static_assets(static_src_dir='static', dst_dir=str(dist_path_obj))
     
     all_files_to_process, sidebar_data = scan_src()
-    _global_sidebar_data_for_redirect = sidebar_data
+    _global_sidebar_data_for_redirect = sidebar_data # Store for redirects
 
     if sidebar_data and sidebar_data[0].get('files') and len(sidebar_data[0]['files']) > 0:
         first_section_slug_for_root = sidebar_data[0]['output_folder_name']
@@ -364,9 +398,17 @@ def build():
     else:
         _global_root_redirect_target_url = "/" 
     
-    process_md_files(all_files_to_process, dist_path_obj, sidebar_data, _global_root_redirect_target_url)
+    print("Starting main content processing...")
+    # MODIFIED: Pass current_env to process_md_files
+    process_md_files(
+        all_files_to_process, 
+        dist_path_obj, 
+        sidebar_data, 
+        _global_root_redirect_target_url,
+        current_env # Pass the fresh Jinja environment
+    )
+    print("Main content processing complete.")
 
-    # Fill the theme script template with actual colors
     theme_script_filled = MINIFIED_THEME_SCRIPT_TEMPLATE.format(
         dark_bg=DARK_THEME_BG,
         dark_text=DARK_THEME_TEXT,
@@ -379,6 +421,7 @@ def build():
             section_slug = section['output_folder_name']
             first_file_slug = section['files'][0]['slug']
             redirect_target_url = f"/{section_slug}/{first_file_slug}/"
+            
             section_base_dir_for_redirect = dist_path_obj / section_slug
             section_base_dir_for_redirect.mkdir(parents=True, exist_ok=True) 
             section_redirect_index_file = section_base_dir_for_redirect / "index.html"
@@ -395,12 +438,15 @@ def build():
         else:
             print("Could not create root redirect: No valid target (first section/file) found.")
 
-    print("Build complete. Output in 'dist' directory.")
+    print(f"--- BUILD COMPLETED at {datetime.datetime.now()} ---")
 
 if __name__ == '__main__':
-    build()
+    build() # Initial build before starting server
     server = Server()
+    # Watch source files that trigger a rebuild
     server.watch('src/**/*.md', build)
-    server.watch('layout.html', build)
+    server.watch('layout_jinja.html', build) # Source for layout.html
     server.watch('static/**/*', build) 
+    server.watch('header_config.yaml', build) # Source for header data
+    
     server.serve(root='dist', default_filename='index.html', port=6454)

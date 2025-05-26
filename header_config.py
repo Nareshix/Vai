@@ -3,7 +3,7 @@ from jinja2 import Environment, FileSystemLoader
 
 
 def setup_header_in_layout_html(): 
-    with open("config.yaml", "r") as f:
+    with open("header_config.yaml", "r") as f:
         config = yaml.safe_load(f)
     github_link  = config['github_link']
     dropdowns = config['dropdowns']
@@ -18,9 +18,5 @@ def setup_header_in_layout_html():
         github_link=github_link,
     )
 
-    print(dropdowns)
-
     with open('layout.html', 'w') as f:
         f.write(rendered)
-
-setup_header_in_layout_html()
