@@ -30,7 +30,6 @@ def clean_display_name(name_with_potential_prefix_and_ext):
     cleaned = re.sub(r"^\d+-", "", name_no_ext)
     return cleaned.strip()
 
-# --- Frontmatter Parsing Function ---
 def parse_metadata_and_body_from_string(markdown_content_as_string):
     metadata = {}
     body = markdown_content_as_string
@@ -47,13 +46,6 @@ def parse_metadata_and_body_from_string(markdown_content_as_string):
                     metadata[key.strip().lower()] = value.strip()
     return metadata, body
 
-# --- Markdown Extensions ---
-# --- Markdown Extensions ---
-# In your Python script (e.g., build.py)
-
-from xml.etree import ElementTree as etree # Ensure this is imported
-
-# ... other imports ...
 
 class HeadingIdAdder(Treeprocessor):
     def run(self, root: etree.Element):
@@ -105,75 +97,61 @@ class AdmonitionProcessorCorrected(BlockProcessor):
         else:
             display_title = custom_title_str if custom_title_str else admon_type.capitalize()
 
-        # These lines are the content of the admonition, without any dedenting
         content_lines_raw = []
         
         block_ended = False
         remaining_lines_after_end_in_current_block = []
 
-        # Consume lines from the *current* (first) block
-        for i in range(1, len(lines)): # Start from the line after the ':::' directive
+        for i in range(1, len(lines)): 
             if self.RE_END.match(lines[i]):
                 block_ended = True
-                # Store any lines in the *same block* that came after the closing :::
                 remaining_lines_after_end_in_current_block = lines[i+1:]
                 break
-            content_lines_raw.append(lines[i]) # Add line as is
+            content_lines_raw.append(lines[i]) 
         
-        # If the end marker ':::' wasn't in the first block, consume subsequent blocks
         if not block_ended:
-            while blocks: # Loop through subsequent blocks provided by the parser
+            while blocks: 
                 next_block_chunk_from_parser = blocks.pop(0)
                 inner_lines_of_chunk = next_block_chunk_from_parser.split('\n')
-                processed_all_inner_lines = True # Flag to see if we consumed the whole chunk
+                processed_all_inner_lines = True 
                 for j, line_in_chunk in enumerate(inner_lines_of_chunk):
                     if self.RE_END.match(line_in_chunk):
                         block_ended = True
-                        # If there are lines after ':::' in this chunk, put them back for later processing
                         if j + 1 < len(inner_lines_of_chunk):
                             blocks.insert(0, '\n'.join(inner_lines_of_chunk[j+1:]))
                         processed_all_inner_lines = False 
-                        break # Found end marker, stop processing this chunk
-                    content_lines_raw.append(line_in_chunk) # Add line as is
+                        break 
+                    content_lines_raw.append(line_in_chunk) 
                 
                 if block_ended and not processed_all_inner_lines:
-                    break # Exit while blocks loop, end marker found partway through a chunk
+                    break 
                 elif block_ended and processed_all_inner_lines:
-                    break # Exit while blocks loop, end marker was the last line of a chunk or whole chunk was content
+                    break 
 
-        if not block_ended: # If loop finishes and block_ended is still false, it's an unterminated admonition
-            blocks.insert(0, original_block) # Put back the first block
-            # Any additionally consumed blocks are effectively lost here if unterminated.
-            # Consider more robust error handling or stricter syntax if this is an issue.
+        if not block_ended: 
+            blocks.insert(0, original_block) 
             return False
 
-        # Join the raw content lines exactly as they were, preserving their original indentation (or lack thereof)
         parsed_content_for_md = '\n'.join(content_lines_raw)
 
-        # Create the admonition HTML structure
         if admon_type == "details":
             el = etree.SubElement(parent, 'details')
             el.set('class', f'admonition {admon_type}')
             summary_el = etree.SubElement(el, 'summary')
             summary_el.set('class', 'admonition-title')
             summary_el.text = display_title
-            content_wrapper_el = etree.SubElement(el, 'div') # Content div after summary
-            # content_wrapper_el.set('class', 'admonition-content') # Optional class
-        else: # 'info', 'warning', etc.
+            content_wrapper_el = etree.SubElement(el, 'div')
+        else: 
             el = etree.SubElement(parent, 'div')
             el.set('class', f'admonition {admon_type}')
             title_el = etree.SubElement(el, 'p')
             title_el.set('class', 'admonition-title')
             title_el.text = display_title
-            content_wrapper_el = etree.SubElement(el, 'div') # Content div
-            # content_wrapper_el.set('class', 'admonition-content') # Optional class
+            content_wrapper_el = etree.SubElement(el, 'div')
         
-        # Recursively parse the collected content block.
-        # Fenced_code and other block processors will now operate on this content.
-        if parsed_content_for_md.strip(): # Only parse if there's non-whitespace content
+        if parsed_content_for_md.strip():
              self.parser.parseBlocks(content_wrapper_el, [parsed_content_for_md])
         
-        # If there were lines after the ':::' in the original block, put them back
         if remaining_lines_after_end_in_current_block:
             blocks.insert(0, '\n'.join(remaining_lines_after_end_in_current_block))
             
@@ -181,17 +159,15 @@ class AdmonitionProcessorCorrected(BlockProcessor):
 
 class AdmonitionExtensionCorrected(Extension):
     def extendMarkdown(self, md):
-        # Priority 105 ensures it runs before FencedBlockPreprocessor (priority 95)
         md.parser.blockprocessors.register(AdmonitionProcessorCorrected(md.parser), 'admonition_corrected', 105)
 
 def convert_md_to_html(md_body_text):
     return markdown.markdown(md_body_text, extensions=[
-        HeadingIdExtension(), # Use the new, comprehensive extension
+        HeadingIdExtension(), 
         AdmonitionExtensionCorrected(),
         'fenced_code',
         CodeHiliteExtension(css_class='codehilite', guess_lang=False, use_pygments=True),
-        'tables' # Removed 'toc' as our extension now handles h1-h6 ID generation
-                 # and generate_heading_links builds the visual TOC.
+        'tables'
     ])
 
 def generate_heading_links(html_body_content):
@@ -218,15 +194,16 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     try:
         shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
         print("Static assets copied successfully.")
-    except TypeError:
+    except TypeError: # Fallback for Python < 3.8
         print("Falling back to item-by-item copy for static assets (Python < 3.8 or other issue).")
         if not dst_path.exists(): dst_path.mkdir(parents=True, exist_ok=True)
         for item in static_src_path.iterdir():
             s = static_src_path / item.name
             d = dst_path / item.name
-            if s.is_dir(): shutil.copytree(s, d, dirs_exist_ok=True)
+            if s.is_dir(): shutil.copytree(s, d, dirs_exist_ok=True) # dirs_exist_ok might still fail on <3.8 shutil.copytree
             else: shutil.copy2(s, d)
         print("Static assets copied item by item successfully.")
+
 
 def scan_src(src_dir_path='src'):
     src_path = Path(src_dir_path)
@@ -276,7 +253,7 @@ def scan_src(src_dir_path='src'):
                 "output_file_slug": file_info["output_file_slug"],
                 "display_title": file_info["display_title"]
             })
-        if current_sidebar_section_files:
+        if current_sidebar_section_files: # Only add section if it has files
             sidebar_data_for_template.append({
                 "title": cleaned_folder_title,
                 "output_folder_name": section_build_data["output_folder_name"],
@@ -287,7 +264,6 @@ def scan_src(src_dir_path='src'):
 def extract_searchable_text_from_html(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
     texts = []
-    # MODIFIED: Exclude h1-h6 from this list, as their content is indexed via the 'headings' field.
     tags_to_extract_text_from = ['p', 'li', 'td', 'th', 'caption', 'dt', 'dd']
     
     for element in soup.find_all(True):
@@ -300,61 +276,43 @@ def extract_searchable_text_from_html(html_content):
             current_check = current_check.parent
         if is_inside_skipped_tag: continue
 
-        if element.name in tags_to_extract_text_from: # Hx tags are now skipped here
-            # Avoid double-counting admonition titles if they are <p>
+        if element.name in tags_to_extract_text_from:
             if 'admonition-title' in element.get('class', []) and element.name == 'p':
                 pass 
             else:
                  texts.append(element.get_text(separator=' ', strip=True))
         
-        # Admonition content extraction (ensure it only gets p and li from within admonition content div)
         if element.name == 'div' and 'admonition' in element.get('class', []):
-            # Try to find the specific content wrapper div we added in AdmonitionProcessorCorrected
-            # Assuming AdmonitionProcessorCorrected creates a child div for content inside the main admonition div.
-            # If your AdmonitionProcessorCorrected directly places <p>, <li> inside the admonition div
-            # (after the title), this logic might need adjustment.
-            # The current AdmonitionProcessorCorrected in your script does:
-            # content_wrapper_el = etree.SubElement(el, 'div')
-            # self.parser.parseBlocks(content_wrapper_el, [parsed_content_for_md])
-            # So, there should be a child div.
-            
             content_wrapper = None
-            # Look for the first direct child div that is NOT a title element
             for child in element.children:
                 if child.name == 'div' and not (child.has_attr('class') and 'admonition-title' in child.get('class', [])):
-                    # For 'details' admonition, the content div is a direct child of 'details'
                     if element.name == 'details':
                         content_wrapper = child
                         break
-                    # For other admonitions, it's a child of the main admonition div
                     elif element.name == 'div':
                          content_wrapper = child
                          break
-            if not content_wrapper and element.name == 'div': # Fallback if no specific content div found, use the admon div itself
+            if not content_wrapper and element.name == 'div':
                  content_wrapper = element
 
             if content_wrapper:
-                for sub_el in content_wrapper.find_all(['p', 'li'], recursive=True): # Search recursively within wrapper
-                    # Ensure this sub_el is not inside a code block within the admonition
+                for sub_el in content_wrapper.find_all(['p', 'li'], recursive=True):
                     is_sub_el_in_code = False
                     sub_check = sub_el
-                    # Traverse up to the content_wrapper to check for intermediate code blocks
                     while sub_check and sub_check != content_wrapper: 
                         if sub_check.name in ['pre', 'code'] or \
                            (sub_check.has_attr('class') and 'codehilite' in sub_check['class']):
                             is_sub_el_in_code = True; break
                         sub_check = sub_check.parent
                     
-                    # Also ensure the sub_el itself is not an admonition title if it's a <p>
                     if not is_sub_el_in_code and not ('admonition-title' in sub_el.get('class', [])):
                         texts.append(sub_el.get_text(separator=' ', strip=True))
 
     seen = set()
-    # Filter out empty or whitespace-only strings before checking for seen
     unique_texts = [x for x in texts if x and x.strip()]
-    # Deduplicate
     unique_texts = [x for x in unique_texts if not (x in seen or seen.add(x))]
     return " ".join(unique_texts)
+
 def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template):
     search_index_entries = []
 
@@ -373,7 +331,6 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
         body_content_html = convert_md_to_html(md_body_only_string)
         toc_table_link_html = generate_heading_links(body_content_html)
 
-        # Page-level information
         page_title_from_meta_or_file = page_meta.get('title', file_item["display_title"])
         base_page_url = f"/{output_folder_name}/{output_file_slug}/"
         
@@ -385,20 +342,17 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
         
         page_breadcrumbs_base = f"{section_title_for_breadcrumbs} > {page_title_from_meta_or_file}"
 
-        # Add a search index entry for the page itself
         search_index_entries.append({
             "type": "page",
-            "id": base_page_url, # Unique ID for this search item
+            "id": base_page_url,
             "page_title": page_title_from_meta_or_file,
-            "display_title": page_title_from_meta_or_file, # For page result, display_title is page_title
+            "display_title": page_title_from_meta_or_file,
             "breadcrumbs": page_breadcrumbs_base,
             "url": base_page_url,
-            # Concatenate relevant texts for searching this page entry
             "searchable_text": f"{page_title_from_meta_or_file} {page_breadcrumbs_base}".lower(),
             "date": page_meta.get('date', None)
         })
 
-        # Add search index entries for each heading
         content_soup = BeautifulSoup(body_content_html, 'html.parser')
         for h_tag in content_soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
             heading_text = h_tag.get_text(strip=True)
@@ -413,19 +367,17 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
 
                 search_index_entries.append({
                     "type": "heading",
-                    "id": heading_url, # Unique ID including hash
-                    "page_title": page_title_from_meta_or_file, # Parent page's title
+                    "id": heading_url,
+                    "page_title": page_title_from_meta_or_file,
                     "heading_text": heading_text,
                     "heading_level": heading_level,
                     "display_title": heading_display_title,
                     "breadcrumbs": heading_breadcrumbs,
                     "url": heading_url,
-                    # Concatenate relevant texts for searching this heading entry
                     "searchable_text": f"{page_title_from_meta_or_file} {heading_breadcrumbs} {heading_text}".lower(),
-                    "date": page_meta.get('date', None) # Inherit date from page
+                    "date": page_meta.get('date', None) 
                 })
 
-        # --- Date handling for the page rendering (not search index) ---
         today = datetime.datetime.today()
         day_suffix = "th"
         if today.day in [1, 21, 31]: day_suffix = "st"
@@ -433,9 +385,8 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
         elif today.day in [3, 23]: day_suffix = "rd"
         day_str = str(today.day) + day_suffix
         default_date = f"{day_str} {today.strftime('%B %Y')}"
-        render_date = page_meta.get('date', default_date) # Use this for displaying on the page
+        render_date = page_meta.get('date', default_date)
 
-        # --- Prev/Next page data for page rendering ---
         prev_page_data = None
         next_page_data = None
         if i > 0:
@@ -455,8 +406,8 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             body_content=body_content_html,
             toc_table_link=toc_table_link_html,
             sidebar_data=sidebar_data_for_template,
-            title=page_title_from_meta_or_file, # Use the determined page title
-            date=render_date, # Use the determined display date
+            title=page_title_from_meta_or_file,
+            date=render_date,
             prev_page_data=prev_page_data,
             next_page_data=next_page_data
         )
@@ -469,33 +420,77 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
 
     search_index_file_path = dist_base_path / "search_index.json"
     with open(search_index_file_path, 'w', encoding='utf-8') as f:
-        json.dump(search_index_entries, f, ensure_ascii=False, indent=None)
+        json.dump(search_index_entries, f, ensure_ascii=False, indent=None) # Use indent=None for smaller file size
     print(f"Generated search index: {search_index_file_path}")
     
 _global_sidebar_data_for_redirect = []
+
 def build():
     global _global_sidebar_data_for_redirect
     print("Starting build...")
     dist_path_obj = Path('dist')
     if dist_path_obj.exists(): shutil.rmtree(dist_path_obj)
     dist_path_obj.mkdir(parents=True, exist_ok=True)
+    
     copy_static_assets(static_src_dir='static', dst_dir=str(dist_path_obj))
+    
     all_files_to_process, sidebar_data = scan_src()
-    _global_sidebar_data_for_redirect = sidebar_data
+    _global_sidebar_data_for_redirect = sidebar_data # Store for root redirect
+    
     process_md_files(all_files_to_process, dist_path_obj, sidebar_data)
+
+            # --- START: Add section index redirects ---
+    for section in sidebar_data: # sidebar_data now only contains sections with files
+        if section.get('files') and len(section['files']) > 0:
+            section_slug = section['output_folder_name']
+            first_file_slug = section['files'][0]['slug']
+            redirect_target_url = f"/{section_slug}/{first_file_slug}/"
+
+            section_base_dir_for_redirect = dist_path_obj / section_slug
+            section_base_dir_for_redirect.mkdir(parents=True, exist_ok=True) 
+
+            section_redirect_index_file = section_base_dir_for_redirect / "index.html"
+            
+            redirect_html_content = f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Redirecting to {section['title']}</title> 
+<meta name="robots" content="noindex, follow">
+<meta http-equiv="refresh" content="0; url={redirect_target_url}">
+<link rel="canonical" href="{redirect_target_url}">
+</head>
+<body>
+<p>If you are not redirected automatically, follow this <a href='{redirect_target_url}'>link to the first page in the "{section['title']}" section</a>.</p> 
+</body>
+</html>"""
+            section_redirect_index_file.write_text(redirect_html_content, encoding='utf-8')
+            print(f"Created section redirect (with noindex): /{section_slug}/ -> {redirect_target_url}") # Optional: update print
+    # --- END: Add section index redirects ---
+
+            
+    # Root index.html redirect (if not already created by a root "index.md" or similar)
+    # This part remains the same
+            # Root index.html redirect ...
     if not (dist_path_obj / 'index.html').exists() and _global_sidebar_data_for_redirect:
-        if _global_sidebar_data_for_redirect[0]['files']:
+        if _global_sidebar_data_for_redirect[0].get('files') and len(_global_sidebar_data_for_redirect[0]['files']) > 0:
             first_section_slug = _global_sidebar_data_for_redirect[0]['output_folder_name']
             first_file_slug = _global_sidebar_data_for_redirect[0]['files'][0]['slug']
-            redirect_html = f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>Redirecting...</title><meta http-equiv="refresh" content="0; url=/{first_section_slug}/{first_file_slug}/"><link rel="canonical" href="/{first_section_slug}/{first_file_slug}/"></head><body><p>If you are not redirected automatically, follow this <a href='/{first_section_slug}/{first_file_slug}/'>link</a>.</p></body></html>"""
+            redirect_html = f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>Redirecting...</title><meta name="robots" content="noindex, follow"> <meta http-equiv="refresh" content="0; url=/{first_section_slug}/{first_file_slug}/"><link rel="canonical" href="/{first_section_slug}/{first_file_slug}/"></head><body><p>If you are not redirected automatically, follow this <a href='/{first_section_slug}/{first_file_slug}/'>link</a>.</p></body></html>"""
             (dist_path_obj / 'index.html').write_text(redirect_html, encoding='utf-8')
-            print(f"Created root redirect to /{first_section_slug}/{first_file_slug}/")
+            print(f"Created root redirect (with noindex) to /{first_section_slug}/{first_file_slug}/") # Optional: update print
+        else:
+            print("Could not create root redirect: First section has no files.")
+    elif not _global_sidebar_data_for_redirect:
+        print("Could not create root redirect: No sidebar data (no sections or files found).")
+
     print("Build complete. Output in 'dist' directory.")
+
 
 if __name__ == '__main__':
     build()
     server = Server()
     server.watch('src/**/*.md', build)
     server.watch('layout.html', build)
-    server.watch('static/**/*', build) # Watch all files and subdirectories in static
+    server.watch('static/**/*', build) 
     server.serve(root='dist', default_filename='index.html', port=6454)
