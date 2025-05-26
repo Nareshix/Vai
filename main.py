@@ -15,33 +15,46 @@ import argparse
 from pathlib import Path
 import shutil
 
-def setup_header_in_layout_html(): 
-    with open("header_config.yaml", "r") as f:
+def setup_header_in_layout_html():
+    DOCS_DIR = Path("docs")  # Define the base path for docs content
+
+    with open(DOCS_DIR / "header_config.yaml", "r") as f: # MODIFIED
         config = yaml.safe_load(f)
     github_link  = config['github_link']
     github_contribution_link = config['github_contribution_link']
-    
+
     dropdowns = config['dropdowns']
     internals = config['internals']
     externals = config['externals']
-    
 
-    project_root = Path(__file__).resolve().parent
-    static_dir = project_root / 'static'
+    # project_root = Path(__file__).resolve().parent # This is the project root
+    # static_dir = project_root / 'static' # OLD: pointed to project_root/static
+    static_dir_in_docs = DOCS_DIR / 'static' # MODIFIED: point to docs/static for operational assets
     wanted_basenames = {'favicon', 'logo'}
 
     found = {}
-    for file_path in static_dir.rglob('*'):
-        if file_path.is_file():
-            stem = file_path.stem
-            if stem in wanted_basenames:
-                found[stem] = file_path.name
+    if static_dir_in_docs.exists(): # Check if docs/static exists
+        for file_path in static_dir_in_docs.rglob('*'): # MODIFIED
+            if file_path.is_file():
+                stem = file_path.stem
+                if stem in wanted_basenames:
+                    found[stem] = file_path.name
+    else:
+        print(f"Warning: Static directory '{static_dir_in_docs}' not found. Logo/Favicon might be missing from header.")
+
 
     logo = found.get('logo', '')
     favicon = found.get('favicon', '')
-    
-    env = Environment(loader=FileSystemLoader('templates'))
-    template = env.get_template('layout_no_header.html')
+
+    templates_dir_in_docs = DOCS_DIR / 'templates' # MODIFIED
+    env = Environment(loader=FileSystemLoader(str(templates_dir_in_docs))) # MODIFIED
+    try:
+        template = env.get_template('layout_no_header.html')
+    except Exception as e:
+        print(f"Error: Could not load 'layout_no_header.html' from '{templates_dir_in_docs}'. Details: {e}")
+        raise
+
+
     rendered = template.render(
         dropdowns=dropdowns,
         internals=internals,
@@ -52,9 +65,8 @@ def setup_header_in_layout_html():
         github_contribution_link=github_contribution_link,
     )
 
-    with open('templates/layout.html', 'w') as f:
+    with open(templates_dir_in_docs / 'layout.html', 'w') as f: # MODIFIED
         f.write(rendered)
-
 
 def generate_slug(text_to_slugify):
     text = str(text_to_slugify).lower()
@@ -394,38 +406,40 @@ LIGHT_THEME_TEXT = '#202124'
 MINIFIED_THEME_SCRIPT_TEMPLATE = """<script>(function(){{const t=localStorage.getItem('user-preferred-theme')||(window.matchMedia?.('(prefers-color-scheme: light)').matches?'light':'dark');if(t==='dark'){{document.documentElement.style.backgroundColor='{dark_bg}';document.documentElement.style.color='{dark_text}';}}else{{document.documentElement.style.backgroundColor='{light_bg}';document.documentElement.style.color='{light_text}';}}}})();</script>"""
 
 def build():
-    setup_header_in_layout_html() 
+    DOCS_DIR = Path("docs") # Define the base path for docs content
+
+    setup_header_in_layout_html()
 
     current_env = Environment(
-        loader=FileSystemLoader('templates'),
-        autoescape=True 
+        loader=FileSystemLoader(str(DOCS_DIR / 'templates')), # MODIFIED
+        autoescape=True
     )
 
     global _global_sidebar_data_for_redirect, _global_root_redirect_target_url
-    
-    dist_path_obj = Path('docs/dist')
-    if dist_path_obj.exists(): 
+
+    dist_path_obj = DOCS_DIR / 'dist' # Path('docs/dist') is fine, using DOCS_DIR for consistency
+    if dist_path_obj.exists():
         shutil.rmtree(dist_path_obj)
     dist_path_obj.mkdir(parents=True, exist_ok=True)
-    
-    copy_static_assets(static_src_dir='static', dst_dir=str(dist_path_obj))
-    
-    all_files_to_process, sidebar_data = scan_src()
-    _global_sidebar_data_for_redirect = sidebar_data # Store for redirects
+
+    copy_static_assets(static_src_dir=str(DOCS_DIR / 'static'), dst_dir=str(dist_path_obj)) # MODIFIED
+
+    all_files_to_process, sidebar_data = scan_src(src_dir_path=str(DOCS_DIR / 'src')) # MODIFIED
+    _global_sidebar_data_for_redirect = sidebar_data
 
     if sidebar_data and sidebar_data[0].get('files') and len(sidebar_data[0]['files']) > 0:
         first_section_slug_for_root = sidebar_data[0]['output_folder_name']
         first_file_slug_for_root = sidebar_data[0]['files'][0]['slug']
         _global_root_redirect_target_url = f"/{first_section_slug_for_root}/{first_file_slug_for_root}/"
     else:
-        _global_root_redirect_target_url = "/" 
-    
+        _global_root_redirect_target_url = "/"
+
     process_md_files(
-        all_files_to_process, 
-        dist_path_obj, 
-        sidebar_data, 
+        all_files_to_process,
+        dist_path_obj,
+        sidebar_data,
         _global_root_redirect_target_url,
-        current_env 
+        current_env
     )
 
     theme_script_filled = MINIFIED_THEME_SCRIPT_TEMPLATE.format(
@@ -440,11 +454,11 @@ def build():
             section_slug = section['output_folder_name']
             first_file_slug = section['files'][0]['slug']
             redirect_target_url = f"/{section_slug}/{first_file_slug}/"
-            
+
             section_base_dir_for_redirect = dist_path_obj / section_slug
-            section_base_dir_for_redirect.mkdir(parents=True, exist_ok=True) 
+            section_base_dir_for_redirect.mkdir(parents=True, exist_ok=True)
             section_redirect_index_file = section_base_dir_for_redirect / "index.html"
-            
+
             redirect_html_content = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Redirecting to {section['title']}</title><meta name="robots" content="noindex, follow">{theme_script_filled}<meta http-equiv="refresh" content="0; url={redirect_target_url}"><link rel="canonical" href="{redirect_target_url}"><style>body{{margin:0;padding:20px;font-family:sans-serif;text-align:center;}}</style></head><body><p>Redirecting to the "{section['title']}" section...</p></body></html>"""
             section_redirect_index_file.write_text(redirect_html_content, encoding='utf-8')
 
@@ -454,8 +468,6 @@ def build():
             (dist_path_obj / 'index.html').write_text(redirect_html, encoding='utf-8')
         else:
             print("Could not create root redirect: No valid target (first section/file) found.")
-
-
 
 
 
