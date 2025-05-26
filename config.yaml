@@ -1,38 +1,28 @@
-internal:
-  - header: "Guide"
+github_link: "https://github.com/Nareshix/Vai"
+
+internals:
+  - title: "Guide"
     link: "/guides"
 
-  - header: "Reference"
+  - title: "Reference"
     link: "/reference"
 
-external:
-  - header: "RickRoll"
+externals:
+  - title: "RickRoll"
     link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
 
 dropdowns:
-  main_title: "Main Menu"
-  items:
-    - title: "Resources"
-      type: external
-      items:
-        - title: "Docs"
-          link: "https://example.com/docs"
-        - title: "API"
-          link: "https://example.com/api"
+  - main_title: "Main Menu"
+    items:
+      - title: "Guide"
+        type: internal
+        link: "/guides"
 
-    - title: "Navigation"
-      type: internal
-      items:
-        - title: "Home"
-          link: "/home"
-        - title: "About"
-          link: "/about"
+      - title: "Resources"
+        type: internal
+        link: "/reference"
 
-    - title: "Support"
-      type: external
-      items:
-        - title: "FAQ"
-          link: "https://example.com/faq"
-        - title: "Contact"
-          link: "https://example.com/contact"
+      - title: "Rickroll"
+        type: external
+        link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"

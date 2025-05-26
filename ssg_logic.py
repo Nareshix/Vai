@@ -311,9 +311,15 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             next_page_data = {"title": next_item["display_title"], "url": f"/{next_item['output_folder_name']}/{next_item['output_file_slug']}/"}
             
         rendered = template.render(
-            body_content=body_content_html, toc_table_link=toc_table_link_html,
-            sidebar_data=sidebar_data_for_template, title=page_title_from_meta_or_file,
-            date=render_date, prev_page_data=prev_page_data, next_page_data=next_page_data,
+            body_content=body_content_html,
+            toc_table_link=toc_table_link_html,
+            sidebar_data=sidebar_data_for_template,
+            title=page_title_from_meta_or_file,
+            date=render_date,
+
+            prev_page_data=prev_page_data,
+            
+            next_page_data=next_page_data,
             root_redirect_target_url=root_redirect_target_url_for_template
         )
 
