@@ -23,7 +23,7 @@ def generate_slug(text_to_slugify):
     return text
 
 def slugify_heading(text):
-    return generate_slug(text) # Use the more robust general slugifier
+    return generate_slug(text)
 
 def clean_display_name(name_with_potential_prefix_and_ext):
     name_no_ext = Path(name_with_potential_prefix_and_ext).stem
@@ -49,28 +49,22 @@ def parse_metadata_and_body_from_string(markdown_content_as_string):
 
 class HeadingIdAdder(Treeprocessor):
     def run(self, root: etree.Element):
-        self.used_slugs_on_page = set() # Keep track of slugs used on the current page
+        self.used_slugs_on_page = set()
         for element in root.iter():
-            # Process h1 through h6
             if element.tag in ('h1', 'h2', 'h3', 'h4', 'h5', 'h6'):
-                # MODIFIED: Get all text from the element and its children
                 full_heading_text = "".join(element.itertext()).strip()
-
-                if full_heading_text: # Check if there's any text content at all
-                    base_slug = slugify_heading(full_heading_text) # Use the full extracted text for slug
+                if full_heading_text:
+                    base_slug = slugify_heading(full_heading_text)
                     final_slug = base_slug
                     counter = 1
-                    # Ensure the slug is unique on the page
                     while final_slug in self.used_slugs_on_page:
                         final_slug = f"{base_slug}-{counter}"
                         counter += 1
                     element.set('id', final_slug)
                     self.used_slugs_on_page.add(final_slug)
 
-
-class HeadingIdExtension(Extension): # Renamed
+class HeadingIdExtension(Extension):
     def extendMarkdown(self, md):
-        # Use the new class and a new registration key
         md.treeprocessors.register(HeadingIdAdder(md), 'headingidadder', 15)
 
 class AdmonitionProcessorCorrected(BlockProcessor):
@@ -81,55 +75,46 @@ class AdmonitionProcessorCorrected(BlockProcessor):
         return bool(self.RE_START.match(block.split('\n', 1)[0]))
 
     def run(self, parent, blocks):
-        original_block = blocks.pop(0) # The first block matched by test()
+        original_block = blocks.pop(0)
         lines = original_block.split('\n')
-
         first_line_match = self.RE_START.match(lines[0])
-        if not first_line_match: # Should not happen if test() is correct
+        if not first_line_match:
             blocks.insert(0, original_block)
             return False
 
         admon_type = first_line_match.group(1).lower()
         custom_title_str = first_line_match.group(2).strip() if first_line_match.group(2) else ""
         
-        if admon_type == "details":
-            display_title = custom_title_str if custom_title_str else "Details"
-        else:
-            display_title = custom_title_str if custom_title_str else admon_type.capitalize()
+        display_title = custom_title_str if custom_title_str else ("Details" if admon_type == "details" else admon_type.capitalize())
 
         content_lines_raw = []
-        
         block_ended = False
         remaining_lines_after_end_in_current_block = []
 
-        for i in range(1, len(lines)): 
+        for i in range(1, len(lines)):
             if self.RE_END.match(lines[i]):
                 block_ended = True
                 remaining_lines_after_end_in_current_block = lines[i+1:]
                 break
-            content_lines_raw.append(lines[i]) 
+            content_lines_raw.append(lines[i])
         
         if not block_ended:
-            while blocks: 
+            while blocks:
                 next_block_chunk_from_parser = blocks.pop(0)
                 inner_lines_of_chunk = next_block_chunk_from_parser.split('\n')
-                processed_all_inner_lines = True 
+                processed_all_inner_lines = True
                 for j, line_in_chunk in enumerate(inner_lines_of_chunk):
                     if self.RE_END.match(line_in_chunk):
                         block_ended = True
                         if j + 1 < len(inner_lines_of_chunk):
                             blocks.insert(0, '\n'.join(inner_lines_of_chunk[j+1:]))
-                        processed_all_inner_lines = False 
-                        break 
-                    content_lines_raw.append(line_in_chunk) 
-                
-                if block_ended and not processed_all_inner_lines:
-                    break 
-                elif block_ended and processed_all_inner_lines:
-                    break 
-
-        if not block_ended: 
-            blocks.insert(0, original_block) 
+                        processed_all_inner_lines = False
+                        break
+                    content_lines_raw.append(line_in_chunk)
+                if block_ended: break
+        
+        if not block_ended:
+            blocks.insert(0, original_block)
             return False
 
         parsed_content_for_md = '\n'.join(content_lines_raw)
@@ -141,7 +126,7 @@ class AdmonitionProcessorCorrected(BlockProcessor):
             summary_el.set('class', 'admonition-title')
             summary_el.text = display_title
             content_wrapper_el = etree.SubElement(el, 'div')
-        else: 
+        else:
             el = etree.SubElement(parent, 'div')
             el.set('class', f'admonition {admon_type}')
             title_el = etree.SubElement(el, 'p')
@@ -150,11 +135,10 @@ class AdmonitionProcessorCorrected(BlockProcessor):
             content_wrapper_el = etree.SubElement(el, 'div')
         
         if parsed_content_for_md.strip():
-             self.parser.parseBlocks(content_wrapper_el, [parsed_content_for_md])
+            self.parser.parseBlocks(content_wrapper_el, [parsed_content_for_md])
         
         if remaining_lines_after_end_in_current_block:
             blocks.insert(0, '\n'.join(remaining_lines_after_end_in_current_block))
-            
         return True
 
 class AdmonitionExtensionCorrected(Extension):
@@ -193,17 +177,15 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     print(f"Copying static assets from '{static_src_path}' to '{dst_path}'...")
     try:
         shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
-        print("Static assets copied successfully.")
-    except TypeError: # Fallback for Python < 3.8
+    except TypeError:
         print("Falling back to item-by-item copy for static assets (Python < 3.8 or other issue).")
         if not dst_path.exists(): dst_path.mkdir(parents=True, exist_ok=True)
         for item in static_src_path.iterdir():
             s = static_src_path / item.name
             d = dst_path / item.name
-            if s.is_dir(): shutil.copytree(s, d, dirs_exist_ok=True) # dirs_exist_ok might still fail on <3.8 shutil.copytree
+            if s.is_dir(): shutil.copytree(s, d, dirs_exist_ok=True)
             else: shutil.copy2(s, d)
-        print("Static assets copied item by item successfully.")
-
+    print("Static assets copied successfully.")
 
 def scan_src(src_dir_path='src'):
     src_path = Path(src_dir_path)
@@ -253,7 +235,7 @@ def scan_src(src_dir_path='src'):
                 "output_file_slug": file_info["output_file_slug"],
                 "display_title": file_info["display_title"]
             })
-        if current_sidebar_section_files: # Only add section if it has files
+        if current_sidebar_section_files:
             sidebar_data_for_template.append({
                 "title": cleaned_folder_title,
                 "output_folder_name": section_build_data["output_folder_name"],
@@ -261,59 +243,7 @@ def scan_src(src_dir_path='src'):
             })
     return all_files_to_process, sidebar_data_for_template
 
-def extract_searchable_text_from_html(html_content):
-    soup = BeautifulSoup(html_content, 'html.parser')
-    texts = []
-    tags_to_extract_text_from = ['p', 'li', 'td', 'th', 'caption', 'dt', 'dd']
-    
-    for element in soup.find_all(True):
-        is_inside_skipped_tag = False
-        current_check = element
-        while current_check:
-            if current_check.name in ['pre', 'code', 'script', 'style'] or \
-               (current_check.has_attr('class') and 'codehilite' in current_check['class']):
-                is_inside_skipped_tag = True; break
-            current_check = current_check.parent
-        if is_inside_skipped_tag: continue
-
-        if element.name in tags_to_extract_text_from:
-            if 'admonition-title' in element.get('class', []) and element.name == 'p':
-                pass 
-            else:
-                 texts.append(element.get_text(separator=' ', strip=True))
-        
-        if element.name == 'div' and 'admonition' in element.get('class', []):
-            content_wrapper = None
-            for child in element.children:
-                if child.name == 'div' and not (child.has_attr('class') and 'admonition-title' in child.get('class', [])):
-                    if element.name == 'details':
-                        content_wrapper = child
-                        break
-                    elif element.name == 'div':
-                         content_wrapper = child
-                         break
-            if not content_wrapper and element.name == 'div':
-                 content_wrapper = element
-
-            if content_wrapper:
-                for sub_el in content_wrapper.find_all(['p', 'li'], recursive=True):
-                    is_sub_el_in_code = False
-                    sub_check = sub_el
-                    while sub_check and sub_check != content_wrapper: 
-                        if sub_check.name in ['pre', 'code'] or \
-                           (sub_check.has_attr('class') and 'codehilite' in sub_check['class']):
-                            is_sub_el_in_code = True; break
-                        sub_check = sub_check.parent
-                    
-                    if not is_sub_el_in_code and not ('admonition-title' in sub_el.get('class', [])):
-                        texts.append(sub_el.get_text(separator=' ', strip=True))
-
-    seen = set()
-    unique_texts = [x for x in texts if x and x.strip()]
-    unique_texts = [x for x in unique_texts if not (x in seen or seen.add(x))]
-    return " ".join(unique_texts)
-
-def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template):
+def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template, root_redirect_target_url_for_template):
     search_index_entries = []
 
     for i, file_item in enumerate(all_files_to_process):
@@ -339,17 +269,12 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             if sec_data["output_folder_name"] == output_folder_name:
                 section_title_for_breadcrumbs = sec_data["title"]
                 break
-        
         page_breadcrumbs_base = f"{section_title_for_breadcrumbs} > {page_title_from_meta_or_file}"
 
         search_index_entries.append({
-            "type": "page",
-            "id": base_page_url,
-            "page_title": page_title_from_meta_or_file,
-            "display_title": page_title_from_meta_or_file,
-            "breadcrumbs": page_breadcrumbs_base,
-            "url": base_page_url,
-            "searchable_text": f"{page_title_from_meta_or_file} {page_breadcrumbs_base}".lower(),
+            "type": "page", "id": base_page_url, "page_title": page_title_from_meta_or_file,
+            "display_title": page_title_from_meta_or_file, "breadcrumbs": page_breadcrumbs_base,
+            "url": base_page_url, "searchable_text": f"{page_title_from_meta_or_file} {page_breadcrumbs_base}".lower(),
             "date": page_meta.get('date', None)
         })
 
@@ -358,75 +283,64 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             heading_text = h_tag.get_text(strip=True)
             heading_slug = h_tag.get('id')
             level_match = re.match(r'h([1-6])', h_tag.name)
-
             if heading_text and heading_slug and level_match:
                 heading_level = int(level_match.group(1))
                 heading_url = f"{base_page_url}#{heading_slug}"
                 heading_display_title = f"{page_title_from_meta_or_file} » {heading_text}"
                 heading_breadcrumbs = f"{page_breadcrumbs_base} » {heading_text}"
-
                 search_index_entries.append({
-                    "type": "heading",
-                    "id": heading_url,
-                    "page_title": page_title_from_meta_or_file,
-                    "heading_text": heading_text,
-                    "heading_level": heading_level,
-                    "display_title": heading_display_title,
-                    "breadcrumbs": heading_breadcrumbs,
-                    "url": heading_url,
-                    "searchable_text": f"{page_title_from_meta_or_file} {heading_breadcrumbs} {heading_text}".lower(),
-                    "date": page_meta.get('date', None) 
+                    "type": "heading", "id": heading_url, "page_title": page_title_from_meta_or_file,
+                    "heading_text": heading_text, "heading_level": heading_level,
+                    "display_title": heading_display_title, "breadcrumbs": heading_breadcrumbs,
+                    "url": heading_url, "searchable_text": f"{page_title_from_meta_or_file} {heading_breadcrumbs} {heading_text}".lower(),
+                    "date": page_meta.get('date', None)
                 })
 
         today = datetime.datetime.today()
-        day_suffix = "th"
-        if today.day in [1, 21, 31]: day_suffix = "st"
-        elif today.day in [2, 22]: day_suffix = "nd"
-        elif today.day in [3, 23]: day_suffix = "rd"
-        day_str = str(today.day) + day_suffix
-        default_date = f"{day_str} {today.strftime('%B %Y')}"
+        day_suffix = "th" if today.day not in [1, 2, 3, 21, 22, 23, 31] else ("st" if today.day in [1, 21, 31] else ("nd" if today.day in [2, 22] else "rd"))
+        default_date = f"{str(today.day)}{day_suffix} {today.strftime('%B %Y')}"
         render_date = page_meta.get('date', default_date)
 
         prev_page_data = None
-        next_page_data = None
         if i > 0:
-            prev_file_item = all_files_to_process[i-1]
-            prev_page_data = {
-                "title": prev_file_item["display_title"], 
-                "url": f"/{prev_file_item['output_folder_name']}/{prev_file_item['output_file_slug']}/"
-            }
+            prev_item = all_files_to_process[i-1]
+            prev_page_data = {"title": prev_item["display_title"], "url": f"/{prev_item['output_folder_name']}/{prev_item['output_file_slug']}/"}
+        next_page_data = None
         if i < len(all_files_to_process) - 1:
-            next_file_item = all_files_to_process[i+1]
-            next_page_data = {
-                "title": next_file_item["display_title"],
-                "url": f"/{next_file_item['output_folder_name']}/{next_file_item['output_file_slug']}/"
-            }
+            next_item = all_files_to_process[i+1]
+            next_page_data = {"title": next_item["display_title"], "url": f"/{next_item['output_folder_name']}/{next_item['output_file_slug']}/"}
             
         rendered = template.render(
-            body_content=body_content_html,
-            toc_table_link=toc_table_link_html,
-            sidebar_data=sidebar_data_for_template,
-            title=page_title_from_meta_or_file,
-            date=render_date,
-            prev_page_data=prev_page_data,
-            next_page_data=next_page_data
+            body_content=body_content_html, toc_table_link=toc_table_link_html,
+            sidebar_data=sidebar_data_for_template, title=page_title_from_meta_or_file,
+            date=render_date, prev_page_data=prev_page_data, next_page_data=next_page_data,
+            root_redirect_target_url=root_redirect_target_url_for_template
         )
 
         output_dir = dist_base_path / output_folder_name / output_file_slug
         output_dir.mkdir(parents=True, exist_ok=True)
-        output_file = output_dir / "index.html"
-        output_file.write_text(rendered, encoding="utf-8")
-        print(f"Generated: {output_file}")
+        (output_dir / "index.html").write_text(rendered, encoding="utf-8")
+        print(f"Generated: {output_dir / 'index.html'}")
 
     search_index_file_path = dist_base_path / "search_index.json"
     with open(search_index_file_path, 'w', encoding='utf-8') as f:
-        json.dump(search_index_entries, f, ensure_ascii=False, indent=None) # Use indent=None for smaller file size
+        json.dump(search_index_entries, f, ensure_ascii=False, indent=None)
     print(f"Generated search index: {search_index_file_path}")
     
 _global_sidebar_data_for_redirect = []
+_global_root_redirect_target_url = "/" 
+
+# --- IMPORTANT: Define your theme colors here ---
+# Replace these with the exact colors from your style.css for dark and light themes
+DARK_THEME_BG = '#202124' # Example: A common dark grey
+DARK_THEME_TEXT = '#e8eaed' # Example: A light grey/off-white
+LIGHT_THEME_BG = '#ffffff' # Example: White
+LIGHT_THEME_TEXT = '#202124' # Example: Dark grey/black
+
+MINIFIED_THEME_SCRIPT_TEMPLATE = """<script>(function(){{const t=localStorage.getItem('user-preferred-theme')||(window.matchMedia?.('(prefers-color-scheme: light)').matches?'light':'dark');if(t==='dark'){{document.documentElement.style.backgroundColor='{dark_bg}';document.documentElement.style.color='{dark_text}';}}else{{document.documentElement.style.backgroundColor='{light_bg}';document.documentElement.style.color='{light_text}';}}}})();</script>"""
 
 def build():
-    global _global_sidebar_data_for_redirect
+    global _global_sidebar_data_for_redirect, _global_root_redirect_target_url
     print("Starting build...")
     dist_path_obj = Path('dist')
     if dist_path_obj.exists(): shutil.rmtree(dist_path_obj)
@@ -435,57 +349,47 @@ def build():
     copy_static_assets(static_src_dir='static', dst_dir=str(dist_path_obj))
     
     all_files_to_process, sidebar_data = scan_src()
-    _global_sidebar_data_for_redirect = sidebar_data # Store for root redirect
-    
-    process_md_files(all_files_to_process, dist_path_obj, sidebar_data)
+    _global_sidebar_data_for_redirect = sidebar_data
 
-            # --- START: Add section index redirects ---
-    for section in sidebar_data: # sidebar_data now only contains sections with files
+    if sidebar_data and sidebar_data[0].get('files') and len(sidebar_data[0]['files']) > 0:
+        first_section_slug_for_root = sidebar_data[0]['output_folder_name']
+        first_file_slug_for_root = sidebar_data[0]['files'][0]['slug']
+        _global_root_redirect_target_url = f"/{first_section_slug_for_root}/{first_file_slug_for_root}/"
+    else:
+        _global_root_redirect_target_url = "/" 
+    
+    process_md_files(all_files_to_process, dist_path_obj, sidebar_data, _global_root_redirect_target_url)
+
+    # Fill the theme script template with actual colors
+    theme_script_filled = MINIFIED_THEME_SCRIPT_TEMPLATE.format(
+        dark_bg=DARK_THEME_BG,
+        dark_text=DARK_THEME_TEXT,
+        light_bg=LIGHT_THEME_BG,
+        light_text=LIGHT_THEME_TEXT
+    )
+
+    for section in sidebar_data:
         if section.get('files') and len(section['files']) > 0:
             section_slug = section['output_folder_name']
             first_file_slug = section['files'][0]['slug']
             redirect_target_url = f"/{section_slug}/{first_file_slug}/"
-
             section_base_dir_for_redirect = dist_path_obj / section_slug
             section_base_dir_for_redirect.mkdir(parents=True, exist_ok=True) 
-
             section_redirect_index_file = section_base_dir_for_redirect / "index.html"
             
-            redirect_html_content = f"""<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>Redirecting to {section['title']}</title> 
-<meta name="robots" content="noindex, follow">
-<meta http-equiv="refresh" content="0; url={redirect_target_url}">
-<link rel="canonical" href="{redirect_target_url}">
-</head>
-<body>
-<p>If you are not redirected automatically, follow this <a href='{redirect_target_url}'>link to the first page in the "{section['title']}" section</a>.</p> 
-</body>
-</html>"""
+            redirect_html_content = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Redirecting to {section['title']}</title><meta name="robots" content="noindex, follow">{theme_script_filled}<meta http-equiv="refresh" content="0; url={redirect_target_url}"><link rel="canonical" href="{redirect_target_url}"><style>body{{margin:0;padding:20px;font-family:sans-serif;text-align:center;}}</style></head><body><p>Redirecting to the "{section['title']}" section...</p></body></html>"""
             section_redirect_index_file.write_text(redirect_html_content, encoding='utf-8')
-            print(f"Created section redirect (with noindex): /{section_slug}/ -> {redirect_target_url}") # Optional: update print
-    # --- END: Add section index redirects ---
+            print(f"Created themed section redirect (with noindex): /{section_slug}/ -> {redirect_target_url}")
 
-            
-    # Root index.html redirect (if not already created by a root "index.md" or similar)
-    # This part remains the same
-            # Root index.html redirect ...
     if not (dist_path_obj / 'index.html').exists() and _global_sidebar_data_for_redirect:
-        if _global_sidebar_data_for_redirect[0].get('files') and len(_global_sidebar_data_for_redirect[0]['files']) > 0:
-            first_section_slug = _global_sidebar_data_for_redirect[0]['output_folder_name']
-            first_file_slug = _global_sidebar_data_for_redirect[0]['files'][0]['slug']
-            redirect_html = f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>Redirecting...</title><meta name="robots" content="noindex, follow"> <meta http-equiv="refresh" content="0; url=/{first_section_slug}/{first_file_slug}/"><link rel="canonical" href="/{first_section_slug}/{first_file_slug}/"></head><body><p>If you are not redirected automatically, follow this <a href='/{first_section_slug}/{first_file_slug}/'>link</a>.</p></body></html>"""
+        if _global_root_redirect_target_url != "/":
+            redirect_html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Redirecting...</title><meta name="robots" content="noindex, follow">{theme_script_filled}<meta http-equiv="refresh" content="0; url={_global_root_redirect_target_url}"><link rel="canonical" href="{_global_root_redirect_target_url}"><style>body{{margin:0;padding:20px;font-family:sans-serif;text-align:center;}}</style></head><body><p>Redirecting...</p></body></html>"""
             (dist_path_obj / 'index.html').write_text(redirect_html, encoding='utf-8')
-            print(f"Created root redirect (with noindex) to /{first_section_slug}/{first_file_slug}/") # Optional: update print
+            print(f"Created themed root redirect (with noindex) to {_global_root_redirect_target_url}")
         else:
-            print("Could not create root redirect: First section has no files.")
-    elif not _global_sidebar_data_for_redirect:
-        print("Could not create root redirect: No sidebar data (no sections or files found).")
+            print("Could not create root redirect: No valid target (first section/file) found.")
 
     print("Build complete. Output in 'dist' directory.")
-
 
 if __name__ == '__main__':
     build()
