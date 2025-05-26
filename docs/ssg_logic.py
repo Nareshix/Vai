@@ -18,9 +18,12 @@ def setup_header_in_layout_html():
     with open("header_config.yaml", "r") as f:
         config = yaml.safe_load(f)
     github_link  = config['github_link']
+    github_contribution_link = config['github_contribution_link']
+    
     dropdowns = config['dropdowns']
     internals = config['internals']
     externals = config['externals']
+    
 
     project_root = Path(__file__).resolve().parent
     static_dir = project_root / 'static'
@@ -45,6 +48,7 @@ def setup_header_in_layout_html():
         logo=logo,
         favicon=favicon,
         github_link=github_link,
+        github_contribution_link=github_contribution_link,
     )
 
     with open('templates/layout.html', 'w') as f:
