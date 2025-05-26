@@ -12,9 +12,6 @@ from pathlib import Path
 import shutil
 import json
 import datetime
-from header_config import setup_header_in_layout_html
-
-
 import yaml
 
 def setup_header_in_layout_html(): 
