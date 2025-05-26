@@ -529,7 +529,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const ul = document.createElement('ul');
         ul.className = 'search-results-list';
     
-        // THIS IS THE RENDERING LOOP THAT WAS MISPLACED IN YOUR PASTE
         resultsToDisplay.forEach((result, index) => {
             const li = document.createElement('li');
             li.className = 'search-result-item';
@@ -554,17 +553,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const breadcrumbsDiv = document.createElement('div');
             breadcrumbsDiv.className = 'search-result-breadcrumbs';
             if (result.type === 'section') {
-                // For section nav, its breadcrumbs are simple and might contain the query
                 breadcrumbsDiv.innerHTML = highlightText(result.breadcrumbs, trimmedQuery);
             } else {
-                // For page/heading, display raw breadcrumbs (Python pre-formatted them)
-                // Do not re-highlight with query here if that's the goal
                 breadcrumbsDiv.textContent = result.breadcrumbs || ""; 
             }
             
             const snippetDiv = document.createElement('div');
             snippetDiv.className = 'search-result-snippet';
-            snippetDiv.innerHTML = result.snippet; // Snippet is already highlighted by generateSimpleSnippet
+            snippetDiv.innerHTML = result.snippet; 
     
             a.appendChild(titleDiv);
             a.appendChild(breadcrumbsDiv);
@@ -572,10 +568,9 @@ document.addEventListener('DOMContentLoaded', () => {
             li.appendChild(a);
             ul.appendChild(li);
         });
-        // THE RENDERING LOOP ENDS HERE
     
-        searchResultsContainer.appendChild(ul); // This should be after the loop finishes building the ul
-    } // THIS IS THE CORRECT END OF DMAN_performSearch
+        searchResultsContainer.appendChild(ul);
+    } 
     
     function DMAN_clearSearchResultsDisplay(message = "Start typing to see results.") {
         if (searchResultsContainer) {
