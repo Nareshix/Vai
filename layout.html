@@ -74,31 +74,40 @@
             </button>
 
             <div class="header-actions-right">
-                <a href="#guide" class="header-nav-link">Guide</a>
-                <a href="#reference" target="_blank" class="header-nav-link">Reference</a>
-                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="header-nav-link external-link">                    
-                    External Link
+                {% for internal in internals %}
+                <a href={{ internal.link }} class="header-nav-link">{{ internal.title }}</a>
+                {% endfor %}
+
+                {% for external in externals %}
+                <a href={{external.link}} target="_blank" class="header-nav-link">
+                    {{external.title}}
                     <svg style="margin-left: 0.3rem; color: grey;" class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
-
                 </a>
+                {% endfor %}
 
+                {% for dropdown in dropdowns.items %}
                 <div class="header-dropdown-container" id="versionDropdownContainer">
                     <button class="header-dropdown-trigger" id="versionDropdownTrigger" aria-haspopup="true" aria-expanded="false" aria-controls="versionDropdownMenu">
-                        <span>v0.0.1</span>
+                        <span>{{dropdown.main_title}}</span>
                         <svg class="dropdown-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline>></svg>
                     </button>
                     <div class="header-dropdown-menu" id="versionDropdownMenu" role="menu" aria-labelledby="versionDropdownTrigger">
-                        <a href="#" role="menuitem" class="header-dropdown-item">
-                            <span>Changelog</span>
+                        {% for details in dropdown %}
+                            {% if detail.type == "external" %}
+                        <a href={{detail.link}} role="menuitem" class="header-dropdown-item" target="_blank">
+                            <span>{{detail.title}}</span>
                             <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         </a>
-                        <a href="#" role="menuitem" class="header-dropdown-item">
-                            <span>Changelog</span>
-                            <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                            {% elif detail.type == "internal" %}
+                        <a href={{detail.link}} role="menuitem" class="header-dropdown-item">
+                            <span>{{detail.title}}</span>
                         </a>
+                            {% endif %}
+                        {% endfor %}
+    
                     </div>
                 </div>
-
+                {% endfor %}
                 <button id="themeToggle" class="theme-toggle-button" aria-label="Toggle theme">
                     <span class="theme-icon theme-icon-sun">
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17q-2.075 0-3.537-1.463T7 12t1.463-3.537T12 7t3.538 1.463T17 12t-1.463 3.538T12 17m-7-4H1v-2h4zm18 0h-4v-2h4zM11 5V1h2v4zm0 18v-4h2v4zM6.4 7.75L3.875 5.325L5.3 3.85l2.4 2.5zm12.3 12.4l-2.425-2.525L17.6 16.25l2.525 2.425zM16.25 6.4l2.425-2.525L20.15 5.3l-2.5 2.4zM3.85 18.7l2.525-2.425L7.75 17.6l-2.425 2.525z"/></svg>
