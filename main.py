@@ -18,7 +18,7 @@ import shutil
 def setup_header_in_layout_html():
     DOCS_DIR = Path("docs")  # Define the base path for docs content
 
-    with open(DOCS_DIR / "header_config.yaml", "r") as f: # MODIFIED
+    with open(DOCS_DIR / "header_config.yaml", "r") as f:  
         config = yaml.safe_load(f)
     github_link  = config['github_link']
     github_contribution_link = config['github_contribution_link']
@@ -27,14 +27,12 @@ def setup_header_in_layout_html():
     internals = config['internals']
     externals = config['externals']
 
-    # project_root = Path(__file__).resolve().parent # This is the project root
-    # static_dir = project_root / 'static' # OLD: pointed to project_root/static
-    static_dir_in_docs = DOCS_DIR / 'static' # MODIFIED: point to docs/static for operational assets
+    static_dir_in_docs = DOCS_DIR / 'static'
     wanted_basenames = {'favicon', 'logo'}
 
     found = {}
-    if static_dir_in_docs.exists(): # Check if docs/static exists
-        for file_path in static_dir_in_docs.rglob('*'): # MODIFIED
+    if static_dir_in_docs.exists(): 
+        for file_path in static_dir_in_docs.rglob('*'):
             if file_path.is_file():
                 stem = file_path.stem
                 if stem in wanted_basenames:
@@ -46,8 +44,8 @@ def setup_header_in_layout_html():
     logo = found.get('logo', '')
     favicon = found.get('favicon', '')
 
-    templates_dir_in_docs = DOCS_DIR / 'templates' # MODIFIED
-    env = Environment(loader=FileSystemLoader(str(templates_dir_in_docs))) # MODIFIED
+    templates_dir_in_docs = DOCS_DIR / 'templates'  
+    env = Environment(loader=FileSystemLoader(str(templates_dir_in_docs)))  
     try:
         template = env.get_template('layout_no_header.html')
     except Exception as e:
@@ -65,7 +63,7 @@ def setup_header_in_layout_html():
         github_contribution_link=github_contribution_link,
     )
 
-    with open(templates_dir_in_docs / 'layout.html', 'w') as f: # MODIFIED
+    with open(templates_dir_in_docs / 'layout.html', 'w') as f:  
         f.write(rendered)
 
 def generate_slug(text_to_slugify):
@@ -303,7 +301,7 @@ def scan_src(src_dir_path='src'):
             
     return all_files_to_process, sidebar_data_for_template
 
-def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template, root_redirect_target_url_for_template, jinja_env):
+def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template, jinja_env):
     search_index_entries = []
     page_template = jinja_env.get_template('layout.html')
 
@@ -325,7 +323,7 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
         page_title_from_meta_or_file = page_meta.get('title', file_item["display_title"])
         base_page_url = f"/{output_folder_name}/{output_file_slug}/"
         
-        section_title_for_breadcrumbs = "Unknown Section" # Default
+        section_title_for_breadcrumbs = "Unknown Section" 
         for sec_data in sidebar_data_for_template:
             if sec_data["output_folder_name"] == output_folder_name:
                 section_title_for_breadcrumbs = sec_data["title"]
@@ -384,7 +382,7 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             date=render_date,
             prev_page_data=prev_page_data,
             next_page_data=next_page_data,
-            root_redirect_target_url=root_redirect_target_url_for_template
+
         )
 
         output_dir = dist_base_path / output_folder_name / output_file_slug
@@ -398,12 +396,6 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
 _global_sidebar_data_for_redirect = []
 _global_root_redirect_target_url = "/" 
 
-DARK_THEME_BG = '#202124' 
-DARK_THEME_TEXT = '#e8eaed' 
-LIGHT_THEME_BG = '#ffffff' 
-LIGHT_THEME_TEXT = '#202124'
-
-MINIFIED_THEME_SCRIPT_TEMPLATE = """<script>(function(){{const t=localStorage.getItem('user-preferred-theme')||(window.matchMedia?.('(prefers-color-scheme: light)').matches?'light':'dark');if(t==='dark'){{document.documentElement.style.backgroundColor='{dark_bg}';document.documentElement.style.color='{dark_text}';}}else{{document.documentElement.style.backgroundColor='{light_bg}';document.documentElement.style.color='{light_text}';}}}})();</script>"""
 
 def build():
     DOCS_DIR = Path("docs") # Define the base path for docs content
@@ -411,20 +403,20 @@ def build():
     setup_header_in_layout_html()
 
     current_env = Environment(
-        loader=FileSystemLoader(str(DOCS_DIR / 'templates')), # MODIFIED
+        loader=FileSystemLoader(str(DOCS_DIR / 'templates')),  
         autoescape=True
     )
 
     global _global_sidebar_data_for_redirect, _global_root_redirect_target_url
 
-    dist_path_obj = DOCS_DIR / 'dist' # Path('docs/dist') is fine, using DOCS_DIR for consistency
+    dist_path_obj = DOCS_DIR / 'dist'
     if dist_path_obj.exists():
         shutil.rmtree(dist_path_obj)
     dist_path_obj.mkdir(parents=True, exist_ok=True)
 
-    copy_static_assets(static_src_dir=str(DOCS_DIR / 'static'), dst_dir=str(dist_path_obj)) # MODIFIED
+    copy_static_assets(static_src_dir=str(DOCS_DIR / 'static'), dst_dir=str(dist_path_obj))
 
-    all_files_to_process, sidebar_data = scan_src(src_dir_path=str(DOCS_DIR / 'src')) # MODIFIED
+    all_files_to_process, sidebar_data = scan_src(src_dir_path=str(DOCS_DIR / 'src'))
     _global_sidebar_data_for_redirect = sidebar_data
 
     if sidebar_data and sidebar_data[0].get('files') and len(sidebar_data[0]['files']) > 0:
@@ -438,39 +430,61 @@ def build():
         all_files_to_process,
         dist_path_obj,
         sidebar_data,
-        _global_root_redirect_target_url,
         current_env
-    )
-
-    theme_script_filled = MINIFIED_THEME_SCRIPT_TEMPLATE.format(
-        dark_bg=DARK_THEME_BG,
-        dark_text=DARK_THEME_TEXT,
-        light_bg=LIGHT_THEME_BG,
-        light_text=LIGHT_THEME_TEXT
     )
 
     for section in sidebar_data:
         if section.get('files') and len(section['files']) > 0:
             section_slug = section['output_folder_name']
-            first_file_slug = section['files'][0]['slug']
-            redirect_target_url = f"/{section_slug}/{first_file_slug}/"
+            first_file_in_section_slug = section['files'][0]['slug']
 
-            section_base_dir_for_redirect = dist_path_obj / section_slug
-            section_base_dir_for_redirect.mkdir(parents=True, exist_ok=True)
-            section_redirect_index_file = section_base_dir_for_redirect / "index.html"
+            # Path to the actual content of the first file in this section
+            source_html_for_section_index = dist_path_obj / section_slug / first_file_in_section_slug / "index.html"
 
-            redirect_html_content = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Redirecting to {section['title']}</title><meta name="robots" content="noindex, follow">{theme_script_filled}<meta http-equiv="refresh" content="0; url={redirect_target_url}"><link rel="canonical" href="{redirect_target_url}"><style>body{{margin:0;padding:20px;font-family:sans-serif;text-align:center;}}</style></head><body><p>Redirecting to the "{section['title']}" section...</p></body></html>"""
-            section_redirect_index_file.write_text(redirect_html_content, encoding='utf-8')
+            # Path for the section's index.html (e.g., docs/dist/introduction/index.html)
+            section_index_output_path = dist_path_obj / section_slug / "index.html"
 
+            if source_html_for_section_index.exists():
+                # Ensure the section directory itself exists (e.g., docs/dist/introduction/)
+                (dist_path_obj / section_slug).mkdir(parents=True, exist_ok=True)
+
+                # Read the content of the first page's HTML in this section
+                content_of_first_page_in_section = source_html_for_section_index.read_text(encoding='utf-8')
+                # Write this content to the section's index.html
+                section_index_output_path.write_text(content_of_first_page_in_section, encoding='utf-8')
+                print(f"INFO: Created section index {section_index_output_path} as a copy of content from: {source_html_for_section_index}")
+            else:
+                print(f"WARNING: Source HTML for section index copy not found at: {source_html_for_section_index}")
+                print(f"INFO: Section index for '{section_slug}' will not be created by copying.")
+    # --- END OF MODIFIED SECTION INDEX PAGES ---
+
+
+    # --- CODE FOR ROOT index.html (COPYING CONTENT) ---
+    # This part remains the same as your previous correct version
     if not (dist_path_obj / 'index.html').exists() and _global_sidebar_data_for_redirect:
         if _global_root_redirect_target_url != "/":
-            redirect_html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Redirecting...</title><meta name="robots" content="noindex, follow">{theme_script_filled}<meta http-equiv="refresh" content="0; url={_global_root_redirect_target_url}"><link rel="canonical" href="{_global_root_redirect_target_url}"><style>body{{margin:0;padding:20px;font-family:sans-serif;text-align:center;}}</style></head><body><p>Redirecting...</p></body></html>"""
-            (dist_path_obj / 'index.html').write_text(redirect_html, encoding='utf-8')
+            try:
+                path_parts = _global_root_redirect_target_url.strip('/').split('/')
+                if len(path_parts) >= 2:
+                    first_section_slug_for_copy = path_parts[0]
+                    first_file_slug_for_copy = path_parts[1]
+                    source_html_path = dist_path_obj / first_section_slug_for_copy / first_file_slug_for_copy / "index.html"
+
+                    if source_html_path.exists():
+                        content_of_first_page = source_html_path.read_text(encoding='utf-8')
+                        (dist_path_obj / 'index.html').write_text(content_of_first_page, encoding='utf-8')
+                        print(f"INFO: Created root index.html as a copy of content from: {source_html_path}")
+                    else:
+                        print(f"WARNING: Source HTML for root index.html copy not found at: {source_html_path}")
+                        print("INFO: Root index.html will not be created by copying. Ensure 'src' structure is valid or create a 'src/index.md'.")
+                else:
+                    print("WARNING: Could not determine path components from _global_root_redirect_target_url to copy for root index.html.")
+            except Exception as e:
+                print(f"ERROR: Occurred while trying to create root index.html by copying: {e}")
         else:
-            print("Could not create root redirect: No valid target (first section/file) found.")
-
-
-
+            print("INFO: Could not create root index.html by copying: No valid target (first section/file) found.")
+    # --- END OF ROOT index.html CODE ---
+    
 def cli_init():
     docs_path = Path("docs")
     dist_path = docs_path / "dist"
@@ -517,7 +531,7 @@ def cli_run():
     server.watch('docs/static/**/*', build) 
     server.watch('docs/header_config.yaml', build) 
     
-    server.serve(root='docs/dist', default_filename='index.html', port=6454)
+    server.serve(root='docs/dist', default_filename='index.html', port=6455)
 
 
 def main():
