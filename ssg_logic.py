@@ -12,9 +12,6 @@ from pathlib import Path
 import shutil
 import json
 import datetime
-
-# Assuming setup_header_in_layout_html is in a file named header_config.py
-# in the same directory, or your Python path is set up correctly.
 from header_config import setup_header_in_layout_html
 
 
@@ -169,9 +166,6 @@ def generate_heading_links(html_body_content):
         links.append(f'<a href="#{anchor}"{link_style}>{title}</a>')
     return '\n'.join(links)
 
-# REMOVED global 'env' and 'template' initializations
-# env = Environment(loader=FileSystemLoader('.'))
-# template = env.get_template('layout.html')
 
 def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     static_src_path = Path(static_src_dir)
@@ -182,13 +176,13 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     print(f"Copying static assets from '{static_src_path}' to '{dst_path}'...")
     try:
         shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
-    except TypeError: # For Python < 3.8
+    except TypeError:
         print("Falling back to item-by-item copy for static assets (Python < 3.8 or other issue).")
         if not dst_path.exists(): dst_path.mkdir(parents=True, exist_ok=True)
         for item in static_src_path.iterdir():
             s = static_src_path / item.name
             d = dst_path / item.name
-            if s.is_dir(): shutil.copytree(s, d, dirs_exist_ok=True) # Ensure dirs_exist_ok here too if nesting
+            if s.is_dir(): shutil.copytree(s, d, dirs_exist_ok=True)
             else: shutil.copy2(s, d)
     print("Static assets copied successfully.")
 
@@ -217,8 +211,8 @@ def scan_src(src_dir_path='src'):
             
             temp_sections_by_cleaned_title[cleaned_section_display_title]["files"].append({
                 "original_path": md_file_path,
-                "original_folder_name_for_sort": original_folder_name, # For multi-level sort if needed
-                "original_file_name_for_sort": original_file_name_with_ext, # For sorting files
+                "original_folder_name_for_sort": original_folder_name, 
+                "original_file_name_for_sort": original_file_name_with_ext,
                 "display_title": cleaned_file_display_title,
                 "output_file_slug": file_output_slug
             })
@@ -249,7 +243,7 @@ def scan_src(src_dir_path='src'):
                 "display_title": file_info["display_title"]
             })
         
-        if current_sidebar_section_files: # Only add section if it has files
+        if current_sidebar_section_files: 
             sidebar_data_for_template.append({
                 "title": cleaned_folder_title,
                 "output_folder_name": section_build_data["output_folder_name"],
@@ -258,10 +252,8 @@ def scan_src(src_dir_path='src'):
             
     return all_files_to_process, sidebar_data_for_template
 
-# MODIFIED: Added jinja_env parameter
 def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template, root_redirect_target_url_for_template, jinja_env):
     search_index_entries = []
-    # MODIFIED: Get template from the passed jinja_env
     page_template = jinja_env.get_template('layout.html')
 
     for i, file_item in enumerate(all_files_to_process):
@@ -293,7 +285,7 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             "type": "page", "id": base_page_url, "page_title": page_title_from_meta_or_file,
             "display_title": page_title_from_meta_or_file, "breadcrumbs": page_breadcrumbs_base,
             "url": base_page_url, "searchable_text": f"{page_title_from_meta_or_file} {page_breadcrumbs_base}".lower(),
-            "date": page_meta.get('date', None) # Keep date from metadata if present
+            "date": page_meta.get('date', None)
         })
 
         content_soup = BeautifulSoup(body_content_html, 'html.parser')
@@ -333,7 +325,6 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             next_item = all_files_to_process[i+1]
             next_page_data = {"title": next_item["display_title"], "url": f"/{next_item['output_folder_name']}/{next_item['output_file_slug']}/"}
         
-        # MODIFIED: Use local page_template
         rendered = page_template.render(
             body_content=body_content_html,
             toc_table_link=toc_table_link_html,
@@ -352,7 +343,7 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
 
     search_index_file_path = dist_base_path / "search_index.json"
     with open(search_index_file_path, 'w', encoding='utf-8') as f:
-        json.dump(search_index_entries, f, ensure_ascii=False, indent=None) # indent=None for smaller file
+        json.dump(search_index_entries, f, ensure_ascii=False, indent=None)
     print(f"Generated search index: {search_index_file_path}")
     
 _global_sidebar_data_for_redirect = []
@@ -366,15 +357,13 @@ LIGHT_THEME_TEXT = '#202124'
 MINIFIED_THEME_SCRIPT_TEMPLATE = """<script>(function(){{const t=localStorage.getItem('user-preferred-theme')||(window.matchMedia?.('(prefers-color-scheme: light)').matches?'light':'dark');if(t==='dark'){{document.documentElement.style.backgroundColor='{dark_bg}';document.documentElement.style.color='{dark_text}';}}else{{document.documentElement.style.backgroundColor='{light_bg}';document.documentElement.style.color='{light_text}';}}}})();</script>"""
 
 def build():
-    print(f"--- BUILD STARTED at {datetime.datetime.now()} ---")
     print("Running setup_header_in_layout_html...")
     setup_header_in_layout_html() # This generates/updates layout.html
     print("setup_header_in_layout_html complete.")
 
-    # Create a new Jinja environment AFTER layout.html is (re)generated
     current_env = Environment(
         loader=FileSystemLoader('.'),
-        autoescape=True # Good practice, though might not be strictly needed if all content is safe
+        autoescape=True 
     )
     print(f"Fresh Jinja environment created at {datetime.datetime.now()}")
 
@@ -399,13 +388,12 @@ def build():
         _global_root_redirect_target_url = "/" 
     
     print("Starting main content processing...")
-    # MODIFIED: Pass current_env to process_md_files
     process_md_files(
         all_files_to_process, 
         dist_path_obj, 
         sidebar_data, 
         _global_root_redirect_target_url,
-        current_env # Pass the fresh Jinja environment
+        current_env #
     )
     print("Main content processing complete.")
 
@@ -441,12 +429,11 @@ def build():
     print(f"--- BUILD COMPLETED at {datetime.datetime.now()} ---")
 
 if __name__ == '__main__':
-    build() # Initial build before starting server
+    build() 
     server = Server()
-    # Watch source files that trigger a rebuild
     server.watch('src/**/*.md', build)
-    server.watch('layout_jinja.html', build) # Source for layout.html
+    server.watch('layout_jinja.html', build) 
     server.watch('static/**/*', build) 
-    server.watch('header_config.yaml', build) # Source for header data
+    server.watch('header_config.yaml', build) 
     
     server.serve(root='dist', default_filename='index.html', port=6454)
