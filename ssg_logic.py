@@ -13,6 +13,8 @@ import shutil
 import json
 import datetime
 import yaml
+import argparse
+import sys
 
 def setup_header_in_layout_html(): 
     with open("header_config.yaml", "r") as f:
@@ -454,6 +456,10 @@ def build():
             (dist_path_obj / 'index.html').write_text(redirect_html, encoding='utf-8')
         else:
             print("Could not create root redirect: No valid target (first section/file) found.")
+
+
+
+
 
 
 if __name__ == '__main__':

@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>mother</title>
+<title>{{ title }}</title>
 
 
 <link rel="icon" href="/favicon.png" />
@@ -17,7 +17,7 @@
         <div class="sidebar-brand">
             
 
-            <a href="/asd/wtr/" class="left-side-bar-link">
+            <a href="{{ root_redirect_target_url | default('/') }}" class="left-side-bar-link">
                 
 
                 <div class="left-side-bar-link-container-image-and-text">
@@ -30,56 +30,22 @@
         <nav class="sidebar-nav">
             
 
-            
+            {% for section in sidebar_data %}
             <div class="sidebar-nav-section is-open">
                 <button class="sidebar-section-toggle">
-                    <span>Asd</span> 
+                    <span>{{ section.title }}</span> 
                     <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                 </button>
                 <div class="sidebar-section-content">
                     <ul class="sidebar-nav-links">
-                         
-                        <li><a href="/asd/wtr/" class="sidebar-link">wtr</a></li>
-                         
-                        <li><a href="/asd/mother/" class="sidebar-link">mother</a></li>
-                        
+                        {% for file_item in section.files %} 
+                        <li><a href="/{{ section.output_folder_name }}/{{ file_item.slug }}/" class="sidebar-link">{{ file_item.title }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
             <hr class="sidebar-divider section-divider">
-            
-            <div class="sidebar-nav-section is-open">
-                <button class="sidebar-section-toggle">
-                    <span>Guides</span> 
-                    <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="sidebar-section-content">
-                    <ul class="sidebar-nav-links">
-                         
-                        <li><a href="/guides/zite-config-2/" class="sidebar-link">zite config 2</a></li>
-                         
-                        <li><a href="/guides/site-config/" class="sidebar-link">site config</a></li>
-                        
-                    </ul>
-                </div>
-            </div>
-            <hr class="sidebar-divider section-divider">
-            
-            <div class="sidebar-nav-section is-open">
-                <button class="sidebar-section-toggle">
-                    <span>Reference</span> 
-                    <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
-                </button>
-                <div class="sidebar-section-content">
-                    <ul class="sidebar-nav-links">
-                         
-                        <li><a href="/reference/mom/" class="sidebar-link">mom</a></li>
-                        
-                    </ul>
-                </div>
-            </div>
-            <hr class="sidebar-divider section-divider">
-            
+            {% endfor %}
 
             
 
@@ -189,7 +155,7 @@
         <div id="content-area" tabindex="0">
             
 
-            
+            {{body_content | safe}}
 
             
             <div class="page-footer-container">
@@ -204,23 +170,23 @@
                         
             
 
-                    <span class="last-updated-text">Last updated: 26th May 2025</span>
+                    <span class="last-updated-text">Last updated: {{ date }}</span>
                 </div>
                 <hr class="footer-divider-line">
                 <div class="page-navigation-boxes">
-                    
+                    {% if prev_page_data %}
                     <button class="nav-box previous-page-box">
                         <span class="nav-box-label">Previous page</span>
-                        <a href="/asd/wtr/" class="nav-box-link">wtr</a>
+                        <a href="{{ prev_page_data.url }}" class="nav-box-link">{{ prev_page_data.title }}</a>
                     </button>
-                    
+                    {% endif %}
     
-                    
+                    {% if next_page_data %}
                     <button class="nav-box next-page-box">
                         <span class="nav-box-label">Next page</span>
-                        <a href="/guides/zite-config-2/" class="nav-box-link">zite config 2</a>
+                        <a href="{{ next_page_data.url }}" class="nav-box-link">{{ next_page_data.title }}</a>
                     </button>
-                    
+                    {% endif %}
 
                     
 
@@ -232,7 +198,7 @@
             <div id="toc-active-marker"></div>
             
 
-            
+            {{toc_table_link | safe}}
             
             
         </nav>
