@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mobileTocToggle = document.getElementById('mobileTocToggle');
     
     const searchResultsContainer = document.getElementById('searchResultsContainer');
-    // Create searchHistoryContainer dynamically and insert it
     const searchHistoryContainer = document.createElement('div');
     searchHistoryContainer.id = 'searchHistoryContainer';
     searchHistoryContainer.className = 'search-history-container';
@@ -62,18 +61,26 @@ document.addEventListener('DOMContentLoaded', () => {
         searchResultsContainer.parentNode.insertBefore(searchHistoryContainer, searchResultsContainer);
     }
 
+    // --- Sidebar Data ---
+    let sidebarData = [];
+    const sidebarDataElement = document.getElementById('sidebarDataJson');
+    if (sidebarDataElement) {
+        try {
+            sidebarData = JSON.parse(sidebarDataElement.textContent);
+        } catch (e) {
+            console.error("Error parsing sidebar data:", e);
+        }
+    }
 
     // --- State Variables ---
     const THEME_KEY = 'user-preferred-theme';
     const tocSections = {};
     let isSearchModalActive = false;
-    const SEARCH_HISTORY_KEY = 'docSearchHistory_v1'; // Added _v1 to potentially reset old history
+    const SEARCH_HISTORY_KEY = 'docSearchHistory_v1';
     const MAX_HISTORY_ITEMS = 5;
     let searchHistory = JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY)) || [];
     let currentKeyboardFocusedIndex = -1;
-    let searchIndexData = [];
-    let fuseInstance = null;
-
+    let searchIndexData = []; 
 
     // --- Configuration for Scroll Spy & Click Navigation ---
     const APP_HEADER_ELEMENT = document.querySelector('.app-header');
@@ -94,8 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const isMobileTocOpen = document.body.classList.contains('mobile-toc-open');
         const transitionDuration = 300;
 
-        if (isMobileSidebarOpen || isMobileTocOpen || isSearchModalActive) { // Modified condition
-            if (pageOverlay && (isMobileSidebarOpen || isMobileTocOpen)) { // Only show dark pageOverlay for mobile menus
+        if (isMobileSidebarOpen || isMobileTocOpen || isSearchModalActive) {
+            if (pageOverlay && (isMobileSidebarOpen || isMobileTocOpen)) {
                  if (pageOverlay.style.display !== 'block') {
                     pageOverlay.style.display = 'block';
                     requestAnimationFrame(() => { pageOverlay.style.opacity = '1'; });
@@ -154,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function updateActiveLinkAndMarker() { /* ... same as previous full script ... */
+    function updateActiveLinkAndMarker() {
         if (!mainScroller || !tocLinksContainer || !tocActiveMarker || tocLinks.length === 0) {
             if (tocActiveMarker) tocActiveMarker.style.opacity = '0';
             if (tocLinks) tocLinks.forEach(link => link.classList.remove('active'));
@@ -166,10 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
             tocLinks.forEach(link => link.classList.remove('active'));
             return;
         }
-
         const contentScrollTop = mainScroller.scrollTop;
         let currentSectionId = null;
-
         for (let i = sectionIds.length - 1; i >= 0; i--) {
             const id = sectionIds[i];
             const sectionData = tocSections[id];
@@ -182,7 +187,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-        
         if (currentSectionId === null && sectionIds.length > 0) {
             const firstSectionData = tocSections[sectionIds[0]];
             if (firstSectionData?.element) {
@@ -196,12 +200,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 currentSectionId = sectionIds[0]; 
             }
        }
-
         const epsilon = 5; 
         if ((mainScroller.scrollTop + mainScroller.clientHeight >= mainScroller.scrollHeight - epsilon) && sectionIds.length > 0) {
             currentSectionId = sectionIds[sectionIds.length - 1];
         }
-
         let activeLinkElement = null;
         tocLinks.forEach(link => {
             link.classList.remove('active');
@@ -210,7 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 activeLinkElement = link;
             }
         });
-
         if (activeLinkElement && tocContainerElement.scrollHeight > tocContainerElement.clientHeight) {
             const linkTopInToc = activeLinkElement.offsetTop;
             const linkHeight = activeLinkElement.offsetHeight;
@@ -224,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 tocContainerElement.scrollTo({ top: Math.min(linkBottomInToc - tocClientHeight + scrollPadding, tocContainerElement.scrollHeight - tocClientHeight), behavior: 'smooth' });
             }
         }
-
         if (activeLinkElement) {
             tocActiveMarker.style.top = `${activeLinkElement.offsetTop}px`;
             tocActiveMarker.style.height = `${activeLinkElement.offsetHeight}px`;
@@ -233,43 +233,31 @@ document.addEventListener('DOMContentLoaded', () => {
             tocActiveMarker.style.opacity = '0';
         }
     }
-
-
     if (tocLinksContainer) {
         tocLinksContainer.addEventListener('click', (e) => {
             const targetLink = e.target.closest('a');
-            const href = targetLink?.getAttribute('href'); // Get href once
-
+            const href = targetLink?.getAttribute('href');
             if (href?.startsWith('#')) {
-                e.preventDefault(); // Keep this to prevent default jump & allow smooth scroll
-                const targetId = href.substring(1); // Use href directly
+                e.preventDefault();
+                const targetId = href.substring(1);
                 const sectionData = tocSections[targetId];
-
                 if (sectionData?.element && mainScroller) {
                     const textVisibleStartingPoint = sectionData.element.offsetTop + sectionData.paddingTop;
                     const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
-
-                    mainScroller.scrollTo({
-                        top: Math.max(0, scrollToPosition),
-                        behavior: 'smooth'
-                    });
-
-                    // Manually update the URL hash after scrolling
-                    if (history.pushState) { // Check for browser support
+                    mainScroller.scrollTo({ top: Math.max(0, scrollToPosition), behavior: 'smooth' });
+                    if (history.pushState) {
                         history.pushState(null, null, href);
                     } else {
-                        window.location.hash = href; // Fallback for older browsers
+                        window.location.hash = href;
                     }
                 }
-                
-                // If the mobile TOC panel is open, close it after clicking a link
                 if (document.body.classList.contains('mobile-toc-open')) {
                     DMAN_closeMobileToc();
                 }
             }
         });
     }
-    if (mainScroller && tocLinks.length > 0) { /* ... same as previous full script ... */
+    if (mainScroller && tocLinks.length > 0) {
         mainScroller.addEventListener('scroll', updateActiveLinkAndMarker);
         setTimeout(updateActiveLinkAndMarker, 150); 
         window.addEventListener('resize', updateActiveLinkAndMarker);
@@ -277,24 +265,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 3. Search Functionality ---
-
     function DMAN_saveSearchHistory(query) {
-        if (!query || query.trim().length < 1) return; // Don't save empty or too short queries
+        if (!query || query.trim().length < 1) return;
         const cleanedQuery = query.trim();
-        
-        // Remove existing instance of this query to move it to the top (case-insensitive check)
         searchHistory = searchHistory.filter(item => item.toLowerCase() !== cleanedQuery.toLowerCase());
-        
-        // Add the new query to the beginning of the array
         searchHistory.unshift(cleanedQuery);
-        
-        // Enforce the maximum number of history items
         if (searchHistory.length > MAX_HISTORY_ITEMS) {
-            searchHistory = searchHistory.slice(0, MAX_HISTORY_ITEMS); // Keep only the first MAX_HISTORY_ITEMS
+            searchHistory = searchHistory.slice(0, MAX_HISTORY_ITEMS);
         }
-        
         localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(searchHistory));
     }
+
     function DMAN_deleteSearchHistoryItem(queryToDelete, event) {
         event.stopPropagation();
         event.preventDefault();
@@ -307,44 +288,35 @@ document.addEventListener('DOMContentLoaded', () => {
     function DMAN_displaySearchHistory() {
         currentKeyboardFocusedIndex = -1;
         searchHistoryContainer.innerHTML = ''; 
-        searchResultsContainer.innerHTML = ''; // Clear results when showing history
-
+        searchResultsContainer.innerHTML = '';
         if (searchHistory.length === 0) {
             searchHistoryContainer.style.display = 'none';
             searchResultsContainer.innerHTML = `<p class="search-results-placeholder">Start typing to see results.</p>`;
             return;
         }
-        
         searchHistoryContainer.style.display = 'block';
-        // Add a title for the history section
         const historyTitle = document.createElement('p');
-        historyTitle.className = 'search-history-title'; // For styling
+        historyTitle.className = 'search-history-title';
         historyTitle.textContent = 'Recent Searches';
         searchHistoryContainer.appendChild(historyTitle);
-
         const ul = document.createElement('ul');
         ul.className = 'search-history-list';
         searchHistory.forEach((query, index) => {
             const li = document.createElement('li');
             li.className = 'search-history-item';
             li.dataset.index = index;
-
             const querySpan = document.createElement('span');
             querySpan.className = 'search-history-query';
             querySpan.textContent = query;
-            
-            li.addEventListener('click', () => { // Make the whole li clickable
+            li.addEventListener('click', () => {
                 if (searchInput) searchInput.value = query;
                 DMAN_performSearch(query);
-                DMAN_saveSearchHistory(query);
             });
-
             const deleteButton = document.createElement('button');
             deleteButton.className = 'search-history-delete';
             deleteButton.innerHTML = '×';
             deleteButton.setAttribute('aria-label', `Remove "${query}" from history`);
             deleteButton.addEventListener('click', (event) => DMAN_deleteSearchHistoryItem(query, event));
-
             li.appendChild(querySpan);
             li.appendChild(deleteButton);
             ul.appendChild(li);
@@ -355,10 +327,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function DMAN_openSearchModal() {
         if (isSearchModalActive || !searchOverlayEl || !searchInput) return;
         isSearchModalActive = true;
-        updateBodyScrollAndOverlay(); // Handles body scroll and general overlay if needed
-
+        updateBodyScrollAndOverlay();
         requestAnimationFrame(() => {
-            searchOverlayEl.classList.add('active'); // This is the (now transparent) search specific overlay
+            searchOverlayEl.classList.add('active');
             setTimeout(() => {
                 searchInput.focus();
                 if (searchInput.value.trim().length >= 1) {
@@ -372,17 +343,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function DMAN_closeSearchModal() {
         if (!isSearchModalActive || !searchOverlayEl) return;
-        isSearchModalActive = false; // Set this first
+        isSearchModalActive = false; 
         if (searchOverlayEl) searchOverlayEl.classList.remove('active');
-        if (searchInput) searchInput.blur();
+        if (searchInput) {
+            searchInput.value = ''; 
+            searchInput.blur();
+        }
         if (searchTriggerButton) searchTriggerButton.focus({ preventScroll: true });
-        
-        searchResultsContainer.innerHTML = '';
+        searchResultsContainer.innerHTML = ''; 
+        searchHistoryContainer.innerHTML = ''; 
         searchHistoryContainer.style.display = 'none';
+        currentKeyboardFocusedIndex = -1; 
         updateBodyScrollAndOverlay();
     }
     
-    async function DMAN_fetchSearchIndex() { /* ... same as previous full script ... */
+    async function DMAN_fetchSearchIndex() {
         try {
             const response = await fetch('/search_index.json');
             if (!response.ok) {
@@ -391,24 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             searchIndexData = await response.json();
-            const fuseOptions = {
-                includeScore: true,
-                includeMatches: true,
-                shouldSort: true,
-                threshold: 0.4,
-                location: 0,
-                distance: 200, // Increased distance
-                maxPatternLength: 32,
-                minMatchCharLength: 1, // Allow searching on 1 char with Fuse
-                keys: [
-                    { name: "title", weight: 0.4 },
-                    { name: "headings.text", weight: 0.35 },
-                    { name: "text_content", weight: 0.2 },
-                    { name: "breadcrumbs", weight: 0.05 }
-                ]
-            };
-            fuseInstance = new Fuse(searchIndexData, fuseOptions);
-            if (!searchInput || !searchInput.value.trim()) { // If modal not open or input empty
+            if (!searchInput || !searchInput.value.trim()) {
                  DMAN_clearSearchResultsDisplay("Start typing to see results.");
             }
         } catch (error) {
@@ -416,194 +374,217 @@ document.addEventListener('DOMContentLoaded', () => {
             DMAN_clearSearchResultsDisplay("Error loading search. Please try again later.");
         }
     }
+    
+    function highlightText(text, query) {
+        if (!text || !query || query.trim().length < 1) return String(text || ""); // Ensure text is string
 
-    function highlightFuseMatch(text, indicesArray) { /* ... same as previous full script ... */
-        if (!text || !indicesArray || indicesArray.length === 0) return text || "";
-        let combinedIndices = [];
-        indicesArray.forEach(matchIndices => {
-            matchIndices.forEach(([start, end]) => combinedIndices.push({start, end}));
-        });
-        combinedIndices.sort((a, b) => a.start - b.start);
-        let mergedIndices = [];
-        if (combinedIndices.length > 0) {
-            mergedIndices.push({...combinedIndices[0]});
-            for (let i = 1; i < combinedIndices.length; i++) {
-                let current = combinedIndices[i];
-                let lastMerged = mergedIndices[mergedIndices.length - 1];
-                if (current.start <= lastMerged.end + 1) {
-                    lastMerged.end = Math.max(lastMerged.end, current.end);
-                } else {
-                    mergedIndices.push({...current});
-                }
-            }
+        const trimmedQuery = query.trim();
+        const originalText = String(text); // Work with original casing for output
+        const lowerText = originalText.toLowerCase();
+        const lowerQuery = trimmedQuery.toLowerCase();
+        
+        if (lowerQuery.length === 0) return originalText;
+
+        const startIndex = lowerText.indexOf(lowerQuery);
+
+        if (startIndex === -1) {
+            return originalText; 
         }
-        let result = "";
-        let lastIndex = 0;
-        mergedIndices.forEach(({start, end}) => {
-            result += text.substring(lastIndex, start);
-            result += "<mark>" + text.substring(start, end + 1) + "</mark>";
-            lastIndex = end + 1;
-        });
-        result += text.substring(lastIndex);
-        return result;
+
+        let resultHTML = originalText.substring(0, startIndex) +
+                         "<mark>" + originalText.substring(startIndex, startIndex + trimmedQuery.length) + "</mark>" +
+                         originalText.substring(startIndex + trimmedQuery.length);
+        
+        return resultHTML;
     }
-    
-    function generateSnippet(fullText, matchIndices, query, maxLength = 150) { /* ... same as previous full script ... */
-        if (!fullText) return "No preview available.";
-        if (!matchIndices || matchIndices.length === 0 || !matchIndices[0] || matchIndices[0].length === 0) {
-            return highlightText(fullText.substring(0, maxLength) + (fullText.length > maxLength ? "..." : ""), query);
+
+    function generateSimpleSnippet(fullText, lowerQuery, originalQuery, maxLength = 150) {
+        if (!fullText || !originalQuery) return "Preview not available.";
+        const S_fullText = String(fullText); // Ensure it's a string
+        const S_lowerQuery = String(lowerQuery || "").toLowerCase();
+
+        if (S_lowerQuery.length === 0) {
+             return highlightText(S_fullText.substring(0, maxLength) + (S_fullText.length > maxLength ? "..." : ""), originalQuery);
         }
-        const firstMatch = matchIndices[0][0]; // first [start, end] pair of the first matched region
-        const matchStart = firstMatch[0];
-        const matchEnd = firstMatch[1];
-        const queryActualLength = (matchEnd - matchStart + 1); 
-    
+
+        const lowerFullText = S_fullText.toLowerCase();
+        let matchStartIndex = lowerFullText.indexOf(S_lowerQuery);
+
+        if (matchStartIndex === -1) { 
+            return highlightText(S_fullText.substring(0, maxLength) + (S_fullText.length > maxLength ? "..." : ""), originalQuery);
+        }
+        
+        const queryActualLength = S_lowerQuery.length; // Use length of lowerQuery for calculations
         const snippetRadius = Math.floor((maxLength - queryActualLength) / 2);
-        let snippetStart = Math.max(0, matchStart - snippetRadius);
-        let snippetEnd = Math.min(fullText.length, matchEnd + 1 + snippetRadius); // +1 because end is inclusive
-    
+        let snippetStart = Math.max(0, matchStartIndex - snippetRadius);
+        let snippetEnd = Math.min(S_fullText.length, matchStartIndex + queryActualLength + snippetRadius);
+
         if (snippetStart > 0) {
-            const spaceBefore = fullText.lastIndexOf(" ", snippetStart -1);
+            const spaceBefore = lowerFullText.lastIndexOf(" ", snippetStart -1);
             if (spaceBefore !== -1 && spaceBefore > snippetStart - 30) snippetStart = spaceBefore + 1;
         }
-        if (snippetEnd < fullText.length) {
-            const spaceAfter = fullText.indexOf(" ", snippetEnd); 
+        if (snippetEnd < S_fullText.length) {
+            const spaceAfter = lowerFullText.indexOf(" ", snippetEnd); 
             if (spaceAfter !== -1 && spaceAfter < snippetEnd + 30) snippetEnd = spaceAfter;
         }
-        let snippetText = fullText.substring(snippetStart, snippetEnd);
         
-        let highlightedSnippet = "";
-        const relativeIndices = matchIndices.flatMap(region => 
-            region.map(([start, end]) => [start - snippetStart, end - snippetStart])
-                  .filter(([relStart, relEnd]) => relEnd >= 0 && relStart < snippetText.length) 
-        );
+        let snippetText = S_fullText.substring(snippetStart, snippetEnd);
+        // Highlight using originalQuery to preserve its casing in the mark tag
+        let highlightedSnippet = highlightText(snippetText, originalQuery); 
 
-        highlightedSnippet = highlightFuseMatch(snippetText, [relativeIndices.filter(arr => arr.length > 0 && arr[0] !== undefined && arr[1] !== undefined)]);
-
-        return (snippetStart > 0 ? "..." : "") + highlightedSnippet + (snippetEnd < fullText.length ? "..." : "");
-    }
-    
-    function highlightText(text, query) { /* ... same as previous full script ... */
-        if (!text || !query || query.trim().length < 1) return text || ""; // Allow highlighting for 1 char
-        const lowerText = text.toLowerCase();
-        const lowerQuery = query.trim().toLowerCase(); // Trim query here too
-        let startIndex = 0;
-        let result = "";
-        let pos = lowerText.indexOf(lowerQuery, startIndex);
-        while (pos !== -1) {
-            result += text.substring(startIndex, pos) + "<mark>" + text.substring(pos, pos + query.length) + "</mark>";
-            startIndex = pos + query.length;
-            pos = lowerText.indexOf(lowerQuery, startIndex);
-        }
-        result += text.substring(startIndex);
-        return result;
+        return (snippetStart > 0 ? "..." : "") + highlightedSnippet + (snippetEnd < S_fullText.length ? "..." : "");
     }
 
     function DMAN_performSearch(query) {
         currentKeyboardFocusedIndex = -1;
         searchHistoryContainer.style.display = 'none';
-
-        if (!fuseInstance || !searchResultsContainer) {
-            console.error('Fuse instance or results container not available!');
+    
+        if (!searchIndexData || searchIndexData.length === 0 || !searchResultsContainer) {
+            DMAN_clearSearchResultsDisplay("Search not ready or no data.");
             return;
         }
-        const trimmedQuery = query.trim(); // Use trimmed query for logic
+        const trimmedQuery = query.trim();
         const lowerQuery = trimmedQuery.toLowerCase();
-
-        if (trimmedQuery.length === 0) { // If input becomes empty (e.g. backspace all)
+    
+        if (trimmedQuery.length === 0) {
             DMAN_displaySearchHistory();
             return;
         }
-        // No minimum length check here to allow searching on 1 char
-        
-        const fuseResults = fuseInstance.search(lowerQuery);
-        searchResultsContainer.innerHTML = ''; 
-
-        if (fuseResults.length === 0) {
-            searchResultsContainer.innerHTML = `<p class="search-results-placeholder">No results found for "<strong></strong>"</p>`;
-            searchResultsContainer.querySelector('strong').textContent = query; 
-            return;
+    
+        let potentialResults = {}; 
+    
+        if (sidebarData && lowerQuery.length > 0) {
+            sidebarData.forEach(section => {
+                if (section.title.toLowerCase().startsWith(lowerQuery) && section.files && section.files.length > 0) {
+                    const firstFile = section.files[0];
+                    const url = `/${section.output_folder_name}/${firstFile.slug}/`;
+                    if (!potentialResults[url] || 0.0001 < (potentialResults[url].score || 1)) {
+                        potentialResults[url] = {
+                            type: 'section', 
+                            displayTitle: `Go to section: ${section.title}`,
+                            url: url,
+                            breadcrumbs: `Section: ${section.title}`,
+                            snippet: `Access all content within the '${section.title}' section.`,
+                            score: 0.0001,
+                        };
+                    }
+                }
+            });
         }
-
-        const ul = document.createElement('ul');
-        ul.className = 'search-results-list';
-        fuseResults.slice(0, 15).forEach((fuseResult, index) => {
-            const item = fuseResult.item;
-            let displayTitle = item.title;
-            let displayUrl = item.url;
-            let snippet = "No preview available.";
-            let breadcrumbs = item.breadcrumbs || "";
-
-            if (fuseResult.matches && fuseResult.matches.length > 0) {
-                const bestMatch = fuseResult.matches[0]; 
-                if (bestMatch.key === "headings.text" && item.headings && item.headings[bestMatch.refIndex]) {
-                    const matchedHeading = item.headings[bestMatch.refIndex];
-                    displayTitle = matchedHeading.text;
-                    displayUrl = item.url + '#' + matchedHeading.slug;
-                    snippet = highlightFuseMatch(matchedHeading.text, [bestMatch.indices]);
-                    breadcrumbs = `${item.title} » ${highlightText(matchedHeading.text, trimmedQuery)}`;
-                } else if (bestMatch.key === "title") {
-                    displayTitle = item.title;
-                    snippet = highlightFuseMatch(item.title, [bestMatch.indices]);
-                } else if (bestMatch.key === "text_content" && item.text_content) {
-                     snippet = generateSnippet(item.text_content, [bestMatch.indices], trimmedQuery);
-                } else if (bestMatch.key === "breadcrumbs" && item.breadcrumbs) {
-                    snippet = highlightFuseMatch(item.breadcrumbs, [bestMatch.indices]);
+    
+        searchIndexData.forEach(item => {
+            if (item.searchable_text && item.searchable_text.includes(lowerQuery)) {
+                let score;
+                let isStartsWithMatch = false;
+    
+                if (item.type === 'heading') {
+                    isStartsWithMatch = item.heading_text && String(item.heading_text).toLowerCase().startsWith(lowerQuery);
+                    score = isStartsWithMatch ? 0.002 : 0.012; 
+                } else if (item.type === 'page') {
+                    isStartsWithMatch = item.page_title && String(item.page_title).toLowerCase().startsWith(lowerQuery);
+                    if (isStartsWithMatch) {
+                        score = 0.003;
+                    } else {
+                        isStartsWithMatch = item.breadcrumbs && String(item.breadcrumbs).toLowerCase().startsWith(lowerQuery);
+                        score = isStartsWithMatch ? 0.004 : 0.014;
+                    }
+                } else {
+                    score = 0.05; 
+                }
+                
+                if (!potentialResults[item.url] || score < (potentialResults[item.url].score || 1)) {
+                    let snippetSource = item.displayTitle; 
+                    if (item.type === 'heading' && item.heading_text && String(item.heading_text).toLowerCase().includes(lowerQuery)) {
+                        snippetSource = item.heading_text;
+                    } else if (item.type === 'page' && item.page_title && String(item.page_title).toLowerCase().includes(lowerQuery)) {
+                        snippetSource = item.page_title;
+                    } else if (item.breadcrumbs && String(item.breadcrumbs).toLowerCase().includes(lowerQuery)) {
+                         snippetSource = item.breadcrumbs;
+                    }
+    
+                    potentialResults[item.url] = {
+                        type: item.type,
+                        displayTitle: item.displayTitle,
+                        url: item.url,
+                        breadcrumbs: item.breadcrumbs, // Store the raw breadcrumbs
+                        snippet: generateSimpleSnippet(snippetSource, lowerQuery, trimmedQuery),
+                        score: score,
+                    };
                 }
             }
-            
-            if (snippet === "No preview available." && item.text_content) { 
-                snippet = highlightText(item.text_content.substring(0, 120) + (item.text_content.length > 120 ? "..." : ""), trimmedQuery);
-            }
-
+        });
+    
+        let allDisplayItems = Object.values(potentialResults);
+        allDisplayItems.sort((a, b) => (a.score || 1) - (b.score || 1));
+                
+        const resultsToDisplay = allDisplayItems.slice(0, 15);
+        searchResultsContainer.innerHTML = '';
+    
+        if (resultsToDisplay.length === 0) {
+            searchResultsContainer.innerHTML = `<p class="search-results-placeholder">No results found for "<strong></strong>"</p>`;
+            searchResultsContainer.querySelector('strong').textContent = query;
+            return;
+        }
+    
+        const ul = document.createElement('ul');
+        ul.className = 'search-results-list';
+    
+        // THIS IS THE RENDERING LOOP THAT WAS MISPLACED IN YOUR PASTE
+        resultsToDisplay.forEach((result, index) => {
             const li = document.createElement('li');
             li.className = 'search-result-item';
+            if (result.type === 'section') li.classList.add('section-nav');
+            else if (result.type === 'heading') li.classList.add('heading-nav');
             li.dataset.index = index;
+    
             const a = document.createElement('a');
-            a.href = displayUrl;
+            a.href = result.url;
             a.addEventListener('click', (e) => {
                 e.preventDefault();
-                DMAN_saveSearchHistory(trimmedQuery); // Save the performed search query
+                DMAN_saveSearchHistory(trimmedQuery);
                 window.location.href = a.href;
-                DMAN_closeSearchModal(); 
-                if (searchInput) searchInput.value = ''; 
+                DMAN_closeSearchModal();
+                if (searchInput) searchInput.value = '';
             });
-
+    
             const titleDiv = document.createElement('div');
             titleDiv.className = 'search-result-title';
-            titleDiv.innerHTML = highlightText(displayTitle, trimmedQuery); 
-
+            titleDiv.innerHTML = highlightText(result.displayTitle, trimmedQuery); 
+    
             const breadcrumbsDiv = document.createElement('div');
             breadcrumbsDiv.className = 'search-result-breadcrumbs';
-            if (!(fuseResult.matches && fuseResult.matches[0].key === "headings.text")) {
-                breadcrumbsDiv.innerHTML = highlightText(breadcrumbs, trimmedQuery);
+            if (result.type === 'section') {
+                // For section nav, its breadcrumbs are simple and might contain the query
+                breadcrumbsDiv.innerHTML = highlightText(result.breadcrumbs, trimmedQuery);
             } else {
-                breadcrumbsDiv.innerHTML = breadcrumbs; 
+                // For page/heading, display raw breadcrumbs (Python pre-formatted them)
+                // Do not re-highlight with query here if that's the goal
+                breadcrumbsDiv.textContent = result.breadcrumbs || ""; 
             }
-
+            
             const snippetDiv = document.createElement('div');
             snippetDiv.className = 'search-result-snippet';
-            snippetDiv.innerHTML = snippet; 
-
+            snippetDiv.innerHTML = result.snippet; // Snippet is already highlighted by generateSimpleSnippet
+    
             a.appendChild(titleDiv);
             a.appendChild(breadcrumbsDiv);
             a.appendChild(snippetDiv);
             li.appendChild(a);
             ul.appendChild(li);
         });
-        searchResultsContainer.appendChild(ul);
-    }
+        // THE RENDERING LOOP ENDS HERE
+    
+        searchResultsContainer.appendChild(ul); // This should be after the loop finishes building the ul
+    } // THIS IS THE CORRECT END OF DMAN_performSearch
     
     function DMAN_clearSearchResultsDisplay(message = "Start typing to see results.") {
         if (searchResultsContainer) {
-            // Check if it's already showing history; if so, don't overwrite with this generic message
             if (searchHistoryContainer.style.display === 'block' && searchHistoryContainer.innerHTML !== '') {
-                searchResultsContainer.innerHTML = ''; // Just clear results, history title is in its own container
+                searchResultsContainer.innerHTML = '';
             } else {
                 searchResultsContainer.innerHTML = `<p class="search-results-placeholder">${message}</p>`;
             }
         }
-        // Only hide history if we are truly clearing for a generic message, not when history itself IS the display
         if (message === "Start typing to see results." || message.startsWith("Enter at least")) {
              searchHistoryContainer.style.display = 'none';
         }
@@ -619,7 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
-            const query = e.target.value; // Don't trim here, let performSearch handle it
+            const query = e.target.value;
             if (query.trim().length > 0) {
                 DMAN_performSearch(query);
             } else {
@@ -630,99 +611,106 @@ document.addEventListener('DOMContentLoaded', () => {
         searchInput.addEventListener('keydown', (e) => {
             const activeListContainer = searchHistoryContainer.style.display === 'block' ? searchHistoryContainer : searchResultsContainer;
             const itemsList = activeListContainer.querySelector('ul');
-            
             const items = itemsList ? Array.from(itemsList.querySelectorAll('li[data-index]')) : [];
 
             if (e.key === 'ArrowDown') {
-                if (items.length === 0) return; // No items to navigate
+                if (items.length === 0) return;
                 e.preventDefault();
                 currentKeyboardFocusedIndex = (currentKeyboardFocusedIndex + 1) % items.length;
                 DMAN_updateKeyboardFocus(items, activeListContainer);
             } else if (e.key === 'ArrowUp') {
-                if (items.length === 0) return; // No items to navigate
+                if (items.length === 0) return;
                 e.preventDefault();
                 currentKeyboardFocusedIndex = (currentKeyboardFocusedIndex - 1 + items.length) % items.length;
                 DMAN_updateKeyboardFocus(items, activeListContainer);
-            } else if (e.key === 'Enter') {
-                e.preventDefault(); // Prevent default form submission if any
-
+            } 
+            else if (e.key === 'Enter') {
+                e.preventDefault();
                 const currentQuery = searchInput.value.trim();
+                const lowerQueryForEnter = currentQuery.toLowerCase();
 
-                // Case 1: A specific item is focused by keyboard navigation
                 if (currentKeyboardFocusedIndex > -1 && items && items[currentKeyboardFocusedIndex]) {
                     const targetItem = items[currentKeyboardFocusedIndex];
-                    if (targetItem.classList.contains('search-history-item')) {
-                        targetItem.click(); // Simulate click on history item
-                    } else if (targetItem.classList.contains('search-result-item')) {
-                        const linkElement = targetItem.querySelector('a');
-                        if (linkElement) linkElement.click(); // Simulate click on search result link
+                    const linkElement = targetItem.querySelector('a');
+                    if (linkElement) {
+                        linkElement.click(); 
                     }
-                }
-                // Case 2: No item is focused, but user pressed Enter in the input
-                else if (currentQuery.length > 0) {
-                    // Perform the search again to get the latest results count for the current query
-                    // This is important because 'items' might be from a previous render (e.g. history)
-                    if (fuseInstance) {
-                        const fuseResultsForEnter = fuseInstance.search(currentQuery.toLowerCase());
-                        
-                        if (fuseResultsForEnter.length === 1) {
-                            // Only one result, navigate directly
+                } else if (currentQuery.length > 0) {
+                    let tempPotentialResultsForEnter = {}; 
+                    if (sidebarData && lowerQueryForEnter.length > 0) {
+                        sidebarData.forEach(section => {
+                            if (section.title.toLowerCase().startsWith(lowerQueryForEnter) && section.files && section.files.length > 0) {
+                                const url = `/${section.output_folder_name}/${section.files[0].slug}/`;
+                                if(!tempPotentialResultsForEnter[url] || 0.0001 < (tempPotentialResultsForEnter[url].score ||1)) {
+                                    tempPotentialResultsForEnter[url] = { url: url, score: 0.0001 };
+                                }
+                            }
+                        });
+                    }
+                    searchIndexData.forEach(item => {
+                        if (item.searchable_text && item.searchable_text.includes(lowerQueryForEnter)) { 
+                            let score;
+                            let itemUrl = item.url;
+                            let isStartsWithMatch = false;
 
-                            const itemToNavigate = fuseResultsForEnter[0].item;
-                            let navigateUrl = itemToNavigate.url;
-
-                            // Check if the best match was a heading to append slug
-                            const bestMatch = fuseResultsForEnter[0].matches && fuseResultsForEnter[0].matches[0];
-                            if (bestMatch && bestMatch.key === "headings.text" && itemToNavigate.headings && itemToNavigate.headings[bestMatch.refIndex]) {
-                                const heading = itemToNavigate.headings[bestMatch.refIndex];
-                                navigateUrl += '#' + heading.slug;
+                            if (item.type === 'heading') {
+                                isStartsWithMatch = item.heading_text && String(item.heading_text).toLowerCase().startsWith(lowerQueryForEnter);
+                                score = isStartsWithMatch ? 0.002 : 0.012;
+                            } else if (item.type === 'page') {
+                                isStartsWithMatch = item.page_title && String(item.page_title).toLowerCase().startsWith(lowerQueryForEnter);
+                                if (isStartsWithMatch) {
+                                    score = 0.003;
+                                } else {
+                                    isStartsWithMatch = item.breadcrumbs && String(item.breadcrumbs).toLowerCase().startsWith(lowerQueryForEnter);
+                                    score = isStartsWithMatch ? 0.004 : 0.014;
+                                }
+                            } else {
+                                score = 0.05; 
                             }
                             
-                            DMAN_saveSearchHistory(currentQuery); // Save this query to history
-                            window.location.href = navigateUrl;  // Navigate
-                            DMAN_closeSearchModal();
-                            if (searchInput) searchInput.value = '';
-
-                        } else if (fuseResultsForEnter.length > 1) {
-                            // More than one result:
-                            // Just save to history. The results are already displayed.
-                            DMAN_saveSearchHistory(currentQuery);
-                            // Optionally, focus the first actual search result item if results are shown
-                            const searchResultListItems = searchResultsContainer.querySelectorAll('li.search-result-item[data-index]');
-                            if (searchResultListItems.length > 0) {
-                                currentKeyboardFocusedIndex = 0; // Focus the first search result
-                                DMAN_updateKeyboardFocus(Array.from(searchResultListItems), searchResultsContainer);
+                            if(!tempPotentialResultsForEnter[itemUrl] || score < (tempPotentialResultsForEnter[itemUrl].score || 1)) {
+                                tempPotentialResultsForEnter[itemUrl] = { url: itemUrl, score: score };
                             }
-                        } else { // Zero results
-                             DMAN_saveSearchHistory(currentQuery);
+                        }
+                    });
+                    
+                    let tempResultsArrayForEnter = Object.values(tempPotentialResultsForEnter);
+                    tempResultsArrayForEnter.sort((a, b) => (a.score || 1) - (b.score || 1));
+                    
+                    if (tempResultsArrayForEnter.length === 1) {
+                        const singleResultToNavigate = tempResultsArrayForEnter[0];
+                        DMAN_saveSearchHistory(currentQuery);
+                        window.location.href = singleResultToNavigate.url;
+                        DMAN_closeSearchModal();
+                        if (searchInput) searchInput.value = '';
+                    } else {
+                        DMAN_saveSearchHistory(currentQuery);
+                        const firstDisplayedItem = searchResultsContainer.querySelector('li[data-index="0"]');
+                        if (firstDisplayedItem && tempResultsArrayForEnter.length > 0) {
+                             const displayedListItems = Array.from(searchResultsContainer.querySelectorAll('li[data-index]'));
+                            currentKeyboardFocusedIndex = 0;
+                            DMAN_updateKeyboardFocus(displayedListItems, searchResultsContainer);
                         }
                     }
                 }
-                // Case 3: Enter pressed with empty input (does nothing for now)
             }
         });
-        } else {
+    } else {
         console.error('Search input element (#searchInput) not found!');
     }
-    DMAN_fetchSearchIndex();
+    DMAN_fetchSearchIndex(); 
 
     function DMAN_updateKeyboardFocus(items, listContainer) {
         items.forEach((item, index) => {
             if (index === currentKeyboardFocusedIndex) {
                 item.classList.add('focused');
-                // Smart scroll into view
                 const itemRect = item.getBoundingClientRect();
-                const containerRect = listContainer.getBoundingClientRect(); // Use the specific list container
-                
+                const containerRect = listContainer.getBoundingClientRect();
                 if (itemRect.bottom > containerRect.bottom) {
                     item.scrollIntoView({ block: 'end', behavior: 'smooth' });
                 } else if (itemRect.top < containerRect.top) {
                     item.scrollIntoView({ block: 'start', behavior: 'smooth' });
                 }
-                // If already visible, no scroll, or use 'nearest' if preferred
-                // item.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-
-
             } else {
                 item.classList.remove('focused');
             }
@@ -730,7 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 4. Sidebar Accordion ---
-    document.querySelectorAll('.sidebar-nav .sidebar-nav-section').forEach(section => { /* ... same as previous full script ... */
+    document.querySelectorAll('.sidebar-nav .sidebar-nav-section').forEach(section => {
         const toggleButton = section.querySelector('.sidebar-section-toggle');
         const content = section.querySelector('.sidebar-section-content');
         if (toggleButton && content) {
@@ -746,7 +734,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- 5. Mobile Navigation (Main Sidebar) ---
-    function DMAN_openMobileSidebar() { /* ... same as previous full script ... */
+    function DMAN_openMobileSidebar() {
         if (!leftSidebar || !mobileMenuToggle) return;
         if (document.body.classList.contains('mobile-toc-open')) DMAN_closeMobileToc();
         document.body.classList.add('mobile-sidebar-open');
@@ -754,18 +742,18 @@ document.addEventListener('DOMContentLoaded', () => {
         leftSidebar.querySelector('.sidebar-nav')?.scrollTo(0, 0);
         updateBodyScrollAndOverlay();
     }
-    function DMAN_closeMobileSidebar() { /* ... same as previous full script ... */
+    function DMAN_closeMobileSidebar() {
         if (!leftSidebar || !mobileMenuToggle) return;
         document.body.classList.remove('mobile-sidebar-open');
         mobileMenuToggle.setAttribute('aria-expanded', 'false');
         updateBodyScrollAndOverlay();
     }
-    if (mobileMenuToggle && leftSidebar) { /* ... same as previous full script ... */
+    if (mobileMenuToggle && leftSidebar) {
         mobileMenuToggle.addEventListener('click', () => {
             document.body.classList.contains('mobile-sidebar-open') ? DMAN_closeMobileSidebar() : DMAN_openMobileSidebar();
         });
     }
-    if (leftSidebar) { /* ... same as previous full script ... */
+    if (leftSidebar) {
         leftSidebar.addEventListener('click', (event) => {
             if (event.target.closest('a') && document.body.classList.contains('mobile-sidebar-open')) {
                 DMAN_closeMobileSidebar();
@@ -774,7 +762,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 6. Mobile Table of Contents Panel ---
-    function DMAN_openMobileToc() { /* ... same as previous full script ... */
+    function DMAN_openMobileToc() {
         if (!tocContainerElement || !mobileTocToggle) return;
         if (document.body.classList.contains('mobile-sidebar-open')) DMAN_closeMobileSidebar();
         document.body.classList.add('mobile-toc-open');
@@ -783,36 +771,34 @@ document.addEventListener('DOMContentLoaded', () => {
         updateActiveLinkAndMarker(); 
         updateBodyScrollAndOverlay();
     }
-    function DMAN_closeMobileToc() { /* ... same as previous full script ... */
+    function DMAN_closeMobileToc() {
         if (!tocContainerElement || !mobileTocToggle) return;
         document.body.classList.remove('mobile-toc-open');
         mobileTocToggle.setAttribute('aria-expanded', 'false');
         updateBodyScrollAndOverlay();
     }
-    if (mobileTocToggle && tocContainerElement) { /* ... same as previous full script ... */
+    if (mobileTocToggle && tocContainerElement) {
         mobileTocToggle.addEventListener('click', () => {
             document.body.classList.contains('mobile-toc-open') ? DMAN_closeMobileToc() : DMAN_openMobileToc();
         });
     }
 
     // --- 7. Global Event Listeners (Overlay, Keyboard) ---
-    function isEditingContent(element) { /* ... same as previous full script ... */
+    function isEditingContent(element) {
         const tagName = element?.tagName;
         return tagName === 'INPUT' || tagName === 'TEXTAREA' || element?.isContentEditable || element?.closest('input, textarea, [contenteditable="true"], [contenteditable=""]');
     }
-    if (pageOverlay) { /* ... same as previous full script ... */
+    if (pageOverlay) {
         pageOverlay.addEventListener('click', () => {
             if (document.body.classList.contains('mobile-sidebar-open')) DMAN_closeMobileSidebar();
             if (document.body.classList.contains('mobile-toc-open')) DMAN_closeMobileToc();
-            // Removed direct call to DMAN_closeSearchModal from pageOverlay click, 
-            // as .search-overlay (which is transparent) handles its own click-outside.
         });
     }
-    document.addEventListener('keydown', (e) => { /* ... same as previous full script, ensures DMAN_ functions are called ... */
+    document.addEventListener('keydown', (e) => {
         if (e.key === '/' && !isSearchModalActive && !isEditingContent(document.activeElement)) {
             e.preventDefault(); DMAN_openSearchModal();
         }
-        if (e.key === 'k' && (e.ctrlKey || e.metaKey) && !isEditingContent(document.activeElement)) { // Added !isEditingContent
+        if (e.key === 'k' && (e.ctrlKey || e.metaKey) && !isEditingContent(document.activeElement)) {
             e.preventDefault(); isSearchModalActive ? DMAN_closeSearchModal() : DMAN_openSearchModal();
         }
         if (e.key === 'Escape') {
@@ -827,7 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- Code Block Copy Button ---
-    const codeBlocks = document.querySelectorAll('.codehilite'); /* ... same as previous full script ... */
+    const codeBlocks = document.querySelectorAll('.codehilite');
     const copyIconSVG = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
     const copiedIconSVG = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>`;
 
@@ -864,5 +850,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
 });

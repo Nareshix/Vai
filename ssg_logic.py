@@ -347,7 +347,6 @@ def extract_searchable_text_from_html(html_content):
     # Deduplicate
     unique_texts = [x for x in unique_texts if not (x in seen or seen.add(x))]
     return " ".join(unique_texts)
-
 def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template):
     search_index_entries = []
 
@@ -363,12 +362,62 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             continue
 
         page_meta, md_body_only_string = parse_metadata_and_body_from_string(full_md_text_from_file)
-        
         body_content_html = convert_md_to_html(md_body_only_string)
         toc_table_link_html = generate_heading_links(body_content_html)
 
-        title = page_meta.get('title', file_item["display_title"])
+        # Page-level information
+        page_title_from_meta_or_file = page_meta.get('title', file_item["display_title"])
+        base_page_url = f"/{output_folder_name}/{output_file_slug}/"
+        
+        section_title_for_breadcrumbs = "Unknown Section"
+        for sec_data in sidebar_data_for_template:
+            if sec_data["output_folder_name"] == output_folder_name:
+                section_title_for_breadcrumbs = sec_data["title"]
+                break
+        
+        page_breadcrumbs_base = f"{section_title_for_breadcrumbs} > {page_title_from_meta_or_file}"
 
+        # Add a search index entry for the page itself
+        search_index_entries.append({
+            "type": "page",
+            "id": base_page_url, # Unique ID for this search item
+            "page_title": page_title_from_meta_or_file,
+            "display_title": page_title_from_meta_or_file, # For page result, display_title is page_title
+            "breadcrumbs": page_breadcrumbs_base,
+            "url": base_page_url,
+            # Concatenate relevant texts for searching this page entry
+            "searchable_text": f"{page_title_from_meta_or_file} {page_breadcrumbs_base}".lower(),
+            "date": page_meta.get('date', None)
+        })
+
+        # Add search index entries for each heading
+        content_soup = BeautifulSoup(body_content_html, 'html.parser')
+        for h_tag in content_soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
+            heading_text = h_tag.get_text(strip=True)
+            heading_slug = h_tag.get('id')
+            level_match = re.match(r'h([1-6])', h_tag.name)
+
+            if heading_text and heading_slug and level_match:
+                heading_level = int(level_match.group(1))
+                heading_url = f"{base_page_url}#{heading_slug}"
+                heading_display_title = f"{page_title_from_meta_or_file} » {heading_text}"
+                heading_breadcrumbs = f"{page_breadcrumbs_base} » {heading_text}"
+
+                search_index_entries.append({
+                    "type": "heading",
+                    "id": heading_url, # Unique ID including hash
+                    "page_title": page_title_from_meta_or_file, # Parent page's title
+                    "heading_text": heading_text,
+                    "heading_level": heading_level,
+                    "display_title": heading_display_title,
+                    "breadcrumbs": heading_breadcrumbs,
+                    "url": heading_url,
+                    # Concatenate relevant texts for searching this heading entry
+                    "searchable_text": f"{page_title_from_meta_or_file} {heading_breadcrumbs} {heading_text}".lower(),
+                    "date": page_meta.get('date', None) # Inherit date from page
+                })
+
+        # --- Date handling for the page rendering (not search index) ---
         today = datetime.datetime.today()
         day_suffix = "th"
         if today.day in [1, 21, 31]: day_suffix = "st"
@@ -376,42 +425,15 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
         elif today.day in [3, 23]: day_suffix = "rd"
         day_str = str(today.day) + day_suffix
         default_date = f"{day_str} {today.strftime('%B %Y')}"
-        date = page_meta.get('date', default_date)
+        render_date = page_meta.get('date', default_date) # Use this for displaying on the page
 
-        page_url = f"/{output_folder_name}/{output_file_slug}/"
-        
-        section_title_for_breadcrumbs = "Unknown Section"
-        for sec_data in sidebar_data_for_template:
-            if sec_data["output_folder_name"] == output_folder_name:
-                section_title_for_breadcrumbs = sec_data["title"]
-                break
-        breadcrumbs_str = f"{section_title_for_breadcrumbs} > {title}"
-
-        headings_for_index = []
-        content_soup = BeautifulSoup(body_content_html, 'html.parser')
-        for h_tag in content_soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
-            tag_text = h_tag.get_text(strip=True)
-            tag_id = h_tag.get('id')
-            level_match = re.match(r'h([1-6])', h_tag.name)
-            if tag_text and tag_id and level_match:
-                headings_for_index.append({
-                    "level": int(level_match.group(1)), "text": tag_text, "slug": tag_id
-                })
-        
-        searchable_text = extract_searchable_text_from_html(body_content_html)
-
-        search_index_entries.append({
-            "id": page_url, "title": title, "breadcrumbs": breadcrumbs_str,
-            "url": page_url, "text_content": searchable_text, "headings": headings_for_index,
-            "date": page_meta.get('date', None)
-        })
-
+        # --- Prev/Next page data for page rendering ---
         prev_page_data = None
         next_page_data = None
         if i > 0:
             prev_file_item = all_files_to_process[i-1]
             prev_page_data = {
-                "title": prev_file_item["display_title"],
+                "title": prev_file_item["display_title"], 
                 "url": f"/{prev_file_item['output_folder_name']}/{prev_file_item['output_file_slug']}/"
             }
         if i < len(all_files_to_process) - 1:
@@ -425,8 +447,8 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
             body_content=body_content_html,
             toc_table_link=toc_table_link_html,
             sidebar_data=sidebar_data_for_template,
-            title=title,
-            date=date,
+            title=page_title_from_meta_or_file, # Use the determined page title
+            date=render_date, # Use the determined display date
             prev_page_data=prev_page_data,
             next_page_data=next_page_data
         )
@@ -439,9 +461,9 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
 
     search_index_file_path = dist_base_path / "search_index.json"
     with open(search_index_file_path, 'w', encoding='utf-8') as f:
-        json.dump(search_index_entries, f, ensure_ascii=False, indent=None) # indent=None for smaller file size
+        json.dump(search_index_entries, f, ensure_ascii=False, indent=None)
     print(f"Generated search index: {search_index_file_path}")
-
+    
 _global_sidebar_data_for_redirect = []
 def build():
     global _global_sidebar_data_for_redirect
