@@ -173,7 +173,6 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     if not static_src_path.exists() or not static_src_path.is_dir():
         print(f"Warning: Static assets directory '{static_src_path}' not found. Skipping copy.")
         return
-    print(f"Copying static assets from '{static_src_path}' to '{dst_path}'...")
     try:
         shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
     except TypeError:
@@ -339,12 +338,10 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
         output_dir = dist_base_path / output_folder_name / output_file_slug
         output_dir.mkdir(parents=True, exist_ok=True)
         (output_dir / "index.html").write_text(rendered, encoding="utf-8")
-        print(f"Generated: {output_dir / 'index.html'}")
 
     search_index_file_path = dist_base_path / "search_index.json"
     with open(search_index_file_path, 'w', encoding='utf-8') as f:
         json.dump(search_index_entries, f, ensure_ascii=False, indent=None)
-    print(f"Generated search index: {search_index_file_path}")
     
 _global_sidebar_data_for_redirect = []
 _global_root_redirect_target_url = "/" 
@@ -357,21 +354,17 @@ LIGHT_THEME_TEXT = '#202124'
 MINIFIED_THEME_SCRIPT_TEMPLATE = """<script>(function(){{const t=localStorage.getItem('user-preferred-theme')||(window.matchMedia?.('(prefers-color-scheme: light)').matches?'light':'dark');if(t==='dark'){{document.documentElement.style.backgroundColor='{dark_bg}';document.documentElement.style.color='{dark_text}';}}else{{document.documentElement.style.backgroundColor='{light_bg}';document.documentElement.style.color='{light_text}';}}}})();</script>"""
 
 def build():
-    print("Running setup_header_in_layout_html...")
-    setup_header_in_layout_html() # This generates/updates layout.html
-    print("setup_header_in_layout_html complete.")
+    setup_header_in_layout_html() 
 
     current_env = Environment(
-        loader=FileSystemLoader('.'),
+        loader=FileSystemLoader('templates'),
         autoescape=True 
     )
-    print(f"Fresh Jinja environment created at {datetime.datetime.now()}")
 
     global _global_sidebar_data_for_redirect, _global_root_redirect_target_url
     
     dist_path_obj = Path('dist')
     if dist_path_obj.exists(): 
-        print(f"Cleaning old 'dist' directory: {dist_path_obj}")
         shutil.rmtree(dist_path_obj)
     dist_path_obj.mkdir(parents=True, exist_ok=True)
     
@@ -387,15 +380,13 @@ def build():
     else:
         _global_root_redirect_target_url = "/" 
     
-    print("Starting main content processing...")
     process_md_files(
         all_files_to_process, 
         dist_path_obj, 
         sidebar_data, 
         _global_root_redirect_target_url,
-        current_env #
+        current_env 
     )
-    print("Main content processing complete.")
 
     theme_script_filled = MINIFIED_THEME_SCRIPT_TEMPLATE.format(
         dark_bg=DARK_THEME_BG,
@@ -416,23 +407,20 @@ def build():
             
             redirect_html_content = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Redirecting to {section['title']}</title><meta name="robots" content="noindex, follow">{theme_script_filled}<meta http-equiv="refresh" content="0; url={redirect_target_url}"><link rel="canonical" href="{redirect_target_url}"><style>body{{margin:0;padding:20px;font-family:sans-serif;text-align:center;}}</style></head><body><p>Redirecting to the "{section['title']}" section...</p></body></html>"""
             section_redirect_index_file.write_text(redirect_html_content, encoding='utf-8')
-            print(f"Created themed section redirect (with noindex): /{section_slug}/ -> {redirect_target_url}")
 
     if not (dist_path_obj / 'index.html').exists() and _global_sidebar_data_for_redirect:
         if _global_root_redirect_target_url != "/":
             redirect_html = f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Redirecting...</title><meta name="robots" content="noindex, follow">{theme_script_filled}<meta http-equiv="refresh" content="0; url={_global_root_redirect_target_url}"><link rel="canonical" href="{_global_root_redirect_target_url}"><style>body{{margin:0;padding:20px;font-family:sans-serif;text-align:center;}}</style></head><body><p>Redirecting...</p></body></html>"""
             (dist_path_obj / 'index.html').write_text(redirect_html, encoding='utf-8')
-            print(f"Created themed root redirect (with noindex) to {_global_root_redirect_target_url}")
         else:
             print("Could not create root redirect: No valid target (first section/file) found.")
 
-    print(f"--- BUILD COMPLETED at {datetime.datetime.now()} ---")
 
 if __name__ == '__main__':
     build() 
     server = Server()
     server.watch('src/**/*.md', build)
-    server.watch('layout_jinja.html', build) 
+    server.watch('templates/layout_no_header.html', build) 
     server.watch('static/**/*', build) 
     server.watch('header_config.yaml', build) 
     

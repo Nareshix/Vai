@@ -9,8 +9,8 @@ def setup_header_in_layout_html():
     dropdowns = config['dropdowns']
     internals = config['internals']
     externals = config['externals']
-    env = Environment(loader=FileSystemLoader('.'))
-    template = env.get_template('layout_jinja.html')
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('layout_no_header.html')
     rendered = template.render(
         dropdowns=dropdowns,
         internals=internals,
@@ -18,5 +18,5 @@ def setup_header_in_layout_html():
         github_link=github_link,
     )
 
-    with open('layout.html', 'w') as f:
+    with open('templates/layout.html', 'w') as f:
         f.write(rendered)
