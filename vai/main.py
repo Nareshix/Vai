@@ -741,9 +741,8 @@ def cli_build():
                 content  = re.sub(pattern1, replacement, content)
 
                 pattern2 = r"(a\.href\s*=\s*)(result\.url\s*;)"
-                replacement2 = r"\1" + prefix + r" + \2"
+                replacement2 = r"\1'" + prefix + r"' + \2"
                 content = re.sub(pattern2, replacement2, content)
-
                 ########### GITHUB ONLY #################
 
                 minified = rjsmin.jsmin(content)
