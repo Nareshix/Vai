@@ -648,11 +648,16 @@ def add_github_prefix_to_static_resources(html, github_repo_name):
         'link': 'href',
         'script': 'src',
         'img': 'src',
+        'a': 'href',
+
     }
 
     for tag_name, attr in tags_attrs.items():
         for tag in soup.find_all(tag_name):
             if tag.has_attr(attr):
+                if tag.name == 'a' and tag.get('target') == '_blank':
+                    continue
+
                 val = tag[attr]
                 if '/static' in val and not val.startswith(f'{github_repo_name}/static'):
                     new_val = val.replace('/static', f'{github_repo_name}/static')
@@ -698,14 +703,14 @@ def cli_build():
             if src_file.suffix == ".html":
                 content = src_file.read_text(encoding="utf-8")
 
-                # DOCS_DIR = Path("docs_dev")
-                # with open(DOCS_DIR / "header_config.yaml", "r") as f:  
-                #     config = yaml.safe_load(f)
-                # github_repo_name = config['github_repo_name']
+                DOCS_DIR = Path("docs_dev")
+                with open(DOCS_DIR / "header_config.yaml", "r") as f:  
+                    config = yaml.safe_load(f)
+                github_repo_name = config['github_repo_name']
 
-                # if not github_repo_name.startswith('/'):
-                #     github_repo_name = '/' + github_repo_name
-                # content = add_github_prefix_to_static_resources(content, github_repo_name)
+                if not github_repo_name.startswith('/'):
+                    github_repo_name = '/' + github_repo_name
+                content = add_github_prefix_to_static_resources(content, github_repo_name)
                 minified = minify_html.minify(
                     content,
                     minify_js=True,
