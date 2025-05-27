@@ -1,1 +1,3 @@
 .venv/
+vai.egg-info/
+vai/__pycache__/

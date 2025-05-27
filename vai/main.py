@@ -289,11 +289,11 @@ def generate_heading_links(html_body_content):
     """
     soup = BeautifulSoup(html_body_content, 'html.parser')
     links = []
-    for tag in soup.find_all(['h2', 'h3']):
+    for tag in soup.find_all(['h1', 'h2']):
         title = tag.get_text()
         anchor = tag.get('id')
         if not anchor: continue
-        link_style = ' style="padding-left:2rem"' if tag.name == 'h3' else ''
+        link_style = ' style="padding-left:2rem"' if tag.name == 'h2' else ''
         links.append(f'<a href="#{anchor}"{link_style}>{title}</a>')
     return '\n'.join(links)
 
