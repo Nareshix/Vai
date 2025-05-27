@@ -14,6 +14,9 @@ import yaml
 import argparse
 from pathlib import Path
 import shutil
+import minify_html
+import rcssmin
+import rjsmin
 
 def setup_header_in_layout_html():
     """populates layout_no_heading.html in templates from the header_config.yaml file.
@@ -611,6 +614,36 @@ def cli_init():
         print("'docs' folder already exists.")
 
 
+
+def cli_build():
+    """minifies all code to maximise efficency
+    """
+    source_dir = Path("docs/dist")
+    for file in source_dir.rglob("*"):
+        if file.suffix == ".html":
+            content = file.read_text(encoding="utf-8")
+
+            minified = minify_html.minify(
+                content,
+                minify_js=True,
+                minify_css=True,
+                preserve_chevron_percent_template_syntax=True,
+            )
+
+            file.write_text(minified, encoding="utf-8")
+
+        elif file.suffix == '.js':
+            content = file.read_text(encoding="utf-8")
+            minified = rjsmin.jsmin(content)
+            file.write_text(minified, encoding="utf-8")
+
+        elif file.suffix == '.css':
+            content = file.read_text(encoding="utf-8")
+            minified = rcssmin.cssmin(content)
+            file.write_text(minified, encoding="utf-8")
+
+    print("Build finished! The files in dist are now ready to use in production.")
+
 def cli_run():
     """starts the dev server
     """
@@ -632,6 +665,7 @@ def main():
 
     subparsers.add_parser("init", help="Create 'docs' folder structure.")
     subparsers.add_parser("run", help="Run the tool.")
+    subparsers.add_parser("build", help="minify code. After developing, use this and use the generated files in production")
 
     args = parser.parse_args()
 
@@ -639,6 +673,8 @@ def main():
         cli_init()
     elif args.command == "run":
         cli_run()
+    elif args.command == 'build':
+        cli_build()
     else:
         parser.print_help()
 
