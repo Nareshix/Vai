@@ -613,82 +613,109 @@ document.addEventListener('DOMContentLoaded', () => {
             const items = itemsList ? Array.from(itemsList.querySelectorAll('li[data-index]')) : [];
 
             if (e.key === 'ArrowDown') {
-                if (items.length === 0) return;
+                if (items.length === 0) return; // If no items, do nothing
                 e.preventDefault();
                 currentKeyboardFocusedIndex = (currentKeyboardFocusedIndex + 1) % items.length;
                 DMAN_updateKeyboardFocus(items, activeListContainer);
+
+                // Optional: Update search input as user arrows through history
+                if (activeListContainer === searchHistoryContainer && currentKeyboardFocusedIndex > -1) {
+                    const focusedItemText = items[currentKeyboardFocusedIndex]?.querySelector('.search-history-query')?.textContent;
+                    if (focusedItemText && searchInput) {
+                        // searchInput.value = focusedItemText; // Uncomment if you want live input update
+                    }
+                }
             } else if (e.key === 'ArrowUp') {
-                if (items.length === 0) return;
+                if (items.length === 0) return; // If no items, do nothing
                 e.preventDefault();
                 currentKeyboardFocusedIndex = (currentKeyboardFocusedIndex - 1 + items.length) % items.length;
                 DMAN_updateKeyboardFocus(items, activeListContainer);
+
+                // Optional: Update search input as user arrows through history
+                if (activeListContainer === searchHistoryContainer && currentKeyboardFocusedIndex > -1) {
+                    const focusedItemText = items[currentKeyboardFocusedIndex]?.querySelector('.search-history-query')?.textContent;
+                    if (focusedItemText && searchInput) {
+                        // searchInput.value = focusedItemText; // Uncomment if you want live input update
+                    }
+                }
             } 
             else if (e.key === 'Enter') {
                 e.preventDefault();
-                const currentQuery = searchInput.value.trim();
-                const lowerQueryForEnter = currentQuery.toLowerCase();
-
+                
                 if (currentKeyboardFocusedIndex > -1 && items && items[currentKeyboardFocusedIndex]) {
                     const targetItem = items[currentKeyboardFocusedIndex];
+                    
                     const linkElement = targetItem.querySelector('a');
-                    if (linkElement) {
+                    if (linkElement && activeListContainer === searchResultsContainer) { 
                         linkElement.click(); 
+                    } else if (activeListContainer === searchHistoryContainer) { 
+                        const historyQuerySpan = targetItem.querySelector('.search-history-query');
+                        if (historyQuerySpan && searchInput) {
+                            const historyQueryText = historyQuerySpan.textContent;
+                            searchInput.value = historyQueryText; 
+                            DMAN_performSearch(historyQueryText); 
+                        }
                     }
-                } else if (currentQuery.length > 0) {
-                    let tempPotentialResultsForEnter = {}; 
-                    if (sidebarData && lowerQueryForEnter.length > 0) {
-                        sidebarData.forEach(section => {
-                            if (section.title.toLowerCase().startsWith(lowerQueryForEnter) && section.files && section.files.length > 0) {
-                                const url = `/${section.output_folder_name}/${section.files[0].slug}/`;
-                                if(!tempPotentialResultsForEnter[url] || 0.0001 < (tempPotentialResultsForEnter[url].score ||1)) {
-                                    tempPotentialResultsForEnter[url] = { url: url, score: 0.0001 };
+                } else {
+                    const currentQuery = searchInput.value.trim();
+                    if (currentQuery.length > 0) {
+                        let tempPotentialResultsForEnter = {}; 
+                        const lowerQueryForEnter = currentQuery.toLowerCase();
+                        if (sidebarData && lowerQueryForEnter.length > 0) {
+                            sidebarData.forEach(section => {
+                                if (section.title.toLowerCase().startsWith(lowerQueryForEnter) && section.files && section.files.length > 0) {
+                                    const url = `/${section.output_folder_name}/${section.files[0].slug}/`;
+                                    if(!tempPotentialResultsForEnter[url] || 0.0001 < (tempPotentialResultsForEnter[url].score ||1)) {
+                                        tempPotentialResultsForEnter[url] = { url: url, score: 0.0001 };
+                                    }
+                                }
+                            });
+                        }
+                        searchIndexData.forEach(item => {
+                            if (item.searchable_text && item.searchable_text.includes(lowerQueryForEnter)) { 
+                                let score;
+                                let itemUrl = item.url;
+                                let isStartsWithMatch = false;
+
+                                if (item.type === 'heading') {
+                                    isStartsWithMatch = item.heading_text && String(item.heading_text).toLowerCase().startsWith(lowerQueryForEnter);
+                                    score = isStartsWithMatch ? 0.002 : 0.012;
+                                } else if (item.type === 'page') {
+                                    isStartsWithMatch = item.page_title && String(item.page_title).toLowerCase().startsWith(lowerQueryForEnter);
+                                    if (isStartsWithMatch) {
+                                        score = 0.003;
+                                    } else {
+                                        isStartsWithMatch = item.breadcrumbs && String(item.breadcrumbs).toLowerCase().startsWith(lowerQueryForEnter);
+                                        score = isStartsWithMatch ? 0.004 : 0.014;
+                                    }
+                                } else {
+                                    score = 0.05; 
+                                }
+                                
+                                if(!tempPotentialResultsForEnter[itemUrl] || score < (tempPotentialResultsForEnter[itemUrl].score || 1)) {
+                                    tempPotentialResultsForEnter[itemUrl] = { url: itemUrl, score: score };
                                 }
                             }
                         });
-                    }
-                    searchIndexData.forEach(item => {
-                        if (item.searchable_text && item.searchable_text.includes(lowerQueryForEnter)) { 
-                            let score;
-                            let itemUrl = item.url;
-                            let isStartsWithMatch = false;
-
-                            if (item.type === 'heading') {
-                                isStartsWithMatch = item.heading_text && String(item.heading_text).toLowerCase().startsWith(lowerQueryForEnter);
-                                score = isStartsWithMatch ? 0.002 : 0.012;
-                            } else if (item.type === 'page') {
-                                isStartsWithMatch = item.page_title && String(item.page_title).toLowerCase().startsWith(lowerQueryForEnter);
-                                if (isStartsWithMatch) {
-                                    score = 0.003;
-                                } else {
-                                    isStartsWithMatch = item.breadcrumbs && String(item.breadcrumbs).toLowerCase().startsWith(lowerQueryForEnter);
-                                    score = isStartsWithMatch ? 0.004 : 0.014;
-                                }
-                            } else {
-                                score = 0.05; 
+                        
+                        let tempResultsArrayForEnter = Object.values(tempPotentialResultsForEnter);
+                        tempResultsArrayForEnter.sort((a, b) => (a.score || 1) - (b.score || 1));
+                        
+                        if (tempResultsArrayForEnter.length === 1) {
+                            const singleResultToNavigate = tempResultsArrayForEnter[0];
+                            DMAN_saveSearchHistory(currentQuery);
+                            window.location.href = singleResultToNavigate.url;
+                            DMAN_closeSearchModal();
+                            if (searchInput) searchInput.value = '';
+                        } else {
+                            DMAN_saveSearchHistory(currentQuery);
+                            DMAN_performSearch(currentQuery); 
+                            const firstDisplayedItem = searchResultsContainer.querySelector('li[data-index="0"]');
+                            if (firstDisplayedItem && tempResultsArrayForEnter.length > 0) { // Check tempResultsArrayForEnter as well
+                                 const displayedListItems = Array.from(searchResultsContainer.querySelectorAll('li[data-index]'));
+                                currentKeyboardFocusedIndex = 0;
+                                DMAN_updateKeyboardFocus(displayedListItems, searchResultsContainer);
                             }
-                            
-                            if(!tempPotentialResultsForEnter[itemUrl] || score < (tempPotentialResultsForEnter[itemUrl].score || 1)) {
-                                tempPotentialResultsForEnter[itemUrl] = { url: itemUrl, score: score };
-                            }
-                        }
-                    });
-                    
-                    let tempResultsArrayForEnter = Object.values(tempPotentialResultsForEnter);
-                    tempResultsArrayForEnter.sort((a, b) => (a.score || 1) - (b.score || 1));
-                    
-                    if (tempResultsArrayForEnter.length === 1) {
-                        const singleResultToNavigate = tempResultsArrayForEnter[0];
-                        DMAN_saveSearchHistory(currentQuery);
-                        window.location.href = singleResultToNavigate.url;
-                        DMAN_closeSearchModal();
-                        if (searchInput) searchInput.value = '';
-                    } else {
-                        DMAN_saveSearchHistory(currentQuery);
-                        const firstDisplayedItem = searchResultsContainer.querySelector('li[data-index="0"]');
-                        if (firstDisplayedItem && tempResultsArrayForEnter.length > 0) {
-                             const displayedListItems = Array.from(searchResultsContainer.querySelectorAll('li[data-index]'));
-                            currentKeyboardFocusedIndex = 0;
-                            DMAN_updateKeyboardFocus(displayedListItems, searchResultsContainer);
                         }
                     }
                 }
@@ -697,7 +724,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error('Search input element (#searchInput) not found!');
     }
-    DMAN_fetchSearchIndex(); 
+     DMAN_fetchSearchIndex(); 
 
     function DMAN_updateKeyboardFocus(items, listContainer) {
         items.forEach((item, index) => {
