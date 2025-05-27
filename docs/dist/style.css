@@ -392,6 +392,7 @@ margin-top: 3rem;
 font-size: 0.875rem;
 flex-wrap: wrap;
 gap: 0.5rem;
+margin-bottom: 2rem;
 }
 
 .edit-page-link {
@@ -1442,7 +1443,7 @@ span.linenos { color: inherit; background-color: transparent; padding-left: 5px;
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .light-theme pre .hll { background-color: #ffffcc }
-.light-theme pre { background: #f8f8f8; }
+.light-theme pre { background: #dddcdc; }
 .light-theme pre .c { color: #8F5902; font-style: italic }
 .light-theme pre .err { color: #A40000; border: 1px solid #EF2929 }
 .light-theme pre .g { color: #000 }
@@ -1833,7 +1834,6 @@ font-size: 85%;
 border-radius: 3px;
 font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
-
 
 ul {
     margin-left: 2rem;
