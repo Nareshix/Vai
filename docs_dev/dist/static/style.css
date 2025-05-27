@@ -197,7 +197,6 @@ flex-direction: column;
 overflow: hidden;
 overflow-y: auto;
 height: 100vh;
-scrollbar-width: thin;
 scrollbar-color: var(--main-scrollbar-thumb-bg) var(--color-bg-body);
 
 }
@@ -278,14 +277,13 @@ overflow-y: auto; overflow-x: hidden;
 height: calc(100vh - 3.75rem);
 position: sticky;
 top: 3.75rem;
-scrollbar-width: none;
+margin-right: 1rem;
+scrollbar-width: thin;
 }
 #toc-container::-webkit-scrollbar {
 width: 6px;
 }
-#toc-container::-webkit-scrollbar-track {
-background: transparent;
-}
+
 #toc-container::-webkit-scrollbar-thumb {
 background-color: var(--toc-scrollbar-thumb-bg);
 border-radius: 3px;
@@ -857,8 +855,8 @@ display: none;
 flex-grow: 1;
 overflow-y: auto;
 padding: 0 0 0.75rem;
-scrollbar-width: thin;
 scrollbar-color: var(--toc-scrollbar-thumb-bg) var(--color-bg-sidebar);
+scrollbar-width: thin;
 }
 .sidebar-nav::-webkit-scrollbar {
 width: 6px;
@@ -1768,7 +1766,6 @@ padding: 0;
 margin: 0;
 max-height: 60vh;
 overflow-y: auto;
-scrollbar-width: thin;
 scrollbar-color: var(--main-scrollbar-thumb-bg) transparent;
 }
 
