@@ -708,7 +708,7 @@ def cli_run():
         server.watch('docs_dev/static/**/*', build) 
         server.watch('docs_dev/header_config.yaml', build) 
         
-        server.serve(root='docs/dist', default_filename='index.html', port=6455)
+        server.serve(root='docs_dev/dist', default_filename='index.html', port=6455)
     except Exception as e:
         print(f'{e}. Please ensure u have the necessary files and folders')
 
