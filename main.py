@@ -611,7 +611,7 @@ def cli_init():
             print("Warning: 'header_config.yaml' not found.")
         print("Created 'docs' folder")
     else:
-        print("'docs' folder already exists.")
+        print("The 'docs' folder already exists. Initialisation skipped.")
 
 
 
