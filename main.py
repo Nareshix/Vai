@@ -626,7 +626,7 @@ def cli_build():
     if not source_dir.exists():
         print('dist folder does not exist, pls create one')
         return
-        
+
     for file in source_dir.rglob("*"):
         if file.suffix == ".html":
             content = file.read_text(encoding="utf-8")
@@ -655,15 +655,18 @@ def cli_build():
 def cli_run():
     """starts the dev server
     """
-    build() 
-    server = Server()
-    server.watch('docs/src/**/*.md', build)
-    server.watch('docs/templates/layout_no_header.html', build) 
-    server.watch('docs/static/**/*', build) 
-    server.watch('docs/header_config.yaml', build) 
-    
-    server.serve(root='docs/dist', default_filename='index.html', port=6455)
 
+    try:
+        build() 
+        server = Server()
+        server.watch('docs/src/**/*.md', build)
+        server.watch('docs/templates/layout_no_header.html', build) 
+        server.watch('docs/static/**/*', build) 
+        server.watch('docs/header_config.yaml', build) 
+        
+        server.serve(root='docs/dist', default_filename='index.html', port=6455)
+    except Exception as e:
+        print(f'{e}. Please ensure u have the necessary files')
 
 def main():
     """starts the main cli cmds
