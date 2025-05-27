@@ -734,11 +734,15 @@ def cli_build():
 
                 ########### GITHUB ONLY #################
                 prefix = github_repo_name
-                pattern = r"(fetch\(\s*')[/]search_index\.json(')"
+                pattern1 = r"(fetch\(\s*')[/]search_index\.json(')"
                 replacement = r"\1" + prefix + r"/search_index.json\2"
                 
                 # Testeded with linux diff command and is proven to be accurate
-                content  = re.sub(pattern, replacement, content)
+                content  = re.sub(pattern1, replacement, content)
+
+                pattern2 = r"(a\.href\s*=\s*)(result\.url\s*;)"
+                replacement2 = r"\1" + prefix + r" + \2"
+                content = re.sub(pattern2, replacement2, content)
 
                 ########### GITHUB ONLY #################
 
