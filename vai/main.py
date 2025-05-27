@@ -698,14 +698,14 @@ def cli_build():
             if src_file.suffix == ".html":
                 content = src_file.read_text(encoding="utf-8")
 
-                DOCS_DIR = Path("docs_dev")
-                with open(DOCS_DIR / "header_config.yaml", "r") as f:  
-                    config = yaml.safe_load(f)
-                github_repo_name = config['github_repo_name']
+                # DOCS_DIR = Path("docs_dev")
+                # with open(DOCS_DIR / "header_config.yaml", "r") as f:  
+                #     config = yaml.safe_load(f)
+                # github_repo_name = config['github_repo_name']
 
-                if not github_repo_name.startswith('/'):
-                    github_repo_name = '/' + github_repo_name
-                content = add_github_prefix_to_static_resources(content, github_repo_name)
+                # if not github_repo_name.startswith('/'):
+                #     github_repo_name = '/' + github_repo_name
+                # content = add_github_prefix_to_static_resources(content, github_repo_name)
                 minified = minify_html.minify(
                     content,
                     minify_js=True,
