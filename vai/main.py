@@ -654,7 +654,7 @@ def add_github_prefix_to_static_resources(html, github_repo_name):
         for tag in soup.find_all(tag_name):
             if tag.has_attr(attr):
                 val = tag[attr]
-                if '/static' in val and not val.startswith(f'/{github_repo_name}/static'):
+                if '/static' in val and not val.startswith(f'{github_repo_name}/static'):
                     new_val = val.replace('/static', f'{github_repo_name}/static')
                     tag[attr] = new_val
 
@@ -703,6 +703,8 @@ def cli_build():
                     config = yaml.safe_load(f)
                 github_repo_name = config['github_repo_name']
 
+                if not github_repo_name.startswith('/'):
+                    github_repo_name = '/' + github_repo_name
                 content = add_github_prefix_to_static_resources(content, github_repo_name)
                 minified = minify_html.minify(
                     content,
