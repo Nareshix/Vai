@@ -1,6 +1,6 @@
 github_link: "https://github.com/Nareshix/Vai"
 github_contribution_link: 'https://github.com/Nareshix/Vai/tree/main/docs_dev/src'
-github_repo_name: "Vai" # CASE SENSITIVE
+github_repo_name: "vai" # CASE SENSITIVE
 
 internals:
   - title: "Guide"
