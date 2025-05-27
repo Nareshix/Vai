@@ -17,6 +17,11 @@ import shutil
 import minify_html
 import rcssmin
 import rjsmin
+from importlib.resources import files, as_file
+
+PACKAGE_NAME = "vai"
+PACKAGE_DATA_DIR_NAME = "package_defaults" 
+
 
 def setup_header_in_layout_html():
     """populates layout_no_heading.html in templates from the header_config.yaml file.
@@ -508,7 +513,7 @@ def build():
         shutil.rmtree(dist_path_obj)
     dist_path_obj.mkdir(parents=True, exist_ok=True)
 
-    copy_static_assets(static_src_dir=str(DOCS_DIR / 'static'), dst_dir=str(dist_path_obj))
+    copy_static_assets(static_src_dir=str(DOCS_DIR / 'static'), dst_dir=str(dist_path_obj / 'static'))
 
     all_files_to_process, sidebar_data = scan_src(src_dir_path=str(DOCS_DIR / 'src'))
     sidebar_data_for_redirect = sidebar_data
@@ -578,42 +583,61 @@ def cli_init():
         python main.py init (will be different in prod) 
     """
     docs_path = Path("docs")
-    dist_path = docs_path / "dist"
-    src_path = docs_path / "src"
-    contributing_file = src_path / "contributing.md"
-    static_src = Path("static")
-    templates_src = Path("templates")
-    static_dst = docs_path / "static"
-    templates_dst = docs_path / "templates"
-    header_config = Path("header_config.yaml")
-    header_config_dst = docs_path / "header_config.yaml"
 
-    if not docs_path.exists():
-        dist_path.mkdir(parents=True)
-        src_path.mkdir(parents=True)
-        contributing_file.touch()
+    if docs_path.exists():
+        print(f"The 'docs' folder already exists in the current directory. Initialization skipped.")
+        return
 
-        # Copy static/ and templates/
-        if static_src.exists():
-            shutil.copytree(static_src, static_dst)
+    # Create the main 'docs' directory and its basic subdirectories
+    docs_path.mkdir(parents=True)
+    (docs_path / "dist").mkdir()
+    src_user_path = docs_path / "src"
+    src_user_path.mkdir()
+    (src_user_path / "contributing.md").touch() # As per your original
+
+    # Define destination paths in the user's 'docs' directory
+    static_dst_in_user_docs = docs_path / "static"
+    templates_dst_in_user_docs = docs_path / "templates"
+    header_config_dst_in_user_docs = docs_path / "header_config.yaml"
+
+    print(f"Initializing 'docs' folder at '{docs_path.resolve()}'...")
+
+    try:
+        # Get a reference to the 'package_defaults' directory within the installed package
+        package_defaults_resource_root = files(PACKAGE_NAME).joinpath(PACKAGE_DATA_DIR_NAME)
+
+        # --- Copy 'static' directory from package_defaults ---
+        static_src_in_pkg = package_defaults_resource_root.joinpath("static")
+        if static_src_in_pkg.is_dir():
+            with as_file(static_src_in_pkg) as static_src_concrete_path:
+                shutil.copytree(static_src_concrete_path, static_dst_in_user_docs)
         else:
-            print("Warning: 'static/' folder not found.")
+            print(f"Warning: Default 'static/' folder not found within the package.")
 
-        if templates_src.exists():
-            shutil.copytree(templates_src, templates_dst)
+        # --- Copy 'templates' directory from package_defaults ---
+        templates_src_in_pkg = package_defaults_resource_root.joinpath("templates")
+        if templates_src_in_pkg.is_dir():
+            with as_file(templates_src_in_pkg) as templates_src_concrete_path:
+                shutil.copytree(templates_src_concrete_path, templates_dst_in_user_docs)
         else:
-            print("Warning: 'templates/' folder not found.")
+            print(f"Warning: Default 'templates/' folder not found within the package.")
 
-        # Copy header_config.yaml
-        if header_config.exists():
-            shutil.copy(header_config, header_config_dst)
+        # --- Copy 'header_config.yaml' from package_defaults ---
+        header_config_src_in_pkg = package_defaults_resource_root.joinpath("header_config.yaml")
+        if header_config_src_in_pkg.is_file():
+            with as_file(header_config_src_in_pkg) as header_config_concrete_path:
+                shutil.copy(header_config_concrete_path, header_config_dst_in_user_docs)
         else:
-            print("Warning: 'header_config.yaml' not found.")
-        print("Created 'docs' folder")
-    else:
-        print("The 'docs' folder already exists. Initialisation skipped.")
+            print(f"Warning: Default 'header_config.yaml' not found within the package.")
+        
+        print("Created 'docs' folder.") 
 
-
+    except FileNotFoundError:
+        print(f"Error: Could not find package resources for '{PACKAGE_NAME}'. Is the package installed correctly and includes '{PACKAGE_DATA_DIR_NAME}'?")
+        print("The 'docs' directory may be incomplete.")
+    except Exception as e:
+        print(f"An error occurred during initialization while copying package defaults: {e}")
+        print("The 'docs' directory may be incomplete.")
 
 def cli_build():
     """minifies all code to maximise efficency
@@ -663,7 +687,7 @@ def cli_run():
         
         server.serve(root='docs/dist', default_filename='index.html', port=6455)
     except Exception as e:
-        print(f'{e}. Please ensure u have the necessary files')
+        print(f'{e}. Please ensure u have the necessary files and folders')
 
 def main():
     """starts the main cli cmds
