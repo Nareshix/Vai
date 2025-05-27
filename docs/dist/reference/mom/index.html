@@ -80,6 +80,23 @@
             </div>
             <hr class="sidebar-divider section-divider">
             
+            <div class="sidebar-nav-section is-open">
+                <button class="sidebar-section-toggle">
+                    <span>md_test</span> 
+                    <svg class="sidebar-section-arrow" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </button>
+                <div class="sidebar-section-content">
+                    <ul class="sidebar-nav-links">
+                         
+                        <li><a href="/md_test/chatgpt/" class="sidebar-link">chatgpt</a></li>
+                         
+                        <li><a href="/md_test/test/" class="sidebar-link">test</a></li>
+                        
+                    </ul>
+                </div>
+            </div>
+            <hr class="sidebar-divider section-divider">
+            
 
             
 
@@ -223,6 +240,84 @@ sfd</p>
 </div>
 </div>
 <p><a href="/reference/mom">adsf</a></p>
+<p>Markdown is a plain text format for writing structured documents, based on conventions for indicating formatting in email and usenet posts. It was developed by John Gruber (with help from Aaron Swartz) and released in 2004 in the form of a syntax description and a Perl script (Markdown.pl) for converting Markdown to HTML. In the next decade, dozens of implementations were developed in many languages. Some extended the original Markdown syntax with conventions for footnotes, tables, and other document elements. Some allowed Markdown documents to be rendered in formats other than HTML. Websites like Reddit, StackOverflow, and GitHub had millions of people using Markdown. And Markdown started to be used beyond the web, to author books, articles, slide shows, letters, and lecture notes.</p>
+<h1 id="introduction">Introduction</h1>
+<h2 id="what-is-markdown">What is Markdown?</h2>
+<p>Markdown is a plain text format for writing structured documents,
+based on conventions for indicating formatting in email
+and usenet posts.  It was developed by John Gruber (with
+help from Aaron Swartz) and released in 2004 in the form of a
+<a href="https://daringfireball.net/projects/markdown/syntax">syntax description</a>
+and a Perl script (<code>Markdown.pl</code>) for converting Markdown to
+HTML.  In the next decade, dozens of implementations were
+developed in many languages.  Some extended the original
+Markdown syntax with conventions for footnotes, tables, and
+other document elements.  Some allowed Markdown documents to be
+rendered in formats other than HTML.  Websites like Reddit,
+StackOverflow, and GitHub had millions of people using Markdown.
+And Markdown started to be used beyond the web, to author books,
+articles, slide shows, letters, and lecture notes.</p>
+<p>What distinguishes Markdown from many other lightweight markup
+syntaxes, which are often easier to write, is its readability.
+As Gruber writes:</p>
+<blockquote>
+<p>The overriding design goal for Markdown's formatting syntax is
+to make it as readable as possible. The idea is that a
+Markdown-formatted document should be publishable as-is, as
+plain text, without looking like it's been marked up with tags
+or formatting instructions.
+(<a href="https://daringfireball.net/projects/markdown/">https://daringfireball.net/projects/markdown/</a>)</p>
+</blockquote>
+<p>The point can be illustrated by comparing a sample of
+<a href="https://asciidoc.org/">AsciiDoc</a> with
+an equivalent sample of Markdown.  Here is a sample of
+AsciiDoc from the AsciiDoc manual:</p>
+<div class="codehilite"><pre><span></span><code>1. List item one.
++
+List item one continued with a second paragraph followed by an
+Indented block.
++
+.................
+$ ls *.sh
+$ mv *.sh ~/tmp
+.................
++
+List item continued with a third paragraph.
+
+2. List item two continued with an open block.
++
+--
+This paragraph is part of the preceding list item.
+
+a. This list is nested and does not require explicit item
+continuation.
++
+This paragraph is part of the preceding list item.
+
+b. List item b.
+
+This paragraph belongs to item two of the outer list.
+--
+</code></pre></div>
+
+<p>And here is the equivalent in Markdown:
+```
+1.  List item one.</p>
+<div class="codehilite"><pre><span></span><code>List item one continued with a second paragraph followed by an
+Indented block.
+
+    $ ls *.sh
+    $ mv *.sh ~/tmp
+
+List item continued with a third paragraph.
+</code></pre></div>
+
+<ol>
+<li>
+<p>List item two continued with an open block.</p>
+<p>This paragraph is part of the preceding list item.</p>
+</li>
+</ol>
 
             
             <div class="page-footer-container">
@@ -248,6 +343,11 @@ sfd</p>
                     
     
                     
+                    <button class="nav-box next-page-box">
+                        <span class="nav-box-label">Next page</span>
+                        <a href="/md_test/chatgpt/" class="nav-box-link">chatgpt</a>
+                    </button>
+                    
 
                     
 
@@ -265,6 +365,7 @@ sfd</p>
 <a href="#code">code</a>
 <a href="#vera-level">vera level</a>
 <a href="#my_function_that_is_extermely_longuser-age">my_function_that_is_extermely_long(user, age)</a>
+<a href="#what-is-markdown">What is Markdown?</a>
             
             
         </nav>

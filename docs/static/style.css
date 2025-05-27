@@ -1230,7 +1230,7 @@ position: relative;
 margin-bottom: 1rem;
 border-radius: 6px;
 width: auto;
-max-width: 90%;
+max-width: 80%;
 margin-left: auto;
 margin-right: auto;
 margin-top: 1rem;
@@ -1796,10 +1796,12 @@ padding: 0.5rem 0.25rem;
 }
 
 p img {
-display: block;
-margin: auto;
-margin-bottom: 1rem;
-}
+    display: block;
+    margin: auto; 
+    margin-bottom: 1rem;
+    max-width: 100%;
+    height: auto;   
+    }
 
 #content-area code {
 background-color: var(--color-inline-code-bg);
@@ -1833,10 +1835,22 @@ font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, mono
 }
 
 ul {
-    margin-left: 2rem;
+    margin-left: 5rem;
 }
 
 ol {
+    margin-left: 5rem;
+}
+
+h3 {
     margin-left: 2rem;
 }
 
+p {
+    margin-left: 6rem;
+}
+
+
+table {
+    margin-left: 6rem;
+}
