@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 
 # Tags to check and attributes to modify
 
-def add_github_prefix_to_static_resources(html):
+def add_github_prefix_to_static_resources(html, github_repo_name):
     soup = BeautifulSoup(html, 'html.parser')
 
     tags_attrs = {
@@ -15,17 +15,14 @@ def add_github_prefix_to_static_resources(html):
         for tag in soup.find_all(tag_name):
             if tag.has_attr(attr):
                 val = tag[attr]
-                # If it contains "/static" but doesn't already have "GITHUB" before it
-                if '/static' in val and not val.startswith('GITHUB/static'):
-                    # Insert GITHUB before /static
-                    new_val = val.replace('/static', 'GITHUB/static')
+                if '/static' in val and not val.startswith(f'/{github_repo_name}/static'):
+                    new_val = val.replace('/static', f'{github_repo_name}/static')
                     tag[attr] = new_val
 
     updated_html = str(soup)
     return updated_html
 
 
-print(add_github_prefix_to_static_resources(
 html = '''
 asdf
 fd
@@ -38,5 +35,4 @@ df
 <img src="/static/logo.png" alt="logo" width="38">
 <img src="/static/logo.png" alt="logo" width="64">
 '''
-
-))
+print((add_github_prefix_to_static_resources(html, '/vai')))
