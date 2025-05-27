@@ -1443,7 +1443,7 @@ span.linenos { color: inherit; background-color: transparent; padding-left: 5px;
 td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
 .light-theme pre .hll { background-color: #ffffcc }
-.light-theme pre { background: #f8f8f8; }
+.light-theme pre { background: #dfdede; }
 .light-theme pre .c { color: #8F5902; font-style: italic }
 .light-theme pre .err { color: #A40000; border: 1px solid #EF2929 }
 .light-theme pre .g { color: #000 }
@@ -1527,7 +1527,8 @@ span.linenos { color: #6e7681; background-color: #0d1117; padding-left: 5px; pad
 td.linenos .special { color: #e6edf3; background-color: #6e7681; padding-left: 5px; padding-right: 5px; }
 span.linenos.special { color: #e6edf3; background-color: #6e7681; padding-left: 5px; padding-right: 5px; }
 .dark-theme .hll { background-color: #6e7681 }
-.dark-theme { background: #0d1117; color: #E6EDF3 }
+.dark-theme pre { background: #202020; color: #D0D0D0 }
+
 .dark-theme .c { color: #8B949E; font-style: italic } 
 .dark-theme .err { color: #F85149 } 
 .dark-theme .esc { color: #E6EDF3 } 
@@ -1758,8 +1759,7 @@ flex-direction: column;
 .search-input-container {
 margin-bottom: 1rem;
 }
-.search-history-container {
-}
+
 
 #searchResultsContainer {
 flex-grow: 1;

@@ -1759,8 +1759,7 @@ flex-direction: column;
 .search-input-container {
 margin-bottom: 1rem;
 }
-.search-history-container {
-}
+
 
 #searchResultsContainer {
 flex-grow: 1;
