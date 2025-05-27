@@ -29,7 +29,7 @@ def setup_header_in_layout_html():
     dropdowns, internals  and externals. after populating it will generate a html file
     called layout.html and parsing will be done trhough this html file 
     """
-    DOCS_DIR = Path("docs")
+    DOCS_DIR = Path("docs_dev")
 
     with open(DOCS_DIR / "header_config.yaml", "r") as f:  
         config = yaml.safe_load(f)
@@ -498,7 +498,7 @@ def build():
     root_redirect_target_url = "/" 
 
 
-    DOCS_DIR = Path("docs") 
+    DOCS_DIR = Path("docs_dev") 
 
     setup_header_in_layout_html()
 
@@ -567,14 +567,16 @@ def build():
                     print("WARNING: Could not determine path components from  root_redirect_target_url to copy for root index.html.")
             except Exception as e:
                 print(f"ERROR: Occurred while trying to create root index.html by copying: {e}")
+
+    
         # else:
         #     print("INFO: Could not create root index.html by copying: No valid target (first section/file) found.")
     
 def cli_init():
-    """creates docs folder with necessary metadata in it
+    """creates docs_dev folder with necessary metadata in it
        The metadata includes an 
        1. an empty dist folder
-       2. src folder with contributing.md
+       2. src folder with README.md
        3. static folder with the necessary css and js, icon and favicon files (these image files are expected to be changed)
        4. templates folder containing html files for the parsing of necessary data (yaml or md) to html 
        5. a header_config.yaml that affects the top bar. This will stay consistent for all pages
@@ -582,10 +584,10 @@ def cli_init():
     Usage:
         python main.py init (will be different in prod) 
     """
-    docs_path = Path("docs")
+    docs_path = Path("docs_dev")
 
     if docs_path.exists():
-        print(f"The 'docs' folder already exists in the current directory. Initialization skipped.")
+        print(f"The 'docs_dev' folder already exists in the current directory. Initialization skipped.")
         return
 
     # Create the main 'docs' directory and its basic subdirectories
@@ -593,14 +595,12 @@ def cli_init():
     (docs_path / "dist").mkdir()
     src_user_path = docs_path / "src"
     src_user_path.mkdir()
-    (src_user_path / "contributing.md").touch() # As per your original
+    (src_user_path / "README.md").touch() # As per your original
 
     # Define destination paths in the user's 'docs' directory
     static_dst_in_user_docs = docs_path / "static"
     templates_dst_in_user_docs = docs_path / "templates"
     header_config_dst_in_user_docs = docs_path / "header_config.yaml"
-
-    print(f"Initializing 'docs' folder at '{docs_path.resolve()}'...")
 
     try:
         # Get a reference to the 'package_defaults' directory within the installed package
@@ -630,48 +630,71 @@ def cli_init():
         else:
             print(f"Warning: Default 'header_config.yaml' not found within the package.")
         
-        print("Created 'docs' folder.") 
+        print("Created 'docs_dev' folder.") 
 
     except FileNotFoundError:
         print(f"Error: Could not find package resources for '{PACKAGE_NAME}'. Is the package installed correctly and includes '{PACKAGE_DATA_DIR_NAME}'?")
-        print("The 'docs' directory may be incomplete.")
+        print("The 'docs_dev' directory may be incomplete.")
     except Exception as e:
         print(f"An error occurred during initialization while copying package defaults: {e}")
-        print("The 'docs' directory may be incomplete.")
+        print("The '_devdocs' directory may be incomplete.")
 
 def cli_build():
-    """minifies all code to maximise efficency
     """
-    source_dir = Path("docs/dist")
-    if not Path('docs').exists():
-        print(f"docs folder not created. pls create one.")
+    Builds unminified assets into 'docs_dev/dist', then minifies/copies
+    them to a clean 'docs' folder for production.
+    'docs_dev/dist' remains unminified.
+    'docs' will contain the minified/copied production-ready build.
+    """
+    DEV_SOURCE_DIR = Path("docs_dev/dist") 
+    PROD_OUTPUT_DIR = Path('docs')
+
+    if not Path('docs_dev').exists():
+        print(f"'docs_dev' folder not created. Please run 'init' or ensure it exists.")
         return
-        
+
     build() 
-    for file in source_dir.rglob("*"):
-        if file.suffix == ".html":
-            content = file.read_text(encoding="utf-8")
+    
+    if not DEV_SOURCE_DIR.exists() or not any(DEV_SOURCE_DIR.iterdir()):
+        print(f"Error: The directory '{DEV_SOURCE_DIR}' is empty or does not exist after the build step.")
+        print("Please ensure the `build()` function correctly outputs files to this location.")
+        return
 
-            minified = minify_html.minify(
-                content,
-                minify_js=True,
-                minify_css=True,
-                preserve_chevron_percent_template_syntax=True,
-            )
+    if PROD_OUTPUT_DIR.exists(): 
+        shutil.rmtree(PROD_OUTPUT_DIR)
+    PROD_OUTPUT_DIR.mkdir(parents=True, exist_ok=True) 
 
-            file.write_text(minified, encoding="utf-8")
+    for src_file in DEV_SOURCE_DIR.rglob("*"): 
+        if src_file.is_file():
+            relative_path = src_file.relative_to(DEV_SOURCE_DIR)
+            dest_file_path = PROD_OUTPUT_DIR / relative_path
 
-        elif file.suffix == '.js':
-            content = file.read_text(encoding="utf-8")
-            minified = rjsmin.jsmin(content)
-            file.write_text(minified, encoding="utf-8")
+            dest_file_path.parent.mkdir(parents=True, exist_ok=True)
 
-        elif file.suffix == '.css':
-            content = file.read_text(encoding="utf-8")
-            minified = rcssmin.cssmin(content)
-            file.write_text(minified, encoding="utf-8")
+            if src_file.suffix == ".html":
+                content = src_file.read_text(encoding="utf-8")
+                minified = minify_html.minify(
+                    content,
+                    minify_js=True,
+                    minify_css=True,
+                    preserve_chevron_percent_template_syntax=True,
+                )
+                dest_file_path.write_text(minified, encoding="utf-8") 
 
-    print("Build finished! The files in dist are now ready to use in production.")
+            elif src_file.suffix == '.js':
+                content = src_file.read_text(encoding="utf-8")
+                minified = rjsmin.jsmin(content)
+                dest_file_path.write_text(minified, encoding="utf-8") 
+
+            elif src_file.suffix == '.css':
+                content = src_file.read_text(encoding="utf-8")
+                minified = rcssmin.cssmin(content)
+                dest_file_path.write_text(minified, encoding="utf-8")
+            
+            else:
+                shutil.copy2(src_file, dest_file_path)
+
+    print(f"Build finished! Minified/copied files are in '{PROD_OUTPUT_DIR}'.")
 
 def cli_run():
     """starts the dev server
@@ -680,10 +703,10 @@ def cli_run():
     try:
         build() 
         server = Server()
-        server.watch('docs/src/**/*.md', build)
-        server.watch('docs/templates/layout_no_header.html', build) 
-        server.watch('docs/static/**/*', build) 
-        server.watch('docs/header_config.yaml', build) 
+        server.watch('docs_dev/src/**/*.md', build)
+        server.watch('docs_dev/templates/layout_no_header.html', build) 
+        server.watch('docs_dev/static/**/*', build) 
+        server.watch('docs_dev/header_config.yaml', build) 
         
         server.serve(root='docs/dist', default_filename='index.html', port=6455)
     except Exception as e:
