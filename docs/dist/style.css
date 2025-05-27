@@ -917,14 +917,10 @@ transform: rotate(0deg);
 .sidebar-section-content {
 overflow: hidden;
 max-height: 0;
-transition: max-height 0.3s ease-out,
-        padding-top 0.3s ease-out,
-        padding-bottom 0.3s ease-out;
 padding-top: 0;
 padding-bottom: 0;
 }
 .sidebar-nav-section.is-open > .sidebar-section-content {
-max-height: 1000px;
 padding-top: 0.4rem;
 padding-bottom: 0.2rem;
 }
@@ -1759,8 +1755,7 @@ flex-direction: column;
 .search-input-container {
 margin-bottom: 1rem;
 }
-.search-history-container {
-}
+
 
 #searchResultsContainer {
 flex-grow: 1;

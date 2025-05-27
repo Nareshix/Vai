@@ -1,3 +1,4 @@
+html_content = """
 :root {
     --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1);
     --color-inline-code-bg: rgba(200, 200, 200, 0.12);
@@ -917,10 +918,14 @@ transform: rotate(0deg);
 .sidebar-section-content {
 overflow: hidden;
 max-height: 0;
+transition: max-height 0.3s ease-out,
+        padding-top 0.3s ease-out,
+        padding-bottom 0.3s ease-out;
 padding-top: 0;
 padding-bottom: 0;
 }
 .sidebar-nav-section.is-open > .sidebar-section-content {
+max-height: 1000px;
 padding-top: 0.4rem;
 padding-bottom: 0.2rem;
 }
@@ -1835,3 +1840,9 @@ font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, mono
 ul {
     margin-left: 2rem;
 }
+"""
+import minify_html
+
+minified = minify_html.minify(html_content, minify_js=True, minify_css=True, remove_processing_instructions=True)
+
+print(minified)

@@ -14,7 +14,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     parentSection.classList.add('is-open');
                     const content = parentSection.querySelector('.sidebar-section-content');
                     const toggleButton = parentSection.querySelector('.sidebar-section-toggle');
-                    if (content) content.style.maxHeight = content.scrollHeight + "px";
+                    if (content) {
+                        const calculatedHeight = content.scrollHeight + "px"; // Calculate once
+                        content.style.maxHeight = calculatedHeight;
+                        content.dataset.calculatedMaxHeight = calculatedHeight; // Store it
+                    }
                     if (toggleButton) toggleButton.setAttribute('aria-expanded', 'true');
                 }
                 break;
@@ -717,13 +721,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const toggleButton = section.querySelector('.sidebar-section-toggle');
         const content = section.querySelector('.sidebar-section-content');
         if (toggleButton && content) {
+            // If section is already open on load (e.g. hardcoded class or set by initial setup)
+            // and its height hasn't been calculated and stored yet.
             if (section.classList.contains('is-open')) {
-                 content.style.maxHeight = content.scrollHeight + "px";
+                if (!content.dataset.calculatedMaxHeight) { // Check if not already set
+                    const calculatedHeight = content.scrollHeight + "px";
+                    content.style.maxHeight = calculatedHeight;
+                    content.dataset.calculatedMaxHeight = calculatedHeight; // Store it
+                } else {
+                    // If already calculated (e.g., by the active link logic), ensure it's applied
+                    content.style.maxHeight = content.dataset.calculatedMaxHeight;
+                }
             }
+    
             toggleButton.addEventListener('click', () => {
                 const isOpen = section.classList.toggle('is-open');
                 toggleButton.setAttribute('aria-expanded', isOpen.toString());
-                content.style.maxHeight = isOpen ? content.scrollHeight + "px" : "0px";
+    
+                if (isOpen) {
+                    // If opening, check if we have a stored height
+                    if (content.dataset.calculatedMaxHeight) {
+                        content.style.maxHeight = content.dataset.calculatedMaxHeight; // Use stored height
+                    } else {
+                        // If no stored height (first time opening this section via click)
+                        const calculatedHeight = content.scrollHeight + "px";
+                        content.style.maxHeight = calculatedHeight;
+                        content.dataset.calculatedMaxHeight = calculatedHeight; // Calculate and store
+                    }
+                } else {
+                    content.style.maxHeight = "0px";
+                }
             });
         }
     });
