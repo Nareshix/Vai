@@ -1,3 +1,6 @@
 .venv/
 vai.egg-info/
 vai/__pycache__/
+build/lib/vai/
+test/
+test.py
