@@ -1975,7 +1975,7 @@ table {
     position: relative;
     display: inline-block; /* Add this line */
     text-decoration: none;
-    color: var(--color-sidebar-section-title-text);
+    color: var(--color-footer-meta-text);
 }
 
 .made-by-me-brand {
