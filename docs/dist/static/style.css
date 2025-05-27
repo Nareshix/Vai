@@ -1959,3 +1959,43 @@ table {
 }
 
 /* ... rest of your styles ... */
+
+
+
+
+.made-by-me-div {
+    text-decoration: none;
+    text-align: center;
+    /* margin-top: 1rem; */
+    padding-top: 1rem;
+    
+}
+
+.made-by-me-text {
+    position: relative;
+    display: inline-block; /* Add this line */
+    text-decoration: none;
+    color: var(--color-sidebar-section-title-text);
+}
+
+.made-by-me-brand {
+    color: var(--color-header-nav-link-hover-text-blue);
+    font-weight: 600;
+}
+
+.made-by-me-text::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background-color: var(--color-footer-meta-text);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+.made-by-me-text:hover::after {
+    transform: scaleX(1);
+}

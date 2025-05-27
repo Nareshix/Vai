@@ -1331,6 +1331,17 @@ transform: scale(0.9);
 }
 }
 
+.admonition {
+margin-left: 4rem;
+margin-right: 4rem;
+padding: 1rem 1.25rem;
+margin-bottom: 1rem;
+border-radius: 0.375rem;
+color: #e6edf3;
+font-size: 14px;
+line-height: 1.5;
+margin-top: 1rem;
+}
 
 .admonition-title {
 font-weight: 600;
@@ -1415,6 +1426,13 @@ p {
 margin-left: 3rem;
 }
 
+#content-area hr {
+border: 0;
+border-top: 1px solid var(--color-border-toc-line);
+margin-top: 2.5rem;
+margin-bottom: 0;
+margin-left: 3rem;
+}
 pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
 span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -1816,7 +1834,26 @@ border-radius: 3px;
 font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
 }
 
+ul {
+    margin-left: 3rem;
+}
 
+ol {
+    margin-left: 3rem;
+}
+
+h3 {
+    /* margin-left: 2rem; */
+}
+
+p {
+    /* margin-left: 6rem; */
+}
+
+
+table {
+    margin-left: 6rem;
+}
 
 
 /* style.css */
@@ -1922,3 +1959,43 @@ table {
 }
 
 /* ... rest of your styles ... */
+
+
+
+
+.made-by-me-div {
+    text-decoration: none;
+    text-align: center;
+    /* margin-top: 1rem; */
+    padding-top: 1rem;
+    
+}
+
+.made-by-me-text {
+    position: relative;
+    display: inline-block; /* Add this line */
+    text-decoration: none;
+    color: var(--color-sidebar-section-title-text);
+}
+
+.made-by-me-brand {
+    color: var(--color-header-nav-link-hover-text-blue);
+    font-weight: 600;
+}
+
+.made-by-me-text::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    background-color: var(--color-footer-meta-text);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+}
+
+.made-by-me-text:hover::after {
+    transform: scaleX(1);
+}
