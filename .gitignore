@@ -1,5 +1,1 @@
-main.build/
-main.bin
 .venv/
-src/
-ssg_logic.build/
