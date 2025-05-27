@@ -729,7 +729,19 @@ def cli_build():
                 dest_file_path.write_text(minified, encoding="utf-8") 
 
             elif src_file.suffix == '.js':
+
                 content = src_file.read_text(encoding="utf-8")
+
+                ########### GITHUB ONLY #################
+                prefix = github_repo_name
+                pattern = r"(fetch\(\s*')[/]search_index\.json(')"
+                replacement = r"\1" + prefix + r"/search_index.json\2"
+                
+                # Testeded with linux diff command and is proven to be accurate
+                content  = re.sub(pattern, replacement, content)
+
+                ########### GITHUB ONLY #################
+
                 minified = rjsmin.jsmin(content)
                 dest_file_path.write_text(minified, encoding="utf-8") 
 
