@@ -639,28 +639,6 @@ def cli_init():
         print(f"An error occurred during initialization while copying package defaults: {e}")
         print("The '_devdocs' directory may be incomplete.")
 
-
-
-def add_github_prefix_to_static_resources(html, github_repo_name):
-    soup = BeautifulSoup(html, 'html.parser')
-
-    tags_attrs = {
-        'link': 'href',
-        'script': 'src',
-        'img': 'src',
-    }
-
-    for tag_name, attr in tags_attrs.items():
-        for tag in soup.find_all(tag_name):
-            if tag.has_attr(attr):
-                val = tag[attr]
-                if '/static' in val and not val.startswith(f'{github_repo_name}/static'):
-                    new_val = val.replace('/static', f'{github_repo_name}/static')
-                    tag[attr] = new_val
-
-    updated_html = str(soup)
-    return updated_html
-
 def cli_build():
     """
     Builds unminified assets into 'docs_dev/dist', then minifies/copies
@@ -668,8 +646,6 @@ def cli_build():
     'docs_dev/dist' remains unminified.
     'docs' will contain the minified/copied production-ready build.
     """
-
-    print('building...')
     DEV_SOURCE_DIR = Path("docs_dev/dist") 
     PROD_OUTPUT_DIR = Path('docs')
 
@@ -697,13 +673,7 @@ def cli_build():
 
             if src_file.suffix == ".html":
                 content = src_file.read_text(encoding="utf-8")
-
-                DOCS_DIR = Path("docs_dev")
-                with open(DOCS_DIR / "header_config.yaml", "r") as f:  
-                    config = yaml.safe_load(f)
-                github_repo_name = config['github_repo_name']
-
-                content = add_github_prefix_to_static_resources(content, github_repo_name)
+                print(content)
                 minified = minify_html.minify(
                     content,
                     minify_js=True,
