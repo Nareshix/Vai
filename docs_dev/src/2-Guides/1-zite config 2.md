@@ -1,5 +1,5 @@
 +++
-title: zite config ur moma ass
+title: zite config ur moma 
 date: 1999-99-99
 +++
 
