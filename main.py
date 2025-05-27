@@ -619,6 +619,14 @@ def cli_build():
     """minifies all code to maximise efficency
     """
     source_dir = Path("docs/dist")
+    if not Path('docs').exists():
+        print(f"docs folder not created. pls create one.")
+        return
+    
+    if not source_dir.exists():
+        print('dist folder does not exist, pls create one')
+        return
+        
     for file in source_dir.rglob("*"):
         if file.suffix == ".html":
             content = file.read_text(encoding="utf-8")
