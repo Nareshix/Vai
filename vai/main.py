@@ -672,7 +672,7 @@ def add_github_prefix_to_static_resources(html, github_repo_name):
     updated_html = str(soup)
     return updated_html
 
-def cli_build():
+def cli_build(github=False):
     """
     Builds unminified assets into 'docs_dev/dist', then minifies/copies
     them to a clean 'docs' folder for production.
@@ -709,17 +709,16 @@ def cli_build():
             if src_file.suffix == ".html":
                 content = src_file.read_text(encoding="utf-8")
 
-                ########### GITHUB ONLY #################
-                DOCS_DIR = Path("docs_dev")
-                with open(DOCS_DIR / "header_config.yaml", "r") as f:  
-                    config = yaml.safe_load(f)
-                github_repo_name = config['github_repo_name']
+                if github:
+                    DOCS_DIR = Path("docs_dev")
+                    with open(DOCS_DIR / "header_config.yaml", "r") as f:  
+                        config = yaml.safe_load(f)
+                    github_repo_name = config['github_repo_name']
 
-                if not github_repo_name.startswith('/'):
-                    github_repo_name = '/' + github_repo_name
-                content = add_github_prefix_to_static_resources(content, github_repo_name)
-                ########### GITHUB ONLY #################
-
+                    if not github_repo_name.startswith('/'):
+                        github_repo_name = '/' + github_repo_name
+                    content = add_github_prefix_to_static_resources(content, github_repo_name)
+                
                 minified = minify_html.minify(
                     content,
                     minify_js=True,
@@ -732,18 +731,17 @@ def cli_build():
 
                 content = src_file.read_text(encoding="utf-8")
 
-                ########### GITHUB ONLY #################
-                prefix = github_repo_name
-                pattern1 = r"(fetch\(\s*')[/]search_index\.json(')"
-                replacement = r"\1" + prefix + r"/search_index.json\2"
-                
-                # Testeded with linux diff command and is proven to be accurate
-                content  = re.sub(pattern1, replacement, content)
+                if github:    
+                    prefix = github_repo_name
+                    pattern1 = r"(fetch\(\s*')[/]search_index\.json(')"
+                    replacement = r"\1" + prefix + r"/search_index.json\2"
+                    
+                    # Testeded with linux diff command and is proven to be accurate
+                    content  = re.sub(pattern1, replacement, content)
 
-                pattern2 = r"(a\.href\s*=\s*)(result\.url\s*;)"
-                replacement2 = r"\1'" + prefix + r"' + \2"
-                content = re.sub(pattern2, replacement2, content)
-                ########### GITHUB ONLY #################
+                    pattern2 = r"(a\.href\s*=\s*)(result\.url\s*;)"
+                    replacement2 = r"\1'" + prefix + r"' + \2"
+                    content = re.sub(pattern2, replacement2, content)
 
                 minified = rjsmin.jsmin(content)
                 dest_file_path.write_text(minified, encoding="utf-8") 
@@ -782,16 +780,20 @@ def main():
 
     subparsers.add_parser("init", help="Create 'docs' folder structure.")
     subparsers.add_parser("run", help="Run the tool.")
-    subparsers.add_parser("build", help="minify code. After developing, use this and use the generated files in production")
 
+    build_parser = subparsers.add_parser("build", help="minify code. After developing, use this and use the generated files in production")
+    build_parser.add_argument('--github', action='store_true', help="builds specifically for github")
+    
     args = parser.parse_args()
-
     if args.command == "init":
         cli_init()
     elif args.command == "run":
         cli_run()
     elif args.command == 'build':
-        cli_build()
+        if args.github:
+            cli_build(github=True)
+        else:
+            cli_build()
     else:
         parser.print_help()
 
