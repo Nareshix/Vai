@@ -7,7 +7,7 @@ name = "vai"
 version = "0.1.0"
 description = "A static site generator made in python."
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = "MIT"
 keywords = ["python", "python3", "fast", "static site generator", "ssg"]
 authors = [
