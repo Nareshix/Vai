@@ -26,7 +26,7 @@ PACKAGE_DATA_DIR_NAME = "package_defaults"
 
 def setup_header_in_layout_html():
     """populates layout_no_heading.html in templates from the header_config.yaml file.
-    It populates it with  github_link, github_contribution_link
+    It populates it with  github_link, edit_this_page_on_github_link
     dropdowns, internals  and externals. after populating it will generate a html file
     called layout.html and parsing will be done trhough this html file 
     """
@@ -34,7 +34,7 @@ def setup_header_in_layout_html():
     with open("header_config.yaml", "r") as f:  
         config = yaml.safe_load(f)
     github_link  = config.get('github_link', '')
-    github_contribution_link = config.get('github_contribution_link', '')
+    edit_this_page_on_github_link = config.get('edit_this_page_on_github_link', '')
 
     dropdowns = config.get('dropdowns', '')
     internals = config.get('internals', '')
@@ -75,7 +75,7 @@ def setup_header_in_layout_html():
         logo=logo,
         favicon=favicon,
         github_link=github_link,
-        github_contribution_link=github_contribution_link,
+        edit_this_page_on_github_link=edit_this_page_on_github_link,
     )
 
     with open(templates_dir_in_docs / 'layout.html', 'w') as f:  
