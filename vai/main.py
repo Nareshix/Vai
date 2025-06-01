@@ -589,7 +589,36 @@ def cli_init():
     welcome_dir.mkdir(exist_ok=True)
 
     welcome_file = welcome_dir / "1-welcome.md"
-    welcome_file.write_text("# Welcome to Vai!")
+    welcome_file.write_text('''
+
+# Welcome to Vai! 🥳
+
+
+- *Congratulations! You've successfully initialized a new Vai project.* 🎉
+
+---
+
+
+# This is Your Starting Point 🚀
+
+- This page (`1-welcome.md`) is just a placeholder.
+- Feel free to edit it or replace it entirely with your own homepage content.
+- You will mostly edit content in the `src_md/` directory.
+-  We also have provided `static/` and `templates/` directory for more deeper and advanced customisation 😉 
+
+---
+
+# Resources 📚
+
+*   📖 **Documentation:** [docs.Vai.dev](https://docs.Vai.dev)
+*   💬 **Community (Discord):** [discord.gg/Vai](https://discord.gg/Vai)
+*   🐞 **Report Issues (GitHub):** [github.com/your-repo/issues](https://github.com/your-repo/issues)
+
+---
+
+# And most importantly 🥁
+- **Happy Building!**  💻
+                ''')
 
     static_dst_in_user_docs = current_path / "static"
     templates_dst_in_user_docs = current_path / "templates"
@@ -762,9 +791,11 @@ def cli_run():
         server.watch('header_config.yaml', build) 
             
         server.serve(root='src_html', default_filename='index.html', port=6600)
+    except OSError as e:
+        if e.errno ==98:
+            print("Error: port 6600 running. please kill it first before rerunning.")
     except Exception as e:
-        print("Required files not found. Ensure you're in the root directory. Run 'vai init' if this is your first time.")
-        # print(e)
+        print(e)
 def main():
     """starts the main cli cmds"""
     parser = argparse.ArgumentParser()
