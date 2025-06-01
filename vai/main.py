@@ -1,3 +1,4 @@
+from genericpath import exists
 import markdown
 from markdown.extensions import Extension
 from markdown.treeprocessors import Treeprocessor
@@ -29,9 +30,8 @@ def setup_header_in_layout_html():
     dropdowns, internals  and externals. after populating it will generate a html file
     called layout.html and parsing will be done trhough this html file 
     """
-    DOCS_DIR = Path("docs_dev")
 
-    with open(DOCS_DIR / "header_config.yaml", "r") as f:  
+    with open("header_config.yaml", "r") as f:  
         config = yaml.safe_load(f)
     github_link  = config['github_link']
     github_contribution_link = config['github_contribution_link']
@@ -40,24 +40,26 @@ def setup_header_in_layout_html():
     internals = config['internals']
     externals = config['externals']
 
-    static_dir_in_docs = DOCS_DIR / 'static'
+    static_dir_name = 'static'
+    static_dir = Path(static_dir_name) 
     wanted_basenames = {'favicon', 'logo'}
 
     found = {}
-    if static_dir_in_docs.exists(): 
-        for file_path in static_dir_in_docs.rglob('*'):
+    if static_dir.exists(): 
+        for file_path in static_dir.rglob('*'):
             if file_path.is_file():
                 stem = file_path.stem
                 if stem in wanted_basenames:
                     found[stem] = file_path.name
     else:
-        print(f"Warning: Static directory '{static_dir_in_docs}' not found. Logo/Favicon might be missing from header.")
+        print(f"Warning: Static directory '{static_dir}' not found. Logo/Favicon might be missing from header.")
 
 
     logo = found.get('logo', '')
     favicon = found.get('favicon', '')
 
-    templates_dir_in_docs = DOCS_DIR / 'templates'  
+    templates_dir_in_docs = Path('templates')
+    
     env = Environment(loader=FileSystemLoader(str(templates_dir_in_docs)))  
     try:
         template = env.get_template('layout_no_header.html')
@@ -78,6 +80,7 @@ def setup_header_in_layout_html():
 
     with open(templates_dir_in_docs / 'layout.html', 'w') as f:  
         f.write(rendered)
+
 
 
 def generate_slug(text_to_slugify):
@@ -485,11 +488,16 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
     
 
 def build():
+    """converts all the md files from src_md to html files in
+    src_html while retaining the folder structure. (numbers will be excluded
+    but position retains in frontend)
+    """
     sidebar_data_for_redirect = []
     root_redirect_target_url = "/" 
 
 
-    DOCS_DIR = Path("docs_dev") 
+    # DOCS_DIR = Path("docs_dev") 
+    DOCS_DIR = Path("./") 
 
     setup_header_in_layout_html()
 
@@ -499,14 +507,14 @@ def build():
     )
 
 
-    dist_path_obj = DOCS_DIR / 'dist'
-    if dist_path_obj.exists():
-        shutil.rmtree(dist_path_obj)
-    dist_path_obj.mkdir(parents=True, exist_ok=True)
+    src_html_path_obg = DOCS_DIR / 'src_html'
+    if src_html_path_obg.exists():
+        shutil.rmtree(src_html_path_obg)
+    src_html_path_obg.mkdir(parents=True, exist_ok=True)
 
-    copy_static_assets(static_src_dir=str(DOCS_DIR / 'static'), dst_dir=str(dist_path_obj / 'static'))
+    copy_static_assets(static_src_dir=str(DOCS_DIR / 'static'), dst_dir=str(src_html_path_obg / 'static'))
 
-    all_files_to_process, sidebar_data = scan_src(src_dir_path=str(DOCS_DIR / 'src'))
+    all_files_to_process, sidebar_data = scan_src(src_dir_path=str(DOCS_DIR / 'src_md'))
     sidebar_data_for_redirect = sidebar_data
 
     if sidebar_data and sidebar_data[0].get('files') and len(sidebar_data[0]['files']) > 0:
@@ -518,7 +526,7 @@ def build():
 
     process_md_files(
         all_files_to_process,
-        dist_path_obj,
+        src_html_path_obg,
         sidebar_data,
         current_env
     )
@@ -528,30 +536,30 @@ def build():
             section_slug = section['output_folder_name']
             first_file_in_section_slug = section['files'][0]['slug']
 
-            source_html_for_section_index = dist_path_obj / section_slug / first_file_in_section_slug / "index.html"
+            source_html_for_section_index = src_html_path_obg / section_slug / first_file_in_section_slug / "index.html"
 
-            section_index_output_path = dist_path_obj / section_slug / "index.html"
+            section_index_output_path = src_html_path_obg / section_slug / "index.html"
 
             if source_html_for_section_index.exists():
-                (dist_path_obj / section_slug).mkdir(parents=True, exist_ok=True)
+                (src_html_path_obg / section_slug).mkdir(parents=True, exist_ok=True)
 
                 content_of_first_page_in_section = source_html_for_section_index.read_text(encoding='utf-8')
                 section_index_output_path.write_text(content_of_first_page_in_section, encoding='utf-8')
             else:
                 print(f"WARNING: Source HTML for section index copy not found at: {source_html_for_section_index}")
                 
-    if not (dist_path_obj / 'index.html').exists() and  sidebar_data_for_redirect:
+    if not (src_html_path_obg / 'index.html').exists() and  sidebar_data_for_redirect:
         if  root_redirect_target_url != "/":
             try:
                 path_parts =  root_redirect_target_url.strip('/').split('/')
                 if len(path_parts) >= 2:
                     first_section_slug_for_copy = path_parts[0]
                     first_file_slug_for_copy = path_parts[1]
-                    source_html_path = dist_path_obj / first_section_slug_for_copy / first_file_slug_for_copy / "index.html"
+                    source_html_path = src_html_path_obg / first_section_slug_for_copy / first_file_slug_for_copy / "index.html"
 
                     if source_html_path.exists():
                         content_of_first_page = source_html_path.read_text(encoding='utf-8')
-                        (dist_path_obj / 'index.html').write_text(content_of_first_page, encoding='utf-8')
+                        (src_html_path_obg / 'index.html').write_text(content_of_first_page, encoding='utf-8')
                     else:
                         print(f"WARNING: Source HTML for root index.html copy not found at: {source_html_path}")
                 else:
@@ -559,12 +567,8 @@ def build():
             except Exception as e:
                 print(f"ERROR: Occurred while trying to create root index.html by copying: {e}")
 
-    
-        # else:
-        #     print("INFO: Could not create root index.html by copying: No valid target (first section/file) found.")
-    
 def cli_init():
-    """creates docs_dev folder with necessary metadata in it
+    """populares current dir with necessary metadata in it
        The metadata includes an 
        1. an empty dist folder
        2. src folder with README.md
@@ -575,23 +579,16 @@ def cli_init():
     Usage:
         python main.py init (will be different in prod) 
     """
-    docs_path = Path("docs_dev")
+    current_path = Path("./")
 
-    if docs_path.exists():
-        print(f"The 'docs_dev' folder already exists in the current directory. Initialization skipped.")
-        return
+    (current_path / "src_html").mkdir(exist_ok=True)
+    src_user_path = current_path / "src_md"
+    src_user_path.mkdir(exist_ok=True)
+    (src_user_path / "README.md").touch() 
 
-    # Create the main 'docs' directory and its basic subdirectories
-    docs_path.mkdir(parents=True)
-    (docs_path / "dist").mkdir()
-    src_user_path = docs_path / "src"
-    src_user_path.mkdir()
-    (src_user_path / "README.md").touch() # As per your original
-
-    # Define destination paths in the user's 'docs' directory
-    static_dst_in_user_docs = docs_path / "static"
-    templates_dst_in_user_docs = docs_path / "templates"
-    header_config_dst_in_user_docs = docs_path / "header_config.yaml"
+    static_dst_in_user_docs = current_path / "static"
+    templates_dst_in_user_docs = current_path / "templates"
+    header_config_dst_in_user_docs = current_path / "header_config.yaml"
 
     try:
         # Get a reference to the 'package_defaults' directory within the installed package
@@ -601,7 +598,7 @@ def cli_init():
         static_src_in_pkg = package_defaults_resource_root.joinpath("static")
         if static_src_in_pkg.is_dir():
             with as_file(static_src_in_pkg) as static_src_concrete_path:
-                shutil.copytree(static_src_concrete_path, static_dst_in_user_docs)
+                shutil.copytree(static_src_concrete_path, static_dst_in_user_docs, dirs_exist_ok=True)
         else:
             print(f"Warning: Default 'static/' folder not found within the package.")
 
@@ -609,7 +606,7 @@ def cli_init():
         templates_src_in_pkg = package_defaults_resource_root.joinpath("templates")
         if templates_src_in_pkg.is_dir():
             with as_file(templates_src_in_pkg) as templates_src_concrete_path:
-                shutil.copytree(templates_src_concrete_path, templates_dst_in_user_docs)
+                shutil.copytree(templates_src_concrete_path, templates_dst_in_user_docs, dirs_exist_ok=True)
         else:
             print(f"Warning: Default 'templates/' folder not found within the package.")
 
@@ -619,16 +616,15 @@ def cli_init():
             with as_file(header_config_src_in_pkg) as header_config_concrete_path:
                 shutil.copy(header_config_concrete_path, header_config_dst_in_user_docs)
         else:
-            print(f"Warning: Default 'header_config.yaml' not found within the package.")
+            print(f"Wrning: Default 'header_config.yaml' not found within the package.")
         
-        print("Created 'docs_dev' folder.") 
+        print("Initialised Successfully.") 
 
     except FileNotFoundError:
         print(f"Error: Could not find package resources for '{PACKAGE_NAME}'. Is the package installed correctly and includes '{PACKAGE_DATA_DIR_NAME}'?")
         print("The 'docs_dev' directory may be incomplete.")
     except Exception as e:
         print(f"An error occurred during initialization while copying package defaults: {e}")
-        print("The '_devdocs' directory may be incomplete.")
 
 
 
@@ -665,35 +661,36 @@ def add_github_prefix_to_static_resources(html, github_repo_name):
 
 def cli_build(github=False):
     """
-    Builds unminified assets into 'docs_dev/dist', then minifies/copies
-    them to a clean 'docs' folder for production.
-    'docs_dev/dist' remains unminified.
-    'docs' will contain the minified/copied production-ready build.
+    It first converts all .md files from the src_md folder into .html files in the src_html folder 
+    (in case the user runs vai build without running vai run).
+    Then, it processes all the .html files in src_html 
+    by minimizing the HTML, CSS, and JS, and outputs the final files into the dist folder.
     """
 
     print('building...')
-    DEV_SOURCE_DIR = Path("docs_dev/dist") 
-    PROD_OUTPUT_DIR = Path('docs')
+    SRC_HTML_DIR = Path("src_html") 
+    DIST_DIR = Path('dist')
 
-    if not Path('docs_dev').exists():
-        print(f"'docs_dev' folder not created. Please run 'init' or ensure it exists.")
+    if not Path('src_html').exists():
+        print(f"'src_html' folder not created. Please run 'vai init' or ensure it exists.")
         return
 
+    # runs again to convert md to html just in case
     build() 
     
-    if not DEV_SOURCE_DIR.exists() or not any(DEV_SOURCE_DIR.iterdir()):
-        print(f"Error: The directory '{DEV_SOURCE_DIR}' is empty or does not exist after the build step.")
+    if not SRC_HTML_DIR.exists() or not any(SRC_HTML_DIR.iterdir()):
+        print(f"Error: The directory '{SRC_HTML_DIR}' is empty or does not exist after the build step.")
         print("Please ensure the `build()` function correctly outputs files to this location.")
         return
 
-    if PROD_OUTPUT_DIR.exists(): 
-        shutil.rmtree(PROD_OUTPUT_DIR)
-    PROD_OUTPUT_DIR.mkdir(parents=True, exist_ok=True) 
+    if DIST_DIR.exists(): 
+        shutil.rmtree(DIST_DIR)
+    DIST_DIR.mkdir(parents=True, exist_ok=True) 
 
-    for src_file in DEV_SOURCE_DIR.rglob("*"): 
+    for src_file in SRC_HTML_DIR.rglob("*"): 
         if src_file.is_file():
-            relative_path = src_file.relative_to(DEV_SOURCE_DIR)
-            dest_file_path = PROD_OUTPUT_DIR / relative_path
+            relative_path = src_file.relative_to(SRC_HTML_DIR)
+            dest_file_path = DIST_DIR / relative_path
 
             dest_file_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -745,27 +742,24 @@ def cli_build(github=False):
             else:
                 shutil.copy2(src_file, dest_file_path)
 
-    print(f"Build finished! Minified/copied files are in '{PROD_OUTPUT_DIR}'.")
+    print(f"Build finished! Minified/copied files are in '{DIST_DIR}'.")
 
 def cli_run():
-    """starts the dev server
-    """
-
+    """starts the dev server"""
     try:
         build() 
         server = Server()
-        server.watch('docs_dev/src/**/*.md', build)
-        server.watch('docs_dev/templates/layout_no_header.html', build) 
-        server.watch('docs_dev/static/**/*', build) 
-        server.watch('docs_dev/header_config.yaml', build) 
-        
-        server.serve(root='docs_dev/dist', default_filename='index.html', port=6455)
+        server.watch('src_md/**/*.md', build)
+        server.watch('templates/layout_no_header.html', build) 
+        server.watch('static/**/*', build) 
+        server.watch('header_config.yaml', build) 
+            
+        server.serve(root='src_html', default_filename='index.html', port=6600)
     except Exception as e:
-        print("Please ensure u have the necessary files and folders. run 'vai init' for convenience")
-
+        print("Required files not found. Ensure you're in the root directory. Run 'vai init' if this is your first time.")
+        # print(e)
 def main():
-    """starts the main cli cmds
-    """
+    """starts the main cli cmds"""
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest="command")
 
