@@ -315,6 +315,7 @@ position: relative;
 overflow-wrap: break-word;
 word-break: break-word;
 line-height: 1.4;
+font-weight: 600;
 }
 
 #toc-links a.active {
