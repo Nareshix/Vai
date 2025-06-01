@@ -499,6 +499,7 @@ text-align: right;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
+  font-weight: 600;
 }
 
 .header-nav-link:hover,
@@ -733,6 +734,7 @@ font-weight: 500;
 cursor: pointer;
 transition: background-color 0.2s ease, color 0.2s ease;
 white-space: nowrap;
+font-weight: 600;
 }
 
 .header-dropdown-trigger .dropdown-arrow-icon {
@@ -799,6 +801,7 @@ border-radius: 6px;
 font-size: 0.9rem;
 transition: background-color 0.2s ease, color 0.2s ease;
 white-space: nowrap;
+font-weight: 600;
 }
 
 .header-dropdown-item:hover,
