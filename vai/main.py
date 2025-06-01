@@ -761,7 +761,7 @@ def cli_run():
         
         server.serve(root='docs_dev/dist', default_filename='index.html', port=6455)
     except Exception as e:
-        print(f'{e}. Please ensure u have the necessary files and folders')
+        print("Please ensure u have the necessary files and folders. run 'vai init' for convenience")
 
 def main():
     """starts the main cli cmds
