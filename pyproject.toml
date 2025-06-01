@@ -3,14 +3,13 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "vai"
-# version = "0.1.8" # this is in TestPypi
-version = "0.1.0" # this is for Pypi
+name = "vai-ssg"
+version = "0.0.1" # this is for Pypi
 description = "A static site generator made in python."
 readme = "README.md"
 requires-python = ">=3.9"
 license = "MIT"
-keywords = ["python", "python3", "fast", "static site generator", "ssg"]
+keywords = ["vai", "python", "python3", "fast", "static site generator", "ssg"]
 authors = [
     { name = "Naresh", email = "nareshix66@gmail.com" }
 ]
