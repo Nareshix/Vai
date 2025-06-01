@@ -496,7 +496,6 @@ def build():
     root_redirect_target_url = "/" 
 
 
-    # DOCS_DIR = Path("docs_dev") 
     DOCS_DIR = Path("./") 
 
     setup_header_in_layout_html()
@@ -590,41 +589,43 @@ def cli_init():
     templates_dst_in_user_docs = current_path / "templates"
     header_config_dst_in_user_docs = current_path / "header_config.yaml"
 
-    try:
-        # Get a reference to the 'package_defaults' directory within the installed package
-        package_defaults_resource_root = files(PACKAGE_NAME).joinpath(PACKAGE_DATA_DIR_NAME)
+    # try:
+    # Get a reference to the 'package_defaults' directory within the installed package
+    package_defaults_resource_root = files(PACKAGE_NAME).joinpath(PACKAGE_DATA_DIR_NAME)
 
-        # --- Copy 'static' directory from package_defaults ---
-        static_src_in_pkg = package_defaults_resource_root.joinpath("static")
-        if static_src_in_pkg.is_dir():
-            with as_file(static_src_in_pkg) as static_src_concrete_path:
-                shutil.copytree(static_src_concrete_path, static_dst_in_user_docs, dirs_exist_ok=True)
-        else:
-            print(f"Warning: Default 'static/' folder not found within the package.")
+    # --- Copy 'static' directory from package_defaults ---
+    static_src_in_pkg = package_defaults_resource_root.joinpath("static")
+    if static_src_in_pkg.is_dir():
+        with as_file(static_src_in_pkg) as static_src_concrete_path:
+            shutil.copytree(static_src_concrete_path, static_dst_in_user_docs, dirs_exist_ok=True)
+    else:
+        print(f"Warning: Default 'static/' folder not found within the package.")
 
-        # --- Copy 'templates' directory from package_defaults ---
-        templates_src_in_pkg = package_defaults_resource_root.joinpath("templates")
-        if templates_src_in_pkg.is_dir():
-            with as_file(templates_src_in_pkg) as templates_src_concrete_path:
-                shutil.copytree(templates_src_concrete_path, templates_dst_in_user_docs, dirs_exist_ok=True)
-        else:
-            print(f"Warning: Default 'templates/' folder not found within the package.")
+    # --- Copy 'templates' directory from package_defaults ---
+    templates_src_in_pkg = package_defaults_resource_root.joinpath("templates")
+    if templates_src_in_pkg.is_dir():
+        with as_file(templates_src_in_pkg) as templates_src_concrete_path:
+            shutil.copytree(templates_src_concrete_path, templates_dst_in_user_docs, dirs_exist_ok=True)
+    else:
+        print(f"Warning: Default 'templates/' folder not found within the package.")
 
-        # --- Copy 'header_config.yaml' from package_defaults ---
-        header_config_src_in_pkg = package_defaults_resource_root.joinpath("header_config.yaml")
-        if header_config_src_in_pkg.is_file():
-            with as_file(header_config_src_in_pkg) as header_config_concrete_path:
-                shutil.copy(header_config_concrete_path, header_config_dst_in_user_docs)
-        else:
-            print(f"Wrning: Default 'header_config.yaml' not found within the package.")
-        
-        print("Initialised Successfully.") 
+    # --- Copy 'header_config.yaml' from package_defaults ---
+    header_config_src_in_pkg = package_defaults_resource_root.joinpath("header_config.yaml")
+    if header_config_src_in_pkg.is_file():
+        with as_file(header_config_src_in_pkg) as header_config_concrete_path:
+            shutil.copy(header_config_concrete_path, header_config_dst_in_user_docs)
+    else:
+        print(f"Wrning: Default 'header_config.yaml' not found within the package.")
+    
+    print("Initialised Successfully.") 
 
-    except FileNotFoundError:
-        print(f"Error: Could not find package resources for '{PACKAGE_NAME}'. Is the package installed correctly and includes '{PACKAGE_DATA_DIR_NAME}'?")
-        print("The 'docs_dev' directory may be incomplete.")
-    except Exception as e:
-        print(f"An error occurred during initialization while copying package defaults: {e}")
+
+    # DEVELOPMENT ONLY SHOULD WORK IN PROD 
+
+    # except FileNotFoundError:
+    #     print(f"Error: Could not find package resources for '{PACKAGE_NAME}'. Is the package installed correctly and includes '{PACKAGE_DATA_DIR_NAME}'?")
+    # except Exception as e:
+    #     print(f"An error occurred during initialization while copying package defaults: {e}")
 
 
 
@@ -667,7 +668,6 @@ def cli_build(github=False):
     by minimizing the HTML, CSS, and JS, and outputs the final files into the dist folder.
     """
 
-    print('building...')
     SRC_HTML_DIR = Path("src_html") 
     DIST_DIR = Path('dist')
 
@@ -687,6 +687,7 @@ def cli_build(github=False):
         shutil.rmtree(DIST_DIR)
     DIST_DIR.mkdir(parents=True, exist_ok=True) 
 
+    print('building...')
     for src_file in SRC_HTML_DIR.rglob("*"): 
         if src_file.is_file():
             relative_path = src_file.relative_to(SRC_HTML_DIR)
@@ -698,7 +699,7 @@ def cli_build(github=False):
                 content = src_file.read_text(encoding="utf-8")
 
                 if github:
-                    DOCS_DIR = Path("docs_dev")
+                    DOCS_DIR = Path("./")
                     with open(DOCS_DIR / "header_config.yaml", "r") as f:  
                         config = yaml.safe_load(f)
                     github_repo_name = config['github_repo_name']
