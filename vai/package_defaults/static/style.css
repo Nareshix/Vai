@@ -1242,28 +1242,12 @@ border-radius: 6px;
 overflow-x: auto;
 }
 
-.copy-code-button {
-position: absolute;
-top: 0.75em;
-right: 0.75em;
-padding: 5px;
-background-color: rgba(0,0,0,0.1);
-border: none;
-border-radius: 4px;
-cursor: pointer;
-opacity: 0;
-visibility: hidden;
-transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out;
-z-index: 1;
-line-height: 0;
-user-select: none;
-}
 
 .copy-code-button {
 position: absolute;
-top: 8px;
-right: 8px;
-padding: 5px;
+top: 0.5rem;       
+right: 0.5rem;     
+padding: 0.3125rem;
 background-color: transparent;
 border: none;
 border-radius: 4px;
@@ -1417,13 +1401,6 @@ display: block;
 margin: auto;
 }
 
-h1, h2, h3, h4, h5, h6  {
-padding-left: 3rem;
-}
-
-p {
-margin-left: 3rem;
-}
 
 #content-area hr {
 border: 0;
