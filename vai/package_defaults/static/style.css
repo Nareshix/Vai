@@ -1951,3 +1951,7 @@ table {
 .made-by-me-text:hover::after {
     transform: scaleX(1);
 }
+
+li {
+    margin-bottom: 1rem;
+}
