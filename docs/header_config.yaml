@@ -1,0 +1,30 @@
+github_link: "https://github.com/Nareshix/Vai"
+github_contribution_link: 'https://github.com/Nareshix/Vai/tree/main/docs_dev/src'
+github_repo_name: "vai" # CASE SENSITIVE
+
+internals:
+  - title: "Guide"
+    link: "/guides"
+
+  - title: "Reference"
+    link: "/reference"
+
+externals:
+  - title: "mom"
+    link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+
+
+dropdowns:
+  - main_title: "Main Menu or is it or is it not"
+    items:
+      - title: "Guide"
+        type: internal
+        link: "/guides"
+
+      - title: "Resources"
+        type: internal
+        link: "/reference"
+
+      - title: "Rickroll"
+        type: external
+        link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
