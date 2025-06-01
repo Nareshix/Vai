@@ -310,16 +310,7 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
     if not static_src_path.exists() or not static_src_path.is_dir():
         print(f"Warning: Static assets directory '{static_src_path}' not found. Skipping copy.")
         return
-    try:
-        shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
-    except TypeError:
-        print("Falling back to item-by-item copy for static assets (Python < 3.8 or other issue).")
-        if not dst_path.exists(): dst_path.mkdir(parents=True, exist_ok=True)
-        for item in static_src_path.iterdir():
-            s = static_src_path / item.name
-            d = dst_path / item.name
-            if s.is_dir(): shutil.copytree(s, d, dirs_exist_ok=True)
-            else: shutil.copy2(s, d)
+    shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
 
 def scan_src(src_dir_path='src'):
     """
