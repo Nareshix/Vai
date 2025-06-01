@@ -610,7 +610,7 @@ def cli_init():
 
 # Resources 📚
 
-*   📖 **Documentation:** [docs.vai-ssg.dev](https://vai-ssg.pages.dev/)
+*   📖 **Documentation:** [vai-docs.pages.dev](https://vai-docs.pages.dev/)
 *   🐞 **Report Issues (GitHub):** [github.com/nareshix/vai/issues](https://github.com/nareshix/vai/issues)
 
 ---
