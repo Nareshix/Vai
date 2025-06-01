@@ -610,15 +610,17 @@ def cli_init():
 
 # Resources 📚
 
-*   📖 **Documentation:** [docs.Vai.dev](https://docs.Vai.dev)
-*   💬 **Community (Discord):** [discord.gg/Vai](https://discord.gg/Vai)
-*   🐞 **Report Issues (GitHub):** [github.com/your-repo/issues](https://github.com/your-repo/issues)
+*   📖 **Documentation:** [docs.vai-ssg.dev](https://vai-ssg.pages.dev/)
+*   🐞 **Report Issues (GitHub):** [github.com/nareshix/vai/issues](https://github.com/nareshix/vai/issues)
 
 ---
 
 # And most importantly... 🥁
 - **Happy Building!**  💻
                 ''')
+
+# not big enough of a project to have one lol. just keep it in case (hopefully)
+# *   💬 **Community (Discord):** [discord.gg/Vai](https://discord.gg/Vai)  
 
     static_dst_in_user_docs = current_path / "static"
     templates_dst_in_user_docs = current_path / "templates"
