@@ -616,7 +616,7 @@ def cli_init():
 
 ---
 
-# And most importantly 🥁
+# And most importantly... 🥁
 - **Happy Building!**  💻
                 ''')
 
