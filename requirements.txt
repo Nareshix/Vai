@@ -4,7 +4,6 @@ livereload==2.7.1
 Markdown==3.8
 MarkupSafe==3.0.2
 minify_html==0.16.4
-Nuitka==2.7.3
 ordered-set==4.1.0
 Pygments==2.19.1
 PyYAML==6.0.2
