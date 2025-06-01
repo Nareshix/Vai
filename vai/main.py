@@ -33,12 +33,12 @@ def setup_header_in_layout_html():
 
     with open("header_config.yaml", "r") as f:  
         config = yaml.safe_load(f)
-    github_link  = config['github_link']
-    github_contribution_link = config['github_contribution_link']
+    github_link  = config.get('github_link', '')
+    github_contribution_link = config.get('github_contribution_link', '')
 
-    dropdowns = config['dropdowns']
-    internals = config['internals']
-    externals = config['externals']
+    dropdowns = config.get('dropdowns', '')
+    internals = config.get('internals', '')
+    externals = config.get('externals', '')
 
     static_dir_name = 'static'
     static_dir = Path(static_dir_name) 
@@ -584,6 +584,12 @@ def cli_init():
     src_user_path = current_path / "src_md"
     src_user_path.mkdir(exist_ok=True)
     (src_user_path / "README.md").touch() 
+
+    welcome_dir = src_user_path / "1-Welcome"
+    welcome_dir.mkdir(exist_ok=True)
+
+    welcome_file = welcome_dir / "1-welcome.md"
+    welcome_file.write_text("# Welcome to Vai!")
 
     static_dst_in_user_docs = current_path / "static"
     templates_dst_in_user_docs = current_path / "templates"
