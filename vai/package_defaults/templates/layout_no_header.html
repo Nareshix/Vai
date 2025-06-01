@@ -107,6 +107,7 @@
                 {% endfor %}
 
                 {% for dropdown_config in dropdowns %}
+                    {%if dropdown_config.main_title != '' %}
                 <div class="header-dropdown-container" id="dropdownContainer_{{ loop.index }}">
                     <button class="header-dropdown-trigger" id="dropdownTrigger_{{ loop.index }}" aria-haspopup="true" aria-expanded="false" aria-controls="dropdownMenu_{{ loop.index }}">
                         <span>{{ dropdown_config.main_title }}</span>
@@ -127,6 +128,7 @@
                         {% endfor %}
                     </div>
                 </div>
+                    {% endif %}
                 {% endfor %}
 
                 <button id="themeToggle" class="theme-toggle-button" aria-label="Toggle theme">
