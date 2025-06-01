@@ -4,3 +4,4 @@ vai/__pycache__/
 build/lib/vai/
 test/
 test.py
+.pypirc
