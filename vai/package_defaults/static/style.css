@@ -261,10 +261,12 @@ margin-right: 1rem;
 }
 
 #content-area {
-flex-grow: 3;
-flex-basis: 0;
-padding: 1.5rem;
+    flex-grow: 3;
+    flex-basis: 0;
+    padding: 1.5rem;
+    min-width: 0;
 }
+
 #content-area::-webkit-scrollbar {
 width: 8px;
 }
@@ -340,7 +342,6 @@ margin-bottom: 1rem;
 padding-top: 5rem;
 color: var(--color-text-body);
 }
-
 
 #content-area p {
 line-height: 1.6;
@@ -1226,22 +1227,22 @@ font-weight: 600;
 }
 
 #content-area .codehilite {
-position: relative;
-margin-bottom: 1rem;
-border-radius: 6px;
-width: auto;
-max-width: 85%;
-margin-left: auto;
-margin-right: auto;
-margin-top: 1rem;
+    position: relative;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    max-width: 90%; 
+    margin-left: auto; 
+    margin-right: auto; 
+    margin-top: 1rem;
+    overflow-x: auto;   
 }
 
 #content-area .codehilite pre {
-margin: 0;
-padding: 1em;
-border-radius: 6px;
-overflow-x: auto;
+    margin: 0;
+    padding: 1em;
+    white-space: pre;
 }
+
 
 
 .copy-code-button {
@@ -1302,18 +1303,33 @@ transform: scale(0.9);
 }
 
 @media (max-width: 992px) {
-.codehilite pre {
-    overflow-x: auto;
-    white-space: pre;
-}
+    #content-area .codehilite {
+        max-width: 100%; 
+        margin-left: 0;
+        margin-right: 0;
+        overflow-x: auto;
+
+    }
+    
+    .codehilite pre {
+        overflow-x: auto;
+        white-space: pre;
+    }
 }
 
 @media (max-width: 767px) {
-.codehilite pre {
-    overflow-x: auto;
-    white-space: pre;
+    #content-area .codehilite {
+        max-width: 100%;
+        margin-left: 0;
+        margin-right: 0;
+    }
+    
+    .codehilite pre {
+        overflow-x: auto;
+        white-space: pre;
+    }
 }
-}
+
 
 .admonition {
 margin-left: 4rem;
@@ -1325,10 +1341,6 @@ color: #e6edf3;
 font-size: 14px;
 line-height: 1.5;
 margin-top: 1rem;
-}
-
-.admonition > div > p {
-    font-size: 1.15em;
 }
 
 .admonition-title {
@@ -1347,13 +1359,16 @@ margin-bottom: 0;
 .admonition-content > *:last-child {
 margin-bottom: 0;
 }
+.admonition > div > p {
+    font-size: 1.15em;
+}
 
 .admonition.note     { background-color: #2160b3; }
 .admonition.tip     { background-color: #139024; }
 .admonition.warning { background-color: #d29922; }
 .admonition.danger  { background-color: #f85149; }
+.admonition.details { background-color: #3A414A; }
 .admonition.info { background-color: #485f7b; }
-.admonition.info { background-color: #62758d; }
 .admonition.important { background-color: #7d60b1; }
 
 .admonition.info div p,
@@ -1793,15 +1808,15 @@ word-wrap: break-word;
 }
 
 #content-area pre code {
-background-color: transparent !important;
-color: inherit !important;
-font-family: inherit !important;
-font-size: 1em !important;
-padding: 0 !important;
-margin: 0 !important;
-border-radius: 0 !important;
-border: none !important;
-word-wrap: normal !important;
+    background-color: transparent !important; 
+    color: inherit !important;                
+    font-family: inherit !important;         
+    font-size: 1em !important;               
+    padding: 0 !important;                    
+    margin: 0 !important;                    
+    border-radius: 0 !important;            
+    border: none !important;                 
+    white-space: inherit !important;        
 }
 
 #content-area .admonition-content code {
