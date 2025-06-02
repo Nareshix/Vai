@@ -1352,7 +1352,7 @@ margin-bottom: 0;
 .admonition.tip     { background-color: #139024; }
 .admonition.warning { background-color: #d29922; }
 .admonition.danger  { background-color: #f85149; }
-.admonition.details { background-color: #3A414A; }
+.admonition.info { background-color: #485f7b; }
 .admonition.info { background-color: #62758d; }
 .admonition.important { background-color: #7d60b1; }
 
