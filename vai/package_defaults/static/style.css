@@ -1330,17 +1330,6 @@ transform: scale(0.9);
 }
 
 
-.admonition {
-margin-left: 4rem;
-margin-right: 4rem;
-padding: 1rem 1.25rem;
-margin-bottom: 1rem;
-border-radius: 0.375rem;
-color: #e6edf3;
-font-size: 14px;
-line-height: 1.5;
-margin-top: 1rem;
-}
 
 .admonition-title {
 font-weight: 600;
@@ -1920,10 +1909,10 @@ table {
 }
 
 .admonition {
-    margin-left: 1.5rem;  
-    margin-right: 1.5rem; 
+    margin-left: 3rem;  
+    margin-right: 3rem; 
     padding: 1rem 1.25rem;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
     border-radius: 0.375rem;
     color: #e6edf3;
     font-size: 14px;
