@@ -35,13 +35,13 @@ PACKAGE_DATA_DIR_NAME = "package_defaults"
 
 
 def setup_header_in_layout_html():
-    """populates layout_no_heading.html in templates from the header_config.yaml file.
+    """populates layout_no_heading.html in templates from the config.yaml file.
     It populates it with  github_link, edit_this_page_on_github_link
     dropdowns, internals  and externals. after populating it will generate a html file
     called layout.html and parsing will be done trhough this html file 
     """
 
-    with open("header_config.yaml", "r") as f:  
+    with open("config.yaml", "r") as f:  
         config = yaml.safe_load(f)
     github_link  = config.get('github_link', '')
     edit_this_page_on_github_link = config.get('edit_this_page_on_github_link', '')
@@ -583,7 +583,7 @@ def cli_init():
        2. src folder with README.md
        3. static folder with the necessary css and js, icon and favicon files (these image files are expected to be changed)
        4. templates folder containing html files for the parsing of necessary data (yaml or md) to html 
-       5. a header_config.yaml that affects the top bar. This will stay consistent for all pages
+       5. a config.yaml that affects the top bar. This will stay consistent for all pages
 
     Usage:
         python main.py init (will be different in prod) 
@@ -634,7 +634,7 @@ def cli_init():
 
     static_dst_in_user_docs = current_path / "static"
     templates_dst_in_user_docs = current_path / "templates"
-    header_config_dst_in_user_docs = current_path / "header_config.yaml"
+    header_config_dst_in_user_docs = current_path / "config.yaml"
 
     # try:
     # Get a reference to the 'package_defaults' directory within the installed package
@@ -656,13 +656,13 @@ def cli_init():
     else:
         print(f"Warning: Default 'templates/' folder not found within the package.")
 
-    # --- Copy 'header_config.yaml' from package_defaults ---
-    header_config_src_in_pkg = package_defaults_resource_root.joinpath("header_config.yaml")
+    # --- Copy 'config.yaml' from package_defaults ---
+    header_config_src_in_pkg = package_defaults_resource_root.joinpath("config.yaml")
     if header_config_src_in_pkg.is_file():
         with as_file(header_config_src_in_pkg) as header_config_concrete_path:
             shutil.copy(header_config_concrete_path, header_config_dst_in_user_docs)
     else:
-        print(f"Wrning: Default 'header_config.yaml' not found within the package.")
+        print(f"Wrning: Default 'config.yaml' not found within the package.")
     
     print("Initialised Successfully.") 
 
@@ -747,7 +747,7 @@ def cli_build(github=False):
 
                 if github:
                     DOCS_DIR = Path("./")
-                    with open(DOCS_DIR / "header_config.yaml", "r") as f:  
+                    with open(DOCS_DIR / "config.yaml", "r") as f:  
                         config = yaml.safe_load(f)
                     github_repo_name = config['github_repo_name']
 
@@ -801,7 +801,7 @@ def cli_run():
         server.watch('src_md/**/*.md', build)
         server.watch('templates/layout_no_header.html', build) 
         server.watch('static/**/*', build) 
-        server.watch('header_config.yaml', build) 
+        server.watch('config.yaml', build) 
             
         server.serve(root='src_html', default_filename='index.html', port=6600)
     except OSError as e:
