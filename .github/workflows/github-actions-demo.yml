@@ -1,39 +1,42 @@
-name: Build Cross-Platform VAI Binaries
+name: Build Cross-Platform VAI Binaries and Create Release
 
 on:
   push:
     branches: [main]
-    tags: ['v*'] # Also trigger on version tags
+    tags: ['v*'] # CRITICAL: Trigger on tags like v0.1.0, v1.0.0 etc.
   pull_request:
     branches: [main]
-  workflow_dispatch: # Allows manual triggering
+  workflow_dispatch:
 
 jobs:
-  build-x86_64-and-arm: # Renamed job for clarity as it now includes macOS ARM
+  build_binaries: # This job builds all the binaries
     name: Build for ${{ matrix.os_name }} (${{ matrix.arch }})
     strategy:
-      fail-fast: false # Don't cancel other jobs if one fails
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
             os_name: Linux
             arch: x86_64
-            artifact_suffix: linux-x86_64
-            binary_pattern: "build/*.bin"
+            artifact_name_suffix: linux-x86_64
+            binary_filename: "main.bin" # Expected filename after build
+            asset_name: "vai-linux-x86_64.bin" # Name for the release asset
           - os: windows-latest
             os_name: Windows
             arch: x86_64
-            artifact_suffix: windows-x86_64
-            binary_pattern: "build/*.exe"
-          - os: macos-14 # This runner is ARM64 for Apple Silicon
+            artifact_name_suffix: windows-x86_64
+            binary_filename: "main.exe"
+            asset_name: "vai-windows-x86_64.exe"
+          - os: macos-14
             os_name: macOS
             arch: ARM64
-            artifact_suffix: macos-arm64
-            binary_pattern: "build/**/*.app/"
+            artifact_name_suffix: macos-arm64
+            binary_filename: "main.app" # This will be a directory
+            asset_name: "vai-macos-arm64.zip" # We'll zip the .app bundle for release
 
     runs-on: ${{ matrix.os }}
     permissions:
-      contents: read
+      contents: read # Build job only needs to read
 
     steps:
       - name: Check-out repository
@@ -42,7 +45,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10' # Or your desired Python version
+          python-version: '3.10'
           cache: 'pip'
           cache-dependency-path: |
             pyproject.toml
@@ -53,22 +56,64 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install . # Installs 'vai' and its dependencies from pyproject.toml
+          pip install .
 
       - name: Build Executable with Nuitka
         uses: Nuitka/Nuitka-Action@main
         with:
           nuitka-version: main
-          script-name: vai/main.py # Adjust if needed
+          script-name: vai/main.py
+          # Nuitka options like --output-dir=build are in vai/main.py
 
-      - name: Upload Artifact
+      # For macOS .app, we need to zip it before uploading as a single release asset
+      - name: Zip macOS .app bundle
+        if: matrix.os == 'macos-14' # Only run on the macOS ARM64 runner
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent "build/${{ matrix.binary_filename }}" "build/${{ matrix.asset_name }}"
+        # This creates build/vai-macos-arm64.zip containing main.app
+
+      - name: Upload Binary as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vai-${{ matrix.artifact_suffix }}
-          path: ${{ matrix.binary_pattern }}
+          name: vai-binary-${{ matrix.artifact_name_suffix }} # Unique name for each OS/arch artifact
+          # For macOS, upload the zip; for others, upload the binary directly
+          path: |
+            ${{ matrix.os == 'macos-14' && format('build/{0}', matrix.asset_name) || format('build/{0}', matrix.binary_filename) }}
           if-no-files-found: error
 
-  # --- Optional: Build for Linux ARM64 using a self-hosted runner (Template) ---
-  # build-linux-arm64-self-hosted:
-  #   name: Build for Linux (ARM64 Self-Hosted)
-  #   # ... (rest of the template as before if you plan to use it) ...
+  create_release:
+    name: Create GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v') # IMPORTANT: Only run this job for tags
+    needs: build_binaries # Run after all binaries are built
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to create releases and upload assets
+
+    steps:
+      - name: Download all workflow artifacts
+        uses: actions/download-artifact@v4
+        # No 'name' specified downloads all artifacts from the current workflow run
+        # into directories named after the artifact names.
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v2 # Use v2 or latest stable
+        with:
+          # tag_name: ${{ github.ref_name }} # The action automatically uses this
+          # name: Release ${{ github.ref_name }} # Optional: customize release title
+          # body: | # Optional: customize release body
+          #   See CHANGELOG.md for details.
+          draft: false # Set to true if you want to manually review before publishing
+          prerelease: contains(github.ref, '-rc') || contains(github.ref, '-beta') || contains(github.ref, '-alpha') # Mark as pre-release if tag contains -rc, -beta, etc.
+          files: | # List of files to upload from the downloaded artifacts
+            vai-binary-linux-x86_64/main.bin
+            vai-binary-windows-x86_64/main.exe
+            vai-binary-macos-arm64/vai-macos-arm64.zip
+            # Add checksums if you generate them:
+            # vai-binary-linux-x86_64/main.bin.sha256
+            # vai-binary-windows-x86_64/main.exe.sha256
+            # vai-binary-macos-arm64/vai-macos-arm64.zip.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This is automatically provided
