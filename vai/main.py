@@ -634,7 +634,7 @@ def cli_init():
 
     static_dst_in_user_docs = current_path / "static"
     templates_dst_in_user_docs = current_path / "templates"
-    header_config_dst_in_user_docs = current_path / "config.yaml"
+    config_dst_in_user_docs = current_path / "config.yaml"
 
     # try:
     # Get a reference to the 'package_defaults' directory within the installed package
@@ -657,12 +657,12 @@ def cli_init():
         print(f"Warning: Default 'templates/' folder not found within the package.")
 
     # --- Copy 'config.yaml' from package_defaults ---
-    header_config_src_in_pkg = package_defaults_resource_root.joinpath("config.yaml")
-    if header_config_src_in_pkg.is_file():
-        with as_file(header_config_src_in_pkg) as header_config_concrete_path:
-            shutil.copy(header_config_concrete_path, header_config_dst_in_user_docs)
+    config_src_in_pkg = package_defaults_resource_root.joinpath("config.yaml")
+    if config_src_in_pkg.is_file():
+        with as_file(config_src_in_pkg) as config_concrete_path:
+            shutil.copy(config_concrete_path, config_dst_in_user_docs)
     else:
-        print(f"Wrning: Default 'config.yaml' not found within the package.")
+        print(f"Warning: Default 'config.yaml' not found within the package.")
     
     print("Initialised Successfully.") 
 
