@@ -797,6 +797,7 @@ def cli_run():
     try:
         build() 
         server = Server()
+        print('Ctrl+C to stop the server')
         server.watch('src_md/**/*.md', build)
         server.watch('templates/layout_no_header.html', build) 
         server.watch('static/**/*', build) 
