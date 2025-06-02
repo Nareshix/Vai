@@ -1327,6 +1327,10 @@ line-height: 1.5;
 margin-top: 1rem;
 }
 
+.admonition > div > p {
+    font-size: 1.15em;
+}
+
 .admonition-title {
 font-weight: 600;
 text-transform: uppercase;
