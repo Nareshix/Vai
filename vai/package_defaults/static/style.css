@@ -340,9 +340,7 @@ margin-bottom: 1rem;
 padding-top: 5rem;
 color: var(--color-text-body);
 }
-#content-area h2:first-of-type {
-    margin-top: 2rem;
-}
+
 
 #content-area p {
 line-height: 1.6;
