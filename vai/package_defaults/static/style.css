@@ -1241,6 +1241,7 @@ font-weight: 600;
     margin: 0;
     padding: 1em;
     white-space: pre;
+    overflow-x: scroll;
 }
 
 
@@ -1312,7 +1313,6 @@ transform: scale(0.9);
     }
     
     .codehilite pre {
-        overflow-x: auto;
         white-space: pre;
     }
 }
@@ -1325,7 +1325,6 @@ transform: scale(0.9);
     }
     
     .codehilite pre {
-        overflow-x: auto;
         white-space: pre;
     }
 }
@@ -1396,6 +1395,7 @@ cursor: pointer;
 display: list-item;
 padding-left: 0;
 }
+
 
 .admonition.details > summary.admonition-title::marker,
 .admonition.details > summary.admonition-title::-webkit-details-marker {
