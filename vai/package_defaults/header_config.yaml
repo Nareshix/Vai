@@ -8,17 +8,17 @@ internals:
 
 
 externals:
-  - title: "Rickroll"
-    link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+  - title: "example.com"
+    link: "https://example.com/"
 
 
 dropdowns:
   - main_title: "Placeholder Menu"
     items:
-      - title: "which does nothing"
+      - title: "Another Placeholder"
         type: internal
         link: "#"
 
-      - title: "Rickroll"
+      - title: "example.com"
         type: external
-        link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+        link: "https://example.com/"
