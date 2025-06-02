@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_binaries: # This job builds all the binaries
+  build_main_platforms: # Job for GitHub-hosted runners
     name: Build for ${{ matrix.os_name }} (${{ matrix.arch }})
     strategy:
       fail-fast: false
@@ -19,8 +19,8 @@ jobs:
             os_name: Linux
             arch: x86_64
             artifact_name_suffix: linux-x86_64
-            binary_filename: "main.bin" # Expected filename after build
-            asset_name: "vai-linux-x86_64.bin" # Name for the release asset
+            binary_filename: "main.bin"
+            asset_name: "vai-linux-x86_64.bin"
           - os: windows-latest
             os_name: Windows
             arch: x86_64
@@ -32,11 +32,59 @@ jobs:
             arch: ARM64
             artifact_name_suffix: macos-arm64
             binary_filename: "main.app" # This will be a directory
-            asset_name: "vai-macos-arm64.zip" # We'll zip the .app bundle for release
+            asset_name: "vai-macos-arm64.zip" # We'll zip the .app bundle
 
     runs-on: ${{ matrix.os }}
     permissions:
-      contents: read # Build job only needs to read
+      contents: read
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10' # Or your desired Python version
+          cache: 'pip'
+          cache-dependency-path: |
+            pyproject.toml
+            poetry.lock
+            pdm.lock
+            requirements*.txt
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install . # Installs 'vai' and its dependencies from pyproject.toml
+
+      - name: Build Executable with Nuitka
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main # Or a specific stable Nuitka version
+          script-name: vai/main.py # Adjust if your main script is in a 'src' layout
+
+      - name: Zip macOS .app bundle
+        if: matrix.os == 'macos-14'
+        run: |
+          ditto -c -k --sequesterRsrc --keepParent "build/${{ matrix.binary_filename }}" "build/${{ matrix.asset_name }}"
+
+      - name: Upload Binary as Workflow Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: vai-binary-${{ matrix.artifact_name_suffix }}
+          path: |
+            ${{ matrix.os == 'macos-14' && format('build/{0}', matrix.asset_name) || format('build/{0}', matrix.binary_filename) }}
+          if-no-files-found: error
+
+  build-linux-arm64: # Job specifically for Linux ARM64 on a self-hosted runner
+    name: Build for Linux (ARM64 Self-Hosted)
+    # Only run this job if the event is a tag push, to save resources, or adjust as needed
+    if: startsWith(github.ref, 'refs/tags/v') || github.event_name == 'workflow_dispatch'
+    needs: [] # Can run in parallel with build_main_platforms, or add 'build_main_platforms' to needs if you want it sequential
+    runs-on: [self-hosted, linux, arm64] # IMPORTANT: Match your self-hosted runner labels!
+    permissions:
+      contents: read
 
     steps:
       - name: Check-out repository
@@ -63,28 +111,18 @@ jobs:
         with:
           nuitka-version: main
           script-name: vai/main.py
-          # Nuitka options like --output-dir=build are in vai/main.py
 
-      # For macOS .app, we need to zip it before uploading as a single release asset
-      - name: Zip macOS .app bundle
-        if: matrix.os == 'macos-14' # Only run on the macOS ARM64 runner
-        run: |
-          ditto -c -k --sequesterRsrc --keepParent "build/${{ matrix.binary_filename }}" "build/${{ matrix.asset_name }}"
-        # This creates build/vai-macos-arm64.zip containing main.app
-
-      - name: Upload Binary as Workflow Artifact
+      - name: Upload Linux ARM64 Binary as Workflow Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: vai-binary-${{ matrix.artifact_name_suffix }} # Unique name for each OS/arch artifact
-          # For macOS, upload the zip; for others, upload the binary directly
-          path: |
-            ${{ matrix.os == 'macos-14' && format('build/{0}', matrix.asset_name) || format('build/{0}', matrix.binary_filename) }}
+          name: vai-binary-linux-arm64 # Consistent artifact name for release job
+          path: build/main.bin # Nuitka project options should output to 'build/'
           if-no-files-found: error
 
   create_release:
     name: Create GitHub Release
     if: startsWith(github.ref, 'refs/tags/v') # IMPORTANT: Only run this job for tags
-    needs: build_binaries # Run after all binaries are built
+    needs: [build_main_platforms, build-linux-arm64] # Wait for all build jobs
     runs-on: ubuntu-latest
     permissions:
       contents: write # Needed to create releases and upload assets
@@ -92,28 +130,26 @@ jobs:
     steps:
       - name: Download all workflow artifacts
         uses: actions/download-artifact@v4
-        # No 'name' specified downloads all artifacts from the current workflow run
-        # into directories named after the artifact names.
+        # No 'name' specified downloads all artifacts from the current workflow run.
+        # Each artifact will be in a subdirectory named after the artifact.
 
-      - name: Display structure of downloaded files
+      - name: Display structure of downloaded files (for debugging)
         run: ls -R
 
       - name: Create Release and Upload Assets
-        uses: softprops/action-gh-release@v2 # Use v2 or latest stable
+        uses: softprops/action-gh-release@v2
         with:
-          # tag_name: ${{ github.ref_name }} # The action automatically uses this
+          # tag_name: ${{ github.ref_name }} # Action automatically uses this
           # name: Release ${{ github.ref_name }} # Optional: customize release title
-          # body: | # Optional: customize release body
-          #   See CHANGELOG.md for details.
+          # body_path: CHANGELOG.md # Optional: Use a file for release notes
           draft: false # Set to true if you want to manually review before publishing
-          prerelease: contains(github.ref, '-rc') || contains(github.ref, '-beta') || contains(github.ref, '-alpha') # Mark as pre-release if tag contains -rc, -beta, etc.
-          files: | # List of files to upload from the downloaded artifacts
+          prerelease: contains(github.ref, '-rc') || contains(github.ref, '-beta') || contains(github.ref, '-alpha')
+          files: | # Paths are relative to the runner workspace, after artifacts are downloaded
             vai-binary-linux-x86_64/main.bin
             vai-binary-windows-x86_64/main.exe
             vai-binary-macos-arm64/vai-macos-arm64.zip
-            # Add checksums if you generate them:
-            # vai-binary-linux-x86_64/main.bin.sha256
-            # vai-binary-windows-x86_64/main.exe.sha256
-            # vai-binary-macos-arm64/vai-macos-arm64.zip.sha256
+            vai-binary-linux-arm64/main.bin
+            # You can also add checksum files here if you generate them in build jobs
+            # e.g., vai-binary-linux-x86_64/main.bin.sha256
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This is automatically provided
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
