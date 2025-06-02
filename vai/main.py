@@ -41,8 +41,12 @@ def setup_header_in_layout_html():
     called layout.html and parsing will be done trhough this html file 
     """
 
-    with open("config.yaml", "r") as f:  
-        config = yaml.safe_load(f)
+    try:
+        with open("config.yaml", "r") as f:
+            config = yaml.safe_load(f)
+    except FileNotFoundError:
+        print("Error: config.yaml not found.")
+
     github_link  = config.get('github_link', '')
     edit_this_page_on_github_link = config.get('edit_this_page_on_github_link', '')
 
@@ -629,14 +633,11 @@ def cli_init():
 - **Happy Building!**  💻
                 ''')
 
-# not big enough of a project to have one lol. just keep it in case (hopefully)
-# *   💬 **Community (Discord):** [discord.gg/Vai](https://discord.gg/Vai)  
 
     static_dst_in_user_docs = current_path / "static"
     templates_dst_in_user_docs = current_path / "templates"
     config_dst_in_user_docs = current_path / "config.yaml"
 
-    # try:
     # Get a reference to the 'package_defaults' directory within the installed package
     package_defaults_resource_root = files(PACKAGE_NAME).joinpath(PACKAGE_DATA_DIR_NAME)
 
@@ -661,18 +662,9 @@ def cli_init():
     if config_src_in_pkg.is_file():
         with as_file(config_src_in_pkg) as config_concrete_path:
             shutil.copy(config_concrete_path, config_dst_in_user_docs)
-    else:
-        print(f"Warning: Default 'config.yaml' not found within the package.")
     
     print("Initialised Successfully.") 
 
-
-    # DEVELOPMENT ONLY SHOULD WORK IN PROD 
-
-    # except FileNotFoundError:
-    #     print(f"Error: Could not find package resources for '{PACKAGE_NAME}'. Is the package installed correctly and includes '{PACKAGE_DATA_DIR_NAME}'?")
-    # except Exception as e:
-    #     print(f"An error occurred during initialization while copying package defaults: {e}")
 
 
 
