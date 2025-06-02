@@ -7,7 +7,7 @@
 # nuitka-project: --product-name="vai Application"
 # nuitka-project: --file-version="0.1.0" 
 # nuitka-project: --product-version="0.1.0"
-# nuitka-project: --enable-plugin=pygments
+# nuitka-project: --include-package=pygments.lexers
 from genericpath import exists
 import markdown
 from markdown.extensions import Extension
