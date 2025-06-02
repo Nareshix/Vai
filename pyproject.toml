@@ -51,7 +51,7 @@ packages = ["vai"]
 
 [tool.setuptools.package-data]
 vai = [
-    "package_defaults/header_config.yaml",
+    "package_defaults/config.yaml",
     "package_defaults/static/**",
     "package_defaults/templates/**"
 ]
