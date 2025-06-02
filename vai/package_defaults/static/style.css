@@ -1601,6 +1601,14 @@ span.linenos.special { color: #e6edf3; background-color: #6e7681; padding-left: 
 .dark-theme .vm { color: #79C0FF } 
 .dark-theme .il { color: #A5D6FF } 
 
+.light-theme .codehilite > pre {
+  color: #032F62;
+}
+
+.dark-theme .codehilite > pre {
+  color:#9ECBFF;
+}
+a
 .search-results-list {
 list-style: none;
 padding: 0;
@@ -1836,7 +1844,6 @@ ul {
 
 ol {
     margin-left: 3rem;
-    margin-top: 0.5rem;
 }
 
 
