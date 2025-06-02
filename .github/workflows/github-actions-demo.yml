@@ -9,27 +9,30 @@ on:
   workflow_dispatch: # Allows manual triggering
 
 jobs:
-  build-x86_64:
-    name: Build for ${{ matrix.os_name }} (x86_64)
+  build-x86_64-and-arm: # Renamed job for clarity as it now includes macOS ARM
+    name: Build for ${{ matrix.os_name }} (${{ matrix.arch }})
     strategy:
       fail-fast: false # Don't cancel other jobs if one fails
       matrix:
         include:
           - os: ubuntu-latest
             os_name: Linux
+            arch: x86_64
             artifact_suffix: linux-x86_64
             binary_pattern: "build/*.bin"
           - os: windows-latest
             os_name: Windows
+            arch: x86_64
             artifact_suffix: windows-x86_64
             binary_pattern: "build/*.exe"
-          - os: macos-12 # Older macOS runner, more likely to be Intel x86_64 for wider compatibility if needed
-            os_name: macOS-Intel
-            artifact_suffix: macos-x86_64
-            binary_pattern: "build/**/*.app/" # Nuitka creates .app for macOS with --mode=app
+          - os: macos-14 # This runner is ARM64 for Apple Silicon
+            os_name: macOS
+            arch: ARM64
+            artifact_suffix: macos-arm64
+            binary_pattern: "build/**/*.app/"
 
     runs-on: ${{ matrix.os }}
-    permissions: # Needed for Nuitka commercial plugins if you use them, or for some advanced features
+    permissions:
       contents: read
 
     steps:
@@ -53,96 +56,19 @@ jobs:
           pip install . # Installs 'vai' and its dependencies from pyproject.toml
 
       - name: Build Executable with Nuitka
-        uses: Nuitka/Nuitka-Action@main # Or pin to a specific release like @v0.8
+        uses: Nuitka/Nuitka-Action@main
         with:
-          nuitka-version: main # Or a specific Nuitka version like '1.9.5'
-          script-name: vai/main.py # Adjust if your main script is elsewhere (e.g., src/vai/main.py)
-          # Nuitka options are primarily taken from # nuitka-project comments in script-name
+          nuitka-version: main
+          script-name: vai/main.py # Adjust if needed
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: vai-${{ matrix.artifact_suffix }}
           path: ${{ matrix.binary_pattern }}
-          if-no-files-found: error # Fail if no binaries are found
-
-  build-macos-arm64:
-    name: Build for macOS (ARM64/Apple Silicon)
-    runs-on: macos-14 # This runner is ARM64
-    permissions:
-      contents: read
-
-    steps:
-      - name: Check-out repository
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10' # Match your Python version
-          cache: 'pip'
-          cache-dependency-path: |
-            pyproject.toml
-            poetry.lock
-            pdm.lock
-            requirements*.txt
-
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install .
-
-      - name: Build Executable with Nuitka
-        uses: Nuitka/Nuitka-Action@main
-        with:
-          nuitka-version: main
-          script-name: vai/main.py
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: vai-macos-arm64
-          path: build/**/*.app/ # Nuitka creates .app for macOS with --mode=app
           if-no-files-found: error
 
-  # --- Optional: Build for Linux ARM64 using a self-hosted runner ---
+  # --- Optional: Build for Linux ARM64 using a self-hosted runner (Template) ---
   # build-linux-arm64-self-hosted:
   #   name: Build for Linux (ARM64 Self-Hosted)
-  #   needs: [build-x86_64] # Optional: only run if x86 builds succeed
-  #   if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') # Example: Only build ARM on tags
-  #   runs-on: [self-hosted, linux, arm64] # IMPORTANT: Match your self-hosted runner labels
-  #   permissions:
-  #     contents: read
-  #
-  #   steps:
-  #     - name: Check-out repository
-  #       uses: actions/checkout@v4
-  #
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v5
-  #       with:
-  #         python-version: '3.10' # Match your Python version
-  #         cache: 'pip'
-  #         cache-dependency-path: |
-  #           pyproject.toml
-  #           poetry.lock
-  #           pdm.lock
-  #           requirements*.txt
-  #
-  #     - name: Install Dependencies
-  #       run: |
-  #         python -m pip install --upgrade pip
-  #         pip install .
-  #
-  #     - name: Build Executable with Nuitka
-  #       uses: Nuitka/Nuitka-Action@main
-  #       with:
-  #         nuitka-version: main
-  #         script-name: vai/main.py
-  #
-  #     - name: Upload Artifact
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: vai-linux-arm64
-  #         path: build/*.bin
-  #         if-no-files-found: error
+  #   # ... (rest of the template as before if you plan to use it) ...
