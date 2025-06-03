@@ -1965,7 +1965,21 @@ li {
     margin-bottom: 1rem;
 }
 
-ul > li::marker {
+ul  li::marker {
     content: "• ";
     font-size: 1.5em;
+}
+
+li  p {
+    margin-left: 0.5rem;
+}
+
+
+li:has(.admonition)::marker {
+    content: none; 
+}
+
+li:has(.admonition) .admonition {
+    margin-left: 0;
+    margin-right: 5rem;
 }
