@@ -1975,7 +1975,7 @@ li  p {
 }
 
 
-li:has(.admonition)::marker {
+li:has(> .admonition)::marker {
     content: none; 
 }
 
