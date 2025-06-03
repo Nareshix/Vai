@@ -30,7 +30,7 @@ if (typeof hljs !== 'undefined') {
 }
 
 // --- Highlight.js Theme Management ---
-const highlightJsThemeLink = document.getElementById('highlight-js-theme'); // Make sure your <link> has this ID in HTML
+const highlightJsThemeLink = document.getElementById('highlight-js-theme');
 const lightModeHighlightJsCdn = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
 const darkModeHighlightJsCdn = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
 
@@ -41,7 +41,7 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
     }
     if (currentThemeSetting === 'light') {
         highlightJsThemeLink.href = lightModeHighlightJsCdn;
-    } else { // Assumes 'dark'
+    } else {
         highlightJsThemeLink.href = darkModeHighlightJsCdn;
     }
 }
