@@ -1,4 +1,50 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Code Block Highlighting (Highlight.js) ---
+if (typeof hljs !== 'undefined') {
+    const codeHiliteDivs = document.querySelectorAll('div.codehilite');
+    codeHiliteDivs.forEach(div => {
+        const preElement = div.querySelector('pre');
+        const codeElement = preElement ? preElement.querySelector('code') : null;
+
+        if (codeElement) {
+            let fullText = codeElement.textContent || codeElement.innerText || "";
+            fullText = fullText.trim();
+            const match = fullText.match(/^```(\S+)\s*\n([\s\S]*?)\n?```$/);
+
+            if (match) {
+                const language = match[1].toLowerCase();
+                let actualCode = match[2];
+                if (actualCode.endsWith('\n')) {
+                    actualCode = actualCode.slice(0, -1);
+                }
+                codeElement.textContent = actualCode;
+                codeElement.className = `language-${language}`; // Set class for hljs
+                hljs.highlightElement(codeElement); // Apply highlighting markup
+            } else {
+                console.warn("Code block format not matched...");
+            }
+        }
+    });
+} else {
+    console.warn('Highlight.js library (hljs) not loaded.');
+}
+
+// --- Highlight.js Theme Management ---
+const highlightJsThemeLink = document.getElementById('highlight-js-theme'); // Make sure your <link> has this ID in HTML
+const lightModeHighlightJsCdn = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+const darkModeHighlightJsCdn = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+
+function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
+    if (!highlightJsThemeLink) {
+        console.warn('Highlight.js theme link element not found.');
+        return;
+    }
+    if (currentThemeSetting === 'light') {
+        highlightJsThemeLink.href = lightModeHighlightJsCdn;
+    } else { // Assumes 'dark'
+        highlightJsThemeLink.href = darkModeHighlightJsCdn;
+    }
+}
     // --- Initial Page Setup (Active Sidebar Link, Nav Buttons) ---
     const currentPath = window.location.pathname;
     const pathParts = currentPath.split('/').filter(Boolean);
@@ -134,6 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
         htmlElement.classList.toggle('light-theme', theme === 'light');
         htmlElement.classList.toggle('dark-theme', theme === 'dark');
         if (themeToggleButton) themeToggleButton.setAttribute('aria-label', theme === 'light' ? 'Switch to Dark Theme' : 'Switch to Light Theme');
+        setHighlightJsTheme(theme);
     }
     function saveThemePreference(theme) { localStorage.setItem(THEME_KEY, theme); }
     function getInitialTheme() {
