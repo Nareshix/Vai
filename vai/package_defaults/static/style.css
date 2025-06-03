@@ -1,3 +1,7 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 :root {
     --shadow-header-subtle: 0 1px rgba(0, 0, 0, 1);
     --color-inline-code-bg: rgba(200, 200, 200, 0.12);
@@ -344,7 +348,7 @@ color: var(--color-text-body);
 }
 
 #content-area p {
-line-height: 1.6;
+line-height: 2em;
 color: var(--color-text-body);
 padding: 0;
 margin-bottom: 0;
@@ -1794,6 +1798,7 @@ padding: 0.2em 0.45em;
 margin: 0 0.1em;
 border-radius: 5px;
 word-wrap: break-word;
+color: var(--color-text-toc-link-active);
 }
 
 #content-area pre code {
@@ -1861,7 +1866,8 @@ h1, h2, h3, h4, h5, h6  {
 }
 
 p {
-    margin-left: 1.5rem; 
+    margin-left: 4rem; 
+    margin-right: 4rem;
     margin-top: 0; 
     margin-bottom: 1rem;
 }
