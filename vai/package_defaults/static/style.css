@@ -1877,14 +1877,14 @@ p {
 
 #content-area pre code {
     background-color: transparent !important;
-    color: inherit !important; /* Ensure it inherits from pygments */
-    font-family: inherit !important; /* Ensure it inherits from pygments */
-    font-size: 1em !important; /* Reset to pygments base */
+    color: inherit !important; 
+    font-family: inherit !important;
+    font-size: 1em !important; 
     padding: 0 !important;
     margin: 0 !important;
     border-radius: 0 !important;
     border: none !important;
-    word-wrap: normal !important; /* Allow horizontal scroll for code blocks */
+    word-wrap: normal !important;
 }
 
 
