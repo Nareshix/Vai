@@ -1241,7 +1241,6 @@ font-weight: 600;
     margin: 0;
     padding: 1em;
     white-space: pre;
-    overflow-x: scroll;
 }
 
 
@@ -1333,7 +1332,6 @@ transform: scale(0.9);
 
 .admonition-title {
 font-weight: 600;
-text-transform: uppercase;
 font-size: 13px;
 color: #e6edf3;
 font-size: 1rem;
