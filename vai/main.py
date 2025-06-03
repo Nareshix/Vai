@@ -225,11 +225,20 @@ class AdmonitionProcessorCorrected(BlockProcessor):
             blocks.insert(0, original_block)
             return False
 
-        admon_type = first_line_match.group(1).lower()
-        custom_title_str = first_line_match.group(2).strip() if first_line_match.group(2) else ""
-        
-        display_title = custom_title_str if custom_title_str else ("Details" if admon_type == "details" else admon_type.capitalize())
+        if first_line_match.group(2):
+            custom_title_str = first_line_match.group(2).strip()
+        else:
+            custom_title_str = ""
 
+
+        admon_type = first_line_match.group(1).lower()
+        if custom_title_str:
+            display_title = custom_title_str
+        elif admon_type == "details":
+            display_title = "details"
+        else:
+            display_title = admon_type.capitalize()
+                        
         content_lines_raw = []
         block_ended = False
         remaining_lines_after_end_in_current_block = []
