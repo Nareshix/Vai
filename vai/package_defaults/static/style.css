@@ -1964,3 +1964,8 @@ table {
 li {
     margin-bottom: 1rem;
 }
+
+ul > li::marker {
+    content: "• ";
+    font-size: 1.5em;
+}
