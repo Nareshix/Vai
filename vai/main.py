@@ -802,12 +802,11 @@ def cli_run():
         build()
         server = Server()
         print('Ctrl+C to stop the server')
-        server.watch('src_md/**/*.md', build)
-        server.watch('templates/layout_no_header.html', build)
-        server.watch('static/**/*', build)
-        server.watch('config.yaml', build)
+        server.watch('src_md/**/*.md', build, delay=1000)
+        server.watch('templates/layout_no_header.html', build, delay= 1000)
+        server.watch('static/**/*', build, delay= 1000)
+        server.watch('config.yaml', build, delay= 1000)
             
-        server.serve(root='src_html', default_filename='index.html', port=6600)
 
         server.serve(root='src_html', default_filename='index.html', port=6600)
     except OSError as e:
