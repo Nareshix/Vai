@@ -795,15 +795,20 @@ def cli_build(github=False):
 
 def cli_run():
     """starts the dev server"""
+
+def cli_run():
+    """starts the dev server"""
     try:
-        build() 
+        build()
         server = Server()
         print('Ctrl+C to stop the server')
         server.watch('src_md/**/*.md', build)
-        server.watch('templates/layout_no_header.html', build) 
-        server.watch('static/**/*', build) 
-        server.watch('config.yaml', build) 
+        server.watch('templates/layout_no_header.html', build)
+        server.watch('static/**/*', build)
+        server.watch('config.yaml', build)
             
+        server.serve(root='src_html', default_filename='index.html', port=6600)
+
         server.serve(root='src_html', default_filename='index.html', port=6600)
     except OSError as e:
         if e.errno ==98:
