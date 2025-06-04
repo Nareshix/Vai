@@ -1,4 +1,3 @@
-document.addEventListener('DOMContentLoaded', () => {
     // --- Code Block Highlighting (Highlight.js) ---
 if (typeof hljs !== 'undefined') {
     const codeHiliteDivs = document.querySelectorAll('div.codehilite');
@@ -946,4 +945,56 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
             }
         });
     });
-});
+
+
+(function() {
+    const SCROLL_POSITION_KEY = 'vaiDevScrollPosition';
+    const mainScroller = document.querySelector('.main-area-wrapper');
+
+    // 1. Save scroll position before the page unloads (due to livereload refresh)
+    window.addEventListener('beforeunload', () => {
+        if (mainScroller) {
+            const scrollPosition = {
+                pathname: window.location.pathname, // Save current path
+                scrollTop: mainScroller.scrollTop  // Save scroll top of the main scroller
+            };
+            try {
+                localStorage.setItem(SCROLL_POSITION_KEY, JSON.stringify(scrollPosition));
+            } catch (e) {
+                console.warn('Vai: Could not save scroll position to localStorage:', e);
+            }
+        }
+    });
+
+    // 2. Restore scroll position after the page loads
+    function restoreScrollPosition() {
+        if (mainScroller) {
+            try {
+                const storedPositionJSON = localStorage.getItem(SCROLL_POSITION_KEY);
+                if (storedPositionJSON) {
+                    const storedPosition = JSON.parse(storedPositionJSON);
+
+                    // Only restore if it's the same page path
+                    if (storedPosition.pathname === window.location.pathname) {
+                        requestAnimationFrame(() => {
+                            mainScroller.scrollTo(0, storedPosition.scrollTop);
+                            localStorage.removeItem(SCROLL_POSITION_KEY);
+                        });
+                    } else {
+                        localStorage.removeItem(SCROLL_POSITION_KEY);
+                    }
+                }
+            } catch (e) {
+                console.warn('Could not restore scroll position from localStorage:', e);
+                localStorage.removeItem(SCROLL_POSITION_KEY); // Clear on error
+            }
+        }
+    }
+
+    // Attempt to restore scroll position when the DOM is ready
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+        restoreScrollPosition();
+    } else {
+        document.addEventListener('DOMContentLoaded', restoreScrollPosition);
+    }
+})();
