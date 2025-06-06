@@ -3,7 +3,7 @@
 
 
 ## ✨ Key Features
-
+ - 📱 **Responsive Design**: Looks great on any devices — no extra setup required.
 - 🔎 **Full-Text Search**: Automatically builds a search index for all your pages and headings.
 - 🎨 **Syntax Highlighting**: Beautiful code blocks out of the box.
 - 💅 **Custom Blocks**: Create admonitions for notes, warnings, and tips.
