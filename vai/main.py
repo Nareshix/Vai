@@ -622,7 +622,7 @@ def cli_init():
 ---
 
 
-# This is Your Starting Point 🚀
+## This is Your Starting Point 🚀
 
 - This page (`1-welcome.md`) is just a placeholder.
 - Feel free to edit it or replace it entirely with your own homepage content.
@@ -631,14 +631,14 @@ def cli_init():
 
 ---
 
-# Resources 📚
+## Resources 📚
 
 *   📖 **Documentation:** [vai-docs.pages.dev](https://vai-docs.pages.dev/)
 *   🐞 **Report Issues (GitHub):** [github.com/nareshix/vai/issues](https://github.com/nareshix/vai/issues)
 
 ---
 
-# And most importantly... 🥁
+## And most importantly... 🥁
 - **Happy Building!**  💻
                 ''')
 
