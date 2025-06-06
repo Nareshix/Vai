@@ -945,6 +945,8 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
 
 // --- 8. Page Initialization, Scroll Restoration, and Link Handling ---
 
+// --- 8. Page Initialization, Scroll Restoration, and Link Handling ---
+
 (function() {
     // --- THE FIX: Take manual control over scroll behavior on page loads ---
     if ('scrollRestoration' in history) {
@@ -963,10 +965,11 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
                 scrollTop: mainScroller.scrollTop
             };
             try {
+                // This will be read by the page after it's reloaded by livereload
                 sessionStorage.setItem(SCROLL_POSITION_KEY, JSON.stringify(scrollPosition));
                 sessionStorage.setItem(LIVE_RELOAD_FLAG_KEY, 'true');
             } catch (e) {
-                console.warn('Vai: Could not save scroll position/flag:', e);
+                console.warn('Vai: Could not save scroll position/flag for live reload:', e);
             }
         }
     });
@@ -976,26 +979,34 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
         try {
             const storedPositionJSON = sessionStorage.getItem(SCROLL_POSITION_KEY);
             if (!storedPositionJSON) return;
+            
             const storedPosition = JSON.parse(storedPositionJSON);
+            
+            // Only restore if the path matches. Prevents restoring scroll on a different page.
             if (storedPosition.pathname === window.location.pathname) {
+                // Use a tiny timeout to ensure the DOM is fully painted.
                 setTimeout(() => {
                     mainScroller.scrollTo({ top: storedPosition.scrollTop, behavior: 'instant' });
+                    // Clean up so a normal F5 refresh doesn't trigger it again unnecessarily.
                     sessionStorage.removeItem(SCROLL_POSITION_KEY);
                 }, 10);
             } else {
+                 // Path mismatch, so the stored position is irrelevant. Clean it up.
                 sessionStorage.removeItem(SCROLL_POSITION_KEY);
             }
         } catch (e) {
             console.warn('Could not restore scroll position:', e);
-            sessionStorage.removeItem(SCROLL_POSITION_KEY);
+            sessionStorage.removeItem(SCROLL_POSITION_KEY); // Cleanup on error
         }
     }
 
     function handleInitialHashScroll() {
         if (!window.location.hash || !mainScroller) {
-            return false;
+            return false; // No hash to handle
         }
-        sessionStorage.removeItem(SCROLL_POSITION_KEY);
+        // If we're navigating via hash, don't restore a previous scroll position.
+        sessionStorage.removeItem(SCROLL_POSITION_KEY); 
+        
         setTimeout(() => {
             try {
                 const targetId = window.location.hash.substring(1);
@@ -1006,38 +1017,47 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
                     const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
                     mainScroller.scrollTo({
                         top: Math.max(0, scrollToPosition),
-                        behavior: 'instant'
+                        behavior: 'instant' // 'instant' is better for initial load
                     });
                 }
             } catch (e) {
                 console.error("Vai: Error handling initial hash scroll:", e);
             }
-        }, 100);
+        }, 100); // A slightly longer delay to ensure everything is rendered.
         return true;
     }
     
-    // This logic is now fully in control and will work predictably.
+    // This is our new master function for handling the page load sequence.
     function onPageFullyReady() {
         const isLiveReload = sessionStorage.getItem(LIVE_RELOAD_FLAG_KEY) === 'true';
 
         if (isLiveReload) {
-            sessionStorage.removeItem(LIVE_RELOAD_FLAG_KEY);
+            // This was a livereload-triggered refresh.
+            sessionStorage.removeItem(LIVE_RELOAD_FLAG_KEY); // Clean up the flag
             restoreScrollPosition();
         } else {
+            // This was a normal navigation (e.g., clicked a link, typed URL).
+            // Prioritize scrolling to a hash in the URL if it exists.
             const hashWasHandled = handleInitialHashScroll();
             if (!hashWasHandled) {
-                restoreScrollPosition();
+                // If there was no hash, we can fall back to restoring scroll
+                // This helps with manual F5 reloads.
+                restoreScrollPosition(); 
             }
         }
+        // Finally, update the ToC marker after we've scrolled to the right place.
         setTimeout(updateActiveLinkAndMarker, 150);
     }
     
+    // We use the 'load' event to ensure all page content, including images, is loaded
+    // and the layout is stable before we try to scroll.
     window.addEventListener('load', onPageFullyReady);
 
-    // This listener for on-page anchor clicks remains unchanged and correct.
+    // This listener for on-page anchor clicks (that aren't in the TOC) remains correct.
     document.addEventListener('click', function (e) {
         const link = e.target.closest('a');
         if (!link || !link.getAttribute('href')?.startsWith('#')) { return; }
+        // Let the TOC click handler manage its own clicks
         if (link.closest('#toc-links')) { return; }
 
         e.preventDefault();
