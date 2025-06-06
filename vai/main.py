@@ -417,7 +417,7 @@ def scan_src(src_dir_path='src'):
 def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template, jinja_env):
     """
     Takes the list of md files from src and processes each one to generate the final HTML page.
-    It also builds the search index
+    It also builds a hierarchical search index
     """    
     search_index_entries = []
     page_template = jinja_env.get_template('layout.html')
