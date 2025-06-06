@@ -945,18 +945,18 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
             }
         });
     });
-
+// --- 8. Page Initialization & Live Reload Scroll Restoration ---
 
 (function() {
     const SCROLL_POSITION_KEY = 'vaiDevScrollPosition';
     const mainScroller = document.querySelector('.main-area-wrapper');
 
-    // 1. Save scroll position before the page unloads (due to livereload refresh)
+    // Save the scroll position just before the page reloads.
     window.addEventListener('beforeunload', () => {
         if (mainScroller) {
             const scrollPosition = {
-                pathname: window.location.pathname, // Save current path
-                scrollTop: mainScroller.scrollTop  // Save scroll top of the main scroller
+                pathname: window.location.pathname,
+                scrollTop: mainScroller.scrollTop
             };
             try {
                 localStorage.setItem(SCROLL_POSITION_KEY, JSON.stringify(scrollPosition));
@@ -966,35 +966,38 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
         }
     });
 
-    // 2. Restore scroll position after the page loads
+    // will  be called only when its confirmed that the page is settled.
     function restoreScrollPosition() {
-        if (mainScroller) {
-            try {
-                const storedPositionJSON = localStorage.getItem(SCROLL_POSITION_KEY);
-                if (storedPositionJSON) {
-                    const storedPosition = JSON.parse(storedPositionJSON);
+        if (!mainScroller) return;
 
-                    // Only restore if it's the same page path
-                    if (storedPosition.pathname === window.location.pathname) {
-                        requestAnimationFrame(() => {
-                            mainScroller.scrollTo(0, storedPosition.scrollTop);
-                            localStorage.removeItem(SCROLL_POSITION_KEY);
-                        });
-                    } else {
-                        localStorage.removeItem(SCROLL_POSITION_KEY);
-                    }
-                }
-            } catch (e) {
-                console.warn('Could not restore scroll position from localStorage:', e);
-                localStorage.removeItem(SCROLL_POSITION_KEY); // Clear on error
+        try {
+            const storedPositionJSON = localStorage.getItem(SCROLL_POSITION_KEY);
+            if (!storedPositionJSON) return;
+
+            const storedPosition = JSON.parse(storedPositionJSON);
+
+            // Only restore if it's on the same page .
+            if (storedPosition.pathname === window.location.pathname) {
+                //  small timeout
+                setTimeout(() => {
+                    mainScroller.scrollTo({ top: storedPosition.scrollTop, behavior: 'instant' });
+                    localStorage.removeItem(SCROLL_POSITION_KEY);
+                }, 10); 
+            } else {
+                // If the path is different, don't need the old key.
+                localStorage.removeItem(SCROLL_POSITION_KEY);
             }
+        } catch (e) {
+            console.warn('Could not restore scroll position from localStorage:', e);
+            localStorage.removeItem(SCROLL_POSITION_KEY);
         }
     }
 
-    // Attempt to restore scroll position when the DOM is ready
-    if (document.readyState === "complete" || document.readyState === "interactive") {
+    function onPageFullyReady() {
+        updateActiveLinkAndMarker();
         restoreScrollPosition();
-    } else {
-        document.addEventListener('DOMContentLoaded', restoreScrollPosition);
     }
+
+    window.addEventListener('load', onPageFullyReady);
+
 })();
