@@ -1007,7 +1007,7 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
                     
                     mainScroller.scrollTo({
                         top: Math.max(0, scrollToPosition),
-                        behavior: 'smooth' 
+                        behavior: 'instant' 
                     });
                 }
             } catch (e) {
