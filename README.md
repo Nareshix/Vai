@@ -2,18 +2,18 @@
 # Vai
 
 
-##  Key Features
+## ✨ Key Features
 
--  **Full-Text Search**: Automatically builds a search index for all your pages and headings.
-- **Syntax Highlighting**: Beautiful code blocks out of the box.
-- **Custom Blocks**: Create admonitions for notes, warnings, and tips.
--  **Simple Configuration**: Control your site's navigation from a single `config.yaml` file.
--  **Zero Dependencies**: The final site is just pure HTML, CSS, and JS. No backend needed.
-- **Live Reload Server**: See your changes instantly as you write. However, it is not as robust as other alternative such as VitePress. You may have to manually refersh at times. u can `Ctrl+r` for quick refresh though.
+- 🔎 **Full-Text Search**: Automatically builds a search index for all your pages and headings.
+- 🎨 **Syntax Highlighting**: Beautiful code blocks out of the box.
+- 💅 **Custom Blocks**: Create admonitions for notes, warnings, and tips.
+- ⚙️ **Simple Configuration**: Control your site's navigation from a single `config.yaml` file.
+- 📦 **Zero Dependencies**: The final site is just pure HTML, CSS, and JS. No backend needed.
+- 🐢 **Live Reload Server**: See your changes instantly as you write. However, it is not as robust as other alternative such as VitePress. You may have to manually refersh at times. u can `Ctrl+r` for quick refresh though.
 
 ---
 
-##  Quick Start Guide
+## ⚡ Quick Start Guide
 
 ### 1. Installation
 
@@ -56,7 +56,7 @@ This will generate your final static site in the `dist/` folder. You can host th
 
 ---
 
-## Understanding the Stucture
+## 🧠 Understanding the Stucture
 
 ### Writing Content in `src_md/`
 
@@ -94,7 +94,6 @@ This file controls the header, navigation, and metadata (e.g., GitHub repo link)
 * Modify the site's CSS in `static/style.css`.
 * Replace images/logos in the `static/` folder.
 
----
 
 ## 📚 Special Markdown Features
 
@@ -102,7 +101,7 @@ This file controls the header, navigation, and metadata (e.g., GitHub repo link)
 
 Add a title and date to any page by including a metadata block at the top:
 
-```markdown
+```
 +++
 title: My Custom Page Title
 date: January 1, 2024
