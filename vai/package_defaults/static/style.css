@@ -347,7 +347,11 @@ color: var(--color-text-body);
 line-height: 2em;
 color: var(--color-text-body);
 padding: 0;
-margin-bottom: 0;
+margin-left: 2rem; 
+margin-right: 4rem;
+margin-top: 0; 
+margin-bottom: 1rem;
+
 }
 
 .theme-toggle-button {
@@ -1862,12 +1866,7 @@ h1, h2, h3, h4, h5, h6  {
     padding-left: 1.5rem;
 }
 
-p {
-    margin-left: 4rem; 
-    margin-right: 4rem;
-    margin-top: 0; 
-    margin-bottom: 1rem;
-}
+
 
 #content-area code { 
     background-color: var(--color-inline-code-bg);
