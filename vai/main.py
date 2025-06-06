@@ -455,22 +455,46 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
         })
 
         content_soup = BeautifulSoup(body_content_html, 'html.parser')
+        
+        last_seen_parent_headings = {1: "", 2: "", 3: "", 4: "", 5: ""}
+
         for h_tag in content_soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
             heading_text = h_tag.get_text(strip=True)
             heading_slug = h_tag.get('id')
             level_match = re.match(r'h([1-6])', h_tag.name)
             if heading_text and heading_slug and level_match:
                 heading_level = int(level_match.group(1))
-                heading_url = f"{base_page_url}#{heading_slug}"
+
+                if heading_level <= 5: # We only track up to h5 as parents
+                    last_seen_parent_headings[heading_level] = heading_text
+                # Reset the state for all lower heading levels to ensure correct hierarchy
+                # e.g., when we find an H2, any previous H3 is no longer a parent
+                for level in range(heading_level + 1, 7):
+                    if level in last_seen_parent_headings:
+                        last_seen_parent_headings[level] = ""
+                
+                breadcrumb_trail_parts = [page_breadcrumbs_base]
+                for level in range(1, heading_level):
+                    if level in last_seen_parent_headings and last_seen_parent_headings[level]:
+                        breadcrumb_trail_parts.append(last_seen_parent_headings[level])
+                breadcrumb_trail_parts.append(heading_text)
+                
+                heading_breadcrumbs = " » ".join(breadcrumb_trail_parts)
+
                 heading_display_title = f"{page_title_from_meta_or_file} » {heading_text}"
-                heading_breadcrumbs = f"{page_breadcrumbs_base} » {heading_text}"
+                
+                heading_url = f"{base_page_url}#{heading_slug}"
+                
                 search_index_entries.append({
                     "type": "heading", "id": heading_url, "page_title": page_title_from_meta_or_file,
                     "heading_text": heading_text, "heading_level": heading_level,
-                    "display_title": heading_display_title, "breadcrumbs": heading_breadcrumbs,
-                    "url": heading_url, "searchable_text": f"{page_title_from_meta_or_file} {heading_breadcrumbs} {heading_text}".lower(),
-                    "date": page_meta.get('date', None) # Keep date from metadata if present
+                    "display_title": heading_display_title, 
+                    "breadcrumbs": heading_breadcrumbs,
+                    "url": heading_url, 
+                    "searchable_text": f"{page_title_from_meta_or_file} {heading_breadcrumbs} {heading_text}".lower(),
+                    "date": page_meta.get('date', None)
                 })
+
 
         today = datetime.datetime.today()
         day_val = today.day
@@ -509,7 +533,6 @@ def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_temp
     search_index_file_path = dist_base_path / "search_index.json"
     with open(search_index_file_path, 'w', encoding='utf-8') as f:
         json.dump(search_index_entries, f, ensure_ascii=False, indent=None)
-    
 
 def build():
     """converts all the md files from src_md to html files in
