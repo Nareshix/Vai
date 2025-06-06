@@ -1000,4 +1000,43 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
 
     window.addEventListener('load', onPageFullyReady);
 
+
+
+function handleInitialHashScroll() {
+    if (window.location.hash && mainScroller) {
+        setTimeout(() => {
+            try {
+                const hash = window.location.hash;
+                // Get the ID from the hash by removing the '#'
+                const targetId = hash.substring(1);
+                const targetElement = document.getElementById(targetId);
+
+                if (targetElement) {
+                    const paddingTop = parseFloat(getComputedStyle(targetElement).paddingTop) || 0;
+                    const textVisibleStartingPoint = targetElement.offsetTop + paddingTop;
+                    const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
+
+                    // Scroll the main content area to the calculated position.
+                    // instant cuz tihs function targets from arriving form url and not clicking the toc
+                    mainScroller.scrollTo({
+                        top: Math.max(0, scrollToPosition),
+                        behavior: 'instant' 
+                    });
+                }
+            } catch (e) {
+                console.error("Vai: Error handling initial hash scroll:", e);
+            }
+        }, 100); 
+    }
+}
+
+
+function onPageFullyReady() {
+    updateActiveLinkAndMarker();
+    restoreScrollPosition();
+    handleInitialHashScroll();
+}
+
+window.addEventListener('load', onPageFullyReady);
+
 })();
