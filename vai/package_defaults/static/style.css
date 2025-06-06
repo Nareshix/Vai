@@ -1807,6 +1807,7 @@ color: var(--color-text-toc-link-active);
     border-radius: 0 !important;            
     border: none !important;                 
     white-space: inherit !important;        
+    overflow-y: hidden;
 }
 
 #content-area .admonition-content code {
