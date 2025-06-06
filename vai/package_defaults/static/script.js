@@ -947,6 +947,8 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
 // --- 8. Page Initialization, Scroll Restoration, and Link Handling ---
 
 (function() {
+    // --- 8a. Setup and Helper Functions ---
+
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
@@ -979,20 +981,18 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
             if (storedPosition.pathname === window.location.pathname) {
                 setTimeout(() => {
                     mainScroller.scrollTo({ top: storedPosition.scrollTop, behavior: 'instant' });
-                    sessionStorage.removeItem(SCROLL_POSITION_KEY);
                 }, 10);
-            } else {
-                sessionStorage.removeItem(SCROLL_POSITION_KEY);
             }
         } catch (e) {
             console.warn('Could not restore scroll position:', e);
+        } finally {
             sessionStorage.removeItem(SCROLL_POSITION_KEY);
         }
     }
 
     function handleHashScroll() {
         if (!window.location.hash || !mainScroller) {
-            return false; 
+            return false;
         }
         
         setTimeout(() => {
@@ -1007,47 +1007,71 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
                     
                     mainScroller.scrollTo({
                         top: Math.max(0, scrollToPosition),
-                        behavior: 'instant' 
+                        behavior: 'instant'
                     });
                 }
             } catch (e) {
                 console.error("Vai: Error handling hash scroll:", e);
             }
-        }, 50); 
+        }, 50);
         return true;
     }
-    
-    function onPageFullyReady() {
-        const hashWasHandledOnLoad = handleHashScroll();
-        
-        if (!hashWasHandledOnLoad) {
-            const isLiveReload = sessionStorage.getItem(LIVE_RELOAD_FLAG_KEY) === 'true';
-            if (isLiveReload) {
-                sessionStorage.removeItem(LIVE_RELOAD_FLAG_KEY);
-                restoreScrollPosition();
-            } else {
-                restoreScrollPosition(); 
-            }
+
+    // --- 8b. Immediate Initialization Logic (The Core Fix) ---
+    // This block runs synchronously when the script is loaded, not waiting for an event.
+    // This ensures it catches all navigation types, including the "re-enter" case.
+
+    const isLiveReload = sessionStorage.getItem(LIVE_RELOAD_FLAG_KEY) === 'true';
+    if (isLiveReload) {
+        // For developer workflow, always prioritize restoring the last known editing position.
+        sessionStorage.removeItem(LIVE_RELOAD_FLAG_KEY);
+        restoreScrollPosition();
+    } else {
+        // For normal user navigation, prioritize handling the URL hash.
+        const hashWasHandled = handleHashScroll();
+        // If there was no hash, fall back to restoring scroll position (e.g., on a simple refresh).
+        if (!hashWasHandled) {
+            restoreScrollPosition();
         }
-        setTimeout(updateActiveLinkAndMarker, 150);
     }
-    
-    window.addEventListener('load', onPageFullyReady);
-    
+    // Always update the TOC marker after a short delay to allow scrolling to finish.
+    setTimeout(updateActiveLinkAndMarker, 200);
+
+
+    // --- 8c. Event Listeners for Future Actions ---
+
+    // This listener handles subsequent hash changes (e.g., browser back/forward buttons).
     window.addEventListener('hashchange', handleHashScroll);
 
-
+    // This listener handles clicks on in-page anchor links.
     document.addEventListener('click', function (e) {
         const link = e.target.closest('a');
-        if (!link || !link.getAttribute('href')?.startsWith('#')) { return; }
-        if (link.closest('#toc-links')) { return; }
+        if (!link || !link.getAttribute('href')?.startsWith('#') || link.closest('#toc-links')) {
+             return;
+        }
 
         e.preventDefault();
-        const targetId = link.getAttribute('href').substring(1);
+
+        const href = link.getAttribute('href');
+        const targetId = href.substring(1);
         const sectionData = tocSections[targetId];
+
         if (sectionData?.element && mainScroller) {
-            window.location.hash = targetId;
+            const textVisibleStartingPoint = sectionData.element.offsetTop + sectionData.paddingTop;
+            const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
+
+            mainScroller.scrollTo({
+                top: Math.max(0, scrollToPosition),
+                behavior: 'smooth'
+            });
+
+            if (history.pushState) {
+                history.pushState(null, null, href);
+            } else {
+                window.location.hash = href;
+            }
         }
     });
 
 })();
+
