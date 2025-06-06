@@ -6,3 +6,4 @@ build/lib/vai/
 test/
 test.py
 .pypirc
+docs_test/
