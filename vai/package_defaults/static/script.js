@@ -311,10 +311,8 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
         mainScroller.addEventListener('scroll', updateActiveLinkAndMarker);
         setTimeout(updateActiveLinkAndMarker, 150); 
         window.addEventListener('resize', updateActiveLinkAndMarker);
-        window.addEventListener('load', updateActiveLinkAndMarker);
-    }
-
-    // --- 3. Search Functionality ---
+    }    
+// --- 3. Search Functionality ---
     function DMAN_saveSearchHistory(query) {
         if (!query || query.trim().length < 1) return;
         const cleanedQuery = query.trim();
@@ -947,11 +945,13 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
     });
 // --- 8. Page Initialization & Live Reload Scroll Restoration ---
 
+// --- 8. Page Initialization, Scroll Restoration, and Link Handling ---
+
 (function() {
     const SCROLL_POSITION_KEY = 'vaiDevScrollPosition';
     const mainScroller = document.querySelector('.main-area-wrapper');
 
-    // Save the scroll position just before the page reloads.
+    // Save scroll position just before page unloads (e.g., for live-reloading)
     window.addEventListener('beforeunload', () => {
         if (mainScroller) {
             const scrollPosition = {
@@ -959,56 +959,53 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
                 scrollTop: mainScroller.scrollTop
             };
             try {
-                localStorage.setItem(SCROLL_POSITION_KEY, JSON.stringify(scrollPosition));
+                // Use session storage if you only want this for the current session,
+                // localStorage if you want it to persist longer. Session is often better for this.
+                sessionStorage.setItem(SCROLL_POSITION_KEY, JSON.stringify(scrollPosition));
             } catch (e) {
-                console.warn('Vai: Could not save scroll position to localStorage:', e);
+                console.warn('Vai: Could not save scroll position:', e);
             }
         }
     });
 
-    // will  be called only when its confirmed that the page is settled.
     function restoreScrollPosition() {
         if (!mainScroller) return;
 
         try {
-            const storedPositionJSON = localStorage.getItem(SCROLL_POSITION_KEY);
+            const storedPositionJSON = sessionStorage.getItem(SCROLL_POSITION_KEY);
             if (!storedPositionJSON) return;
 
             const storedPosition = JSON.parse(storedPositionJSON);
 
-            // Only restore if it's on the same page .
+            // Only restore if it's the same page.
             if (storedPosition.pathname === window.location.pathname) {
-                //  small timeout
+                // Short timeout to ensure layout is complete.
                 setTimeout(() => {
                     mainScroller.scrollTo({ top: storedPosition.scrollTop, behavior: 'instant' });
-                    localStorage.removeItem(SCROLL_POSITION_KEY);
-                }, 10); 
+                    // Clean up after use.
+                    sessionStorage.removeItem(SCROLL_POSITION_KEY);
+                }, 10);
             } else {
-                // If the path is different, don't need the old key.
-                localStorage.removeItem(SCROLL_POSITION_KEY);
+                // Clean up if path is different.
+                sessionStorage.removeItem(SCROLL_POSITION_KEY);
             }
         } catch (e) {
-            console.warn('Could not restore scroll position from localStorage:', e);
-            localStorage.removeItem(SCROLL_POSITION_KEY);
+            console.warn('Could not restore scroll position:', e);
+            sessionStorage.removeItem(SCROLL_POSITION_KEY);
         }
     }
 
-    function onPageFullyReady() {
-        updateActiveLinkAndMarker();
-        restoreScrollPosition();
-    }
+    function handleInitialHashScroll() {
+        if (!window.location.hash || !mainScroller) {
+            return false; // Indicate that we did not handle a hash scroll.
+        }
+        
+        // If a hash exists, we prioritize it. Clear any saved scroll position.
+        sessionStorage.removeItem(SCROLL_POSITION_KEY);
 
-    window.addEventListener('load', onPageFullyReady);
-
-
-
-function handleInitialHashScroll() {
-    if (window.location.hash && mainScroller) {
         setTimeout(() => {
             try {
-                const hash = window.location.hash;
-                // Get the ID from the hash by removing the '#'
-                const targetId = hash.substring(1);
+                const targetId = window.location.hash.substring(1);
                 const targetElement = document.getElementById(targetId);
 
                 if (targetElement) {
@@ -1016,51 +1013,55 @@ function handleInitialHashScroll() {
                     const textVisibleStartingPoint = targetElement.offsetTop + paddingTop;
                     const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
 
-                    // Scroll the main content area to the calculated position.
-                    // instant cuz tihs function targets from arriving form url and not clicking the toc
                     mainScroller.scrollTo({
                         top: Math.max(0, scrollToPosition),
-                        behavior: 'instant' 
+                        behavior: 'instant'
                     });
                 }
             } catch (e) {
                 console.error("Vai: Error handling initial hash scroll:", e);
             }
-        }, 100); 
+        }, 100); // Slightly longer timeout for hash scroll to be safe.
+        return true; // Indicate hash scroll was handled.
     }
-}
-
-
-function onPageFullyReady() {
-    updateActiveLinkAndMarker();
-    restoreScrollPosition();
-    handleInitialHashScroll();
-}
-
-window.addEventListener('load', onPageFullyReady);
-
-
-//  all on-page anchor link clicks to handle smooth scrolling with header offset.
-document.addEventListener('click', function (e) {
-    const link = e.target.closest('a');
-
-    if (!link || !link.getAttribute('href')) {
-        return;
-    }
-
-    const href = link.getAttribute('href');
-
-    if (href.startsWith('#')) {
+    
+    // This is the single, unified function to run when the page is fully loaded.
+    function onPageFullyReady() {
+        // First, try to handle a hash in the URL. This is a specific user intent.
+        const hashWasHandled = handleInitialHashScroll();
         
-        // To avoid running the logic twice,  ignore clicks from inside the TOC.
+        // If there was NO hash in the URL, then try to restore the previous scroll position.
+        if (!hashWasHandled) {
+            restoreScrollPosition();
+        }
+
+        // Finally, update the ToC marker based on the final scroll position.
+        // A small delay ensures the scroll has completed.
+        setTimeout(updateActiveLinkAndMarker, 150);
+    }
+    
+    // Attach the single, correct listener.
+    window.addEventListener('load', onPageFullyReady);
+
+
+    // This listener handles all on-page anchor link clicks NOT originating from the ToC.
+    document.addEventListener('click', function (e) {
+        const link = e.target.closest('a');
+
+        if (!link || !link.getAttribute('href')?.startsWith('#')) {
+            return;
+        }
+
+        // The ToC has its own dedicated click handler. This prevents running the logic twice.
         if (link.closest('#toc-links')) {
             return;
         }
 
-        e.preventDefault(); 
-
-        const targetId = href.substring(1);
-        const sectionData = tocSections[targetId]; 
+        e.preventDefault();
+        const targetId = link.getAttribute('href').substring(1);
+        
+        // Use the globally defined tocSections map to find the element and its data.
+        const sectionData = tocSections[targetId];
 
         if (sectionData?.element && mainScroller) {
             const textVisibleStartingPoint = sectionData.element.offsetTop + sectionData.paddingTop;
@@ -1068,14 +1069,13 @@ document.addEventListener('click', function (e) {
 
             mainScroller.scrollTo({ top: Math.max(0, scrollToPosition), behavior: 'smooth' });
 
+            // Update the URL hash without reloading the page.
             if (history.pushState) {
-                history.pushState(null, null, href);
+                history.pushState(null, null, `#${targetId}`);
             } else {
-                window.location.hash = href;
+                window.location.hash = targetId;
             }
         }
-    }
-});
-
+    });
 
 })();
