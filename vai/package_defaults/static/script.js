@@ -1039,4 +1039,43 @@ function onPageFullyReady() {
 
 window.addEventListener('load', onPageFullyReady);
 
+
+//  all on-page anchor link clicks to handle smooth scrolling with header offset.
+document.addEventListener('click', function (e) {
+    const link = e.target.closest('a');
+
+    if (!link || !link.getAttribute('href')) {
+        return;
+    }
+
+    const href = link.getAttribute('href');
+
+    if (href.startsWith('#')) {
+        
+        // To avoid running the logic twice,  ignore clicks from inside the TOC.
+        if (link.closest('#toc-links')) {
+            return;
+        }
+
+        e.preventDefault(); 
+
+        const targetId = href.substring(1);
+        const sectionData = tocSections[targetId]; 
+
+        if (sectionData?.element && mainScroller) {
+            const textVisibleStartingPoint = sectionData.element.offsetTop + sectionData.paddingTop;
+            const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
+
+            mainScroller.scrollTo({ top: Math.max(0, scrollToPosition), behavior: 'smooth' });
+
+            if (history.pushState) {
+                history.pushState(null, null, href);
+            } else {
+                window.location.hash = href;
+            }
+        }
+    }
+});
+
+
 })();
