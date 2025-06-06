@@ -320,7 +320,11 @@ def generate_heading_links(html_body_content):
         anchor = tag.get('id')
         if not anchor: continue
         link_style = ' style="padding-left:2rem"' if tag.name == 'h3' else ''
-        links.append(f'<a href="#{anchor}"{link_style}>- {title}</a>')
+        if tag.name == 'h3':
+            links.append(f'<a href="#{anchor}"{link_style}>- {title}</a>')
+        else:
+            links.append(f'<a href="#{anchor}"{link_style}>{title}</a>')
+            
     return '\n'.join(links)
 
 
