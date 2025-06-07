@@ -184,13 +184,8 @@
             
 
             <h1 id="deploy">Deploy</h1>
-<div class="admonition tip">
-<p class="admonition-title">TIP</p>
-<div>
-<p>It is strongly recommended to use git to track your files for ease of deploying to your favourite hosting procider</p>
-</div>
-</div>
-<p>After you have done creating your website, stop <code>vai run</code> and now run</p>
+<p><strong>It is strongly recommended to use <code>git</code> to track your files for ease of deploying to your favourite hosting provider</strong></p>
+<p>After you have done creating your website, <strong>stop</strong> <code>vai run</code> and now run</p>
 <div class="codehilite"><pre><span></span><code>vai build
 </code></pre></div>
 
@@ -210,27 +205,16 @@
 <li><a href="https://pages.cloudflare.com/">cloudfare pages</a></li>
 <li><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site">github pages</a></li>
 </ol>
-<p>But it should work for <strong>most</strong> other hosting provider as well as you would just need link your <code>build output</code> to the root of the <code>dist/</code> directory. We will only cover how to deploy to the 4 hosting providers mentioned above. If you prefer to use a different hosting provider, please refer to their documentation and follow the steps provided there.</p>
+<p>Nonetheless,  it should work for <strong>most</strong> other hosting provider as well as you would just need link your <code>build output</code> to the root of the <code>dist/</code> directory. We will only cover how to deploy to the 4 hosting providers mentioned above. If you prefer to use a different hosting provider, please refer to their documentation and follow the necessary steps.</p>
 <h2 id="vercel">Vercel</h2>
-<h2 id="netlify">Netlify</h2>
-<h2 id="cloudfare-pages">Cloudfare Pages</h2>
 <ol>
-<li>create an account at cloudfare pages</li>
-<li>create application</li>
-<li>It will pick workers by default, choose Pages</li>
-</ol>
-<p>Now u can either  <code>direct upload</code> or <code>import a existing git repository</code>. It is recommended to pick the latter if you have been using git to track your site.</p>
-<p>If you pick <code>import a existing git repository</code>, just follow the onsite instructions. You can leave most of the options to its defualt option. all you have to do is link ur <code>dist/</code> folder in the <code>Build output directory</code> box</p>
-<h2 id="github-pages">Github Pages</h2>
-<h2 id="vercel-1">Vercel</h2>
-<ol>
-<li>Sign up or log in to Vercel.</li>
+<li><code>Sign</code> up or log in to Vercel.</li>
 <li>Click Add New... &gt; Project.</li>
 <li>Import the Git repository containing your <code>vai</code> project.</li>
 <li>edit the root directory and pick <code>dist</code></li>
 <li>Click Deploy.</li>
 </ol>
-<h2 id="netlify-1">Netlify</h2>
+<h2 id="netlify">Netlify</h2>
 <ol>
 <li>Sign up or log in to Netlify.</li>
 <li>From your dashboard, click Add new project &gt; Import an existing project.</li>
@@ -244,13 +228,15 @@
 <li>Click Create application &gt; select the Pages tab &gt; Connect to Git.</li>
 <li>Select Your Repository:</li>
 <li>Choose the repository for your vai project and click Begin setup.</li>
-<li>Configure Build Settings:
-This is the most important step. In the "Build settings" section, enter the following:
-Setting Value
-Build command   vai build
-Build output directory  dist
-Save and Deploy:
-Click Save and Deploy. Your site will be live in minutes</li>
+<li>Configure Build Settings. In Build output directory, choose the path to your <code>dist/</code> directory</li>
+<li>Save and Deploy:</li>
+</ol>
+<h2 id="github-pages">Github Pages</h2>
+<p><a href="https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site">Official guide</a></p>
+<p><em>Some key things to take note of</em> :</p>
+<ol>
+<li>github pages only allows the website to be hosted on either <code>docs/</code> or your project root dir</li>
+<li>You would have to change the <code>dist/</code> directory to <code>docs/</code> or host a seperate github repo and transfer everything inside of  <code>dist/</code> there  </li>
 </ol>
 
             
@@ -304,11 +290,8 @@ Click Save and Deploy. Your site will be live in minutes</li>
             <a href="#deploy">Deploy</a>
 <a href="#vercel">Vercel</a>
 <a href="#netlify">Netlify</a>
-<a href="#cloudfare-pages">Cloudfare Pages</a>
-<a href="#github-pages">Github Pages</a>
-<a href="#vercel-1">Vercel</a>
-<a href="#netlify-1">Netlify</a>
 <a href="#cloudflare-pages">Cloudflare Pages</a>
+<a href="#github-pages">Github Pages</a>
             
             
         </nav>

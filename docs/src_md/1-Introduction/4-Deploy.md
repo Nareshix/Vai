@@ -1,9 +1,9 @@
 # Deploy
 
-:::tip TIP
-It is strongly recommended to use git to track your files for ease of deploying to your favourite hosting procider
-:::
-After you have done creating your website, stop `vai run` and now run
+
+**It is strongly recommended to use `git` to track your files for ease of deploying to your favourite hosting provider**
+
+After you have done creating your website, **stop** `vai run` and now run
 
 ```
 vai build
@@ -23,31 +23,13 @@ After that, you would notice a `dist/` folder at the root of your directory whic
 3. [cloudfare pages](https://pages.cloudflare.com/)
 4. [github pages](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
 
-But it should work for **most** other hosting provider as well as you would just need link your `build output` to the root of the `dist/` directory. We will only cover how to deploy to the 4 hosting providers mentioned above. If you prefer to use a different hosting provider, please refer to their documentation and follow the steps provided there.
+Nonetheless,  it should work for **most** other hosting provider as well as you would just need link your `build output` to the root of the `dist/` directory. We will only cover how to deploy to the 4 hosting providers mentioned above. If you prefer to use a different hosting provider, please refer to their documentation and follow the necessary steps.
 
-
-## Vercel
-
-## Netlify
-
-## Cloudfare Pages
-1. create an account at cloudfare pages
-2. create application
-3. It will pick workers by default, choose Pages
-
-Now u can either  `direct upload` or `import a existing git repository`. It is recommended to pick the latter if you have been using git to track your site.
-
-If you pick `import a existing git repository`, just follow the onsite instructions. You can leave most of the options to its defualt option. all you have to do is link ur `dist/` folder in the `Build output directory` box
-
- 
-
-
-## Github Pages
 
 
 
 ## Vercel
-1. Sign up or log in to Vercel.
+1. `Sign` up or log in to Vercel.
 2. Click Add New... > Project.
 3. Import the Git repository containing your `vai` project.
 4. edit the root directory and pick `dist`
@@ -65,10 +47,14 @@ If you pick `import a existing git repository`, just follow the onsite instructi
 3. Click Create application > select the Pages tab > Connect to Git.
 4. Select Your Repository:
 5. Choose the repository for your vai project and click Begin setup.
-6. Configure Build Settings:
-This is the most important step. In the "Build settings" section, enter the following:
-Setting	Value
-Build command	vai build
-Build output directory	dist
-Save and Deploy:
-Click Save and Deploy. Your site will be live in minutes
+6. Configure Build Settings. In Build output directory, choose the path to your	`dist/` directory
+7. Save and Deploy:
+
+
+## Github Pages
+[Official guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
+
+*Some key things to take note of* :
+
+1. github pages only allows the website to be hosted on either `docs/` or your project root dir
+2. You would have to change the `dist/` directory to `docs/` or host a seperate github repo and transfer everything inside of  `dist/` there  
