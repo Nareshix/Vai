@@ -124,36 +124,37 @@ For linking images, you must add the image inside of the `static` directory.
 
 
 
-The `config.yaml` file is responsible for seeting your site's header, navigation, and other global links (more info below).
+The `config.yaml` file is responsible for seeting your site's header, navigation, and other global links. Below is the **default config.yaml** file you will see after running `vai init`
 
 
 ```yaml
 github_link: "https://github.com/Nareshix/vai"
-edit_this_page_on_github_link: 'https://github.com/Nareshix/vai/tree/main/src_md'
-github_repo_name: "vai" # required for github pages. Case-sensitive.
+edit_this_page_on_github_link: 'https://github.com/Nareshix/vai/tree/main/docs/src_md'
+github_repo_name: "vai" # CASE SENSITIVE
 
 internals:
-  - title: "Home"
-    link: "/"
-  - title: "About"
-    link: "/about-us/"
+  - title: "Placeholder"
+    link: "#"
+
 
 externals:
-  - title: "My Company"
-    link: "https://example.com/"
+  - title: "Documentation"
+    link: "https://vai-docs.pages.dev/"
+
 
 dropdowns:
-  - main_title: "Resources"
+  - main_title: "Menu"
     items:
-      - title: "Blog"
-        type: external # Opens in new tab
-        link: "https://example.com/blog"
-      - title: "Getting Started"
-        type: internal # Opens in same tab
-        link: "/introduction/getting-started/"
+      - title: "Placeholder"
+        type: internal
+        link: "#"
+
+      - title: "Documentation"
+        type: external
+        link: "https://vai-docs.pages.dev/"
 ```
 
-*Lets talk more about the key value pairs below*
+*Lets discuss more about the key value pairs below*
 
 ### Header Navigation Links
 
@@ -161,22 +162,22 @@ These settings control the links that appear in the top navigation bar of your s
 
 #### 1. `internals`
 
-Use this for links to pages within your own site. They will open in the same browser tab.
+They will open in the same browser tab.  
 
 ```yaml
 internals:
-  - title: "Home"
-    link: "/"
+  - title: "Introduction"
+    link: "/introduction/"
 ```
 
 #### 2. `externals`
 
-Use this for links to other websites. They will open in a new browser tab and display an "external link" icon.
+They will open in a new browser tab and display an "external link" icon.  
 
 ```yaml
 externals:
-  - title: "My Company"
-    link: "https://example.com/"
+  - title: "Further Customisation"
+    link: "/further-customisation/"
 ```
 
 #### 3. `dropdowns`
@@ -185,14 +186,15 @@ Use this to group multiple links under a single menu item. Each item in the drop
 
 ```yaml
 dropdowns:
-  - main_title: "Resources"
+  - main_title: "Menu"
     items:
-      - title: "Blog"
-        type: external # Opens in new tab
-        link: "https://example.com/blog"
-      - title: "Getting Started"
-        type: internal # Opens in same tab
-        link: "/introduction/getting-started/"
+      - title: "example.com"
+        type: "external"
+        link: "https://example.com/"
+
+      - title: "Further Customisation"
+        type: "internal"
+        link: "/further-customisation"
 ```
 
 ---

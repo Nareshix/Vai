@@ -3,22 +3,22 @@ edit_this_page_on_github_link: 'https://github.com/Nareshix/vai/tree/main/docs/s
 github_repo_name: "vai" # CASE SENSITIVE
 
 internals:
-  - title: "Placeholder"
-    link: "#"
+  - title: "Introduction"
+    link: "/introduction"
 
 
 externals:
-  - title: "example.com"
-    link: "https://example.com/"
+  - title: "Further Customisation"
+    link: "/further-customisation"
 
 
 dropdowns:
-  - main_title: "Placeholder Menu"
+  - main_title: "Menu"
     items:
-      - title: "Another Placeholder"
-        type: internal
-        link: "#"
-
       - title: "example.com"
-        type: external
+        type: "external"
         link: "https://example.com/"
+
+      - title: "Further Customisation"
+        type: "internal"
+        link: "/further-customisation"
