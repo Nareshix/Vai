@@ -44,32 +44,82 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
         highlightJsThemeLink.href = darkModeHighlightJsCdn;
     }
 }
-    // --- Initial Page Setup (Active Sidebar Link, Nav Buttons) ---
+// --- Initial Page Setup (Active Sidebar Link, Nav Buttons) ---
+function activateSidebarLink(linkToActivate) {
+    if (!linkToActivate) return;
+
+    // Remove 'active' from any other link first
+    document.querySelectorAll('.sidebar-link.active').forEach(l => l.classList.remove('active'));
+
+    // Add active class to the target link
+    linkToActivate.classList.add('active');
+
+    // Open the parent accordion section if it's closed
+    const parentSection = linkToActivate.closest('.sidebar-nav-section');
+    if (parentSection && !parentSection.classList.contains('is-open')) {
+        parentSection.classList.add('is-open');
+        const content = parentSection.querySelector('.sidebar-section-content');
+        const toggleButton = parentSection.querySelector('.sidebar-section-toggle');
+        if (content) {
+            // Use pre-calculated height if available, otherwise calculate on the fly
+            const calculatedHeight = content.dataset.calculatedMaxHeight || content.scrollHeight + "px";
+            content.style.maxHeight = calculatedHeight;
+            if (!content.dataset.calculatedMaxHeight) {
+                content.dataset.calculatedMaxHeight = calculatedHeight;
+            }
+        }
+        if (toggleButton) toggleButton.setAttribute('aria-expanded', 'true');
+    }
+}
+
+(function initializeActiveSidebarLink() {
     const currentPath = window.location.pathname;
-    const pathParts = currentPath.split('/').filter(Boolean);
-    if (pathParts.length > 0) {
-        const lastFolderSlug = pathParts[pathParts.length - 1];
-        const lastFolderDisplayName = lastFolderSlug.replaceAll('-', ' ');
-        const sidebarLinks = document.querySelectorAll('.sidebar-nav-links li a');
-        for (const link of sidebarLinks) {
-            if (link.textContent.trim().toLowerCase() === lastFolderDisplayName.toLowerCase()) {
-                link.classList.add('active');
-                const parentSection = link.closest('.sidebar-nav-section');
-                if (parentSection && !parentSection.classList.contains('is-open')) {
-                    parentSection.classList.add('is-open');
-                    const content = parentSection.querySelector('.sidebar-section-content');
-                    const toggleButton = parentSection.querySelector('.sidebar-section-toggle');
-                    if (content) {
-                        const calculatedHeight = content.scrollHeight + "px"; // Calculate once
-                        content.style.maxHeight = calculatedHeight;
-                        content.dataset.calculatedMaxHeight = calculatedHeight; // Store it
-                    }
-                    if (toggleButton) toggleButton.setAttribute('aria-expanded', 'true');
+    const sidebarLinks = document.querySelectorAll('.sidebar-nav-links li a');
+    let linkToActivate = null;
+
+    for (const link of sidebarLinks) {
+        const linkUrl = new URL(link.href, window.location.origin);
+        if (linkUrl.pathname === currentPath) {
+            linkToActivate = link;
+            break; 
+        }
+    }
+
+    if (!linkToActivate) {
+        if (currentPath === '/' || currentPath === '/index.html') {
+            if (sidebarLinks.length > 0) {
+                linkToActivate = sidebarLinks[0];
+            }
+        }
+        else if (currentPath.endsWith('/') && currentPath.split('/').filter(Boolean).length === 1) {
+             for (const link of sidebarLinks) {
+                const linkUrl = new URL(link.href, window.location.origin);
+                if (linkUrl.pathname.startsWith(currentPath)) {
+                    linkToActivate = link;
+                    break; 
                 }
-                break;
             }
         }
     }
+
+    if (linkToActivate) {
+        activateSidebarLink(linkToActivate);
+    } else {
+        const pathParts = currentPath.split('/').filter(Boolean);
+        if (pathParts.length > 0) {
+            const lastFolderSlug = pathParts[pathParts.length - 1];
+            const lastFolderDisplayName = lastFolderSlug.replaceAll('-', ' ');
+            for (const link of sidebarLinks) {
+                if (link.textContent.trim().toLowerCase() === lastFolderDisplayName.toLowerCase()) {
+                    linkToActivate = link;
+                    break;
+                }
+            }
+            activateSidebarLink(linkToActivate);
+        }
+    }
+})();
+
 
     const navButtons = document.querySelectorAll('.page-navigation-boxes .nav-box');
     navButtons.forEach(buttonElement => {
@@ -835,7 +885,6 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
                     content.style.maxHeight = calculatedHeight;
                     content.dataset.calculatedMaxHeight = calculatedHeight; // Store it
                 } else {
-                    // If already calculated (e.g., by the active link logic), ensure it's applied
                     content.style.maxHeight = content.dataset.calculatedMaxHeight;
                 }
             }
@@ -981,20 +1030,16 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
 
 
 
-// --- 8. Page Initialization, Scroll Restoration, and Link Handling ---
 
 // --- 8. Page Initialization, Scroll Restoration, and Link Handling ---
 
 (function() {
-    // Set scroll restoration to manual so we can control it precisely.
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
 
     const SCROLL_POSITION_KEY = 'vaiDevScrollPosition';
 
-    // --- KEY CHANGE 1: Save scroll position before any page unload (like a refresh).
-    // This captures the *actual* scroll position, not just the hash target.
     window.addEventListener('beforeunload', () => {
         if (mainScroller) {
             sessionStorage.setItem(SCROLL_POSITION_KEY, JSON.stringify({
@@ -1004,41 +1049,34 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
         }
     });
 
-    // --- KEY CHANGE 2: A robust, centralized function for scrolling to a hash.
-    // It correctly calculates the offset for the sticky header.
-    // It's used on initial load (for new visitors) and for popstate (back/forward).
     function scrollToHash(hash) {
         if (!hash || !mainScroller) {
             return false;
         }
 
-        // Use a tiny timeout to ensure the DOM has fully rendered, especially after a reload.
         setTimeout(() => {
             try {
                 const targetId = decodeURIComponent(hash.substring(1));
                 const targetElement = document.getElementById(targetId);
 
                 if (targetElement) {
-                    // This is the same intelligent scrolling logic from your TOC click handler.
-                    // We now use it everywhere for consistency.
                     const paddingTop = parseFloat(getComputedStyle(targetElement).paddingTop) || 0;
                     const textVisibleStartingPoint = targetElement.offsetTop + paddingTop;
                     const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
 
                     mainScroller.scrollTo({
                         top: Math.max(0, scrollToPosition),
-                        behavior: 'instant' // On page load, the scroll should be instant.
+                        behavior: 'instant' 
                     });
                 }
             } catch (e) {
                 console.error("Vai: Error handling hash scroll:", e);
             }
-        }, 50); // A 50ms delay is usually sufficient.
+        }, 50); 
 
         return true;
     }
     
-    // --- KEY CHANGE 3: An improved function to restore scroll position on refresh.
     function restoreScrollOnRefresh() {
         if (!mainScroller) return false;
         try {
@@ -1046,44 +1084,31 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
             // IMPORTANT: Only restore if the path in storage matches the current page.
             if (storedPosition && storedPosition.pathname === window.location.pathname) {
                 mainScroller.scrollTo({ top: storedPosition.scrollTop, behavior: 'instant' });
-                return true; // Return true to indicate success.
+                return true; 
             }
-        } catch (e) { /* Ignore parsing errors */ }
-        return false; // Return false if no position was restored.
+        } catch (e) {}
+        return false;
     }
     
-    // --- KEY CHANGE 4: The main page load logic.
     window.addEventListener('DOMContentLoaded', () => {
-        // PRIORITY 1: Always try to restore the last scroll position first.
-        // This is what fixes the live-reload "snap".
         const wasRestored = restoreScrollOnRefresh();
 
-        // PRIORITY 2: If restoration didn't happen (i.e., it's a new visit),
-        // THEN check for a hash in the URL and scroll to it.
         if (!wasRestored && window.location.hash) {
             scrollToHash(window.location.hash);
         }
 
-        // Finally, update the active TOC link based on the final scroll position.
         setTimeout(updateActiveLinkAndMarker, 200);
     });
 
-    // This handles the browser's back/forward buttons. For these actions,
-    // we DO want to snap to the hash.
     window.addEventListener('popstate', () => {
         if (window.location.hash) {
             scrollToHash(window.location.hash);
         }
     });
 
-    // --- KEY CHANGE 5: A generic click handler for any in-content anchor links.
-    // This ensures that links like <a href="#another-heading">...</a> also get
-    // the smooth, header-aware scrolling treatment.
     document.addEventListener('click', function (e) {
         const link = e.target.closest('a');
 
-        // This handler should NOT interfere with the TOC links (already handled)
-        // or any non-hash links.
         if (!link || !link.getAttribute('href')?.startsWith('#') || link.closest('#toc-links')) {
             return;
         }
@@ -1091,9 +1116,8 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
         e.preventDefault();
         const href = link.getAttribute('href');
         
-        // We find the element and scroll to it manually to account for the header offset.
         const targetId = href.substring(1);
-        const sectionData = tocSections[targetId]; // Use cached data if available
+        const sectionData = tocSections[targetId];
         const targetElement = sectionData ? sectionData.element : document.getElementById(targetId);
 
         if (targetElement) {
