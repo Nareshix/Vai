@@ -198,6 +198,8 @@ overflow: hidden;
 overflow-y: auto;
 height: 100vh;
 scrollbar-color: var(--main-scrollbar-thumb-bg) var(--color-bg-body);
+overflow-anchor: none;
+scroll-padding-top: 5rem;
 
 }
 

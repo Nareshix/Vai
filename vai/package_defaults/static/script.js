@@ -585,14 +585,50 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
     
             const a = document.createElement('a');
             a.href = result.url;
+// REPLACE a.addEventListener('click', ...) in DMAN_performSearch with this:
+
             a.addEventListener('click', (e) => {
-                e.preventDefault();
-                DMAN_saveSearchHistory(trimmedQuery);
-                window.location.href = a.href;
-                DMAN_closeSearchModal();
-                if (searchInput) searchInput.value = '';
+                e.preventDefault(); // Prevent the link from navigating immediately
+                const targetHref = a.href;
+                const targetUrl = new URL(targetHref, window.location.origin);
+
+                // --- SMART NAVIGATION LOGIC ---
+                // Check if we are navigating to a hash on the *current* page.
+                if (targetUrl.pathname === window.location.pathname && targetUrl.hash) {
+                    
+                    // Manually handle scrolling for same-page navigation
+                    const targetId = decodeURIComponent(targetUrl.hash.substring(1));
+                    const sectionData = tocSections[targetId];
+
+                    if (sectionData?.element && mainScroller) {
+                        const textVisibleStartingPoint = sectionData.element.offsetTop + sectionData.paddingTop;
+                        const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
+                        mainScroller.scrollTo({
+                            top: Math.max(0, scrollToPosition),
+                            behavior: 'smooth'
+                        });
+                    }
+                    
+                    // Update the URL in the browser bar without reloading the page
+                    if (history.pushState) {
+                        history.pushState(null, null, targetHref);
+                    } else {
+                        window.location.hash = targetHref;
+                    }
+                    
+                    // Close the search modal and clean up
+                    DMAN_saveSearchHistory(trimmedQuery);
+                    DMAN_closeSearchModal();
+                    if (searchInput) searchInput.value = '';
+
+                } else {
+                    // This is for a different page, so just navigate normally.
+                    // The new page's load logic (from Change #2) will handle the scrolling.
+                    DMAN_saveSearchHistory(trimmedQuery);
+                    window.location.href = targetHref;
+                }
             });
-    
+
             const titleDiv = document.createElement('div');
             titleDiv.className = 'search-result-title';
             titleDiv.innerHTML = highlightText(result.displayTitle, trimmedQuery); 
@@ -944,134 +980,86 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
     });
 
 
+
 // --- 8. Page Initialization, Scroll Restoration, and Link Handling ---
 
 (function() {
-    // --- 8a. Setup and Helper Functions ---
-
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
 
     const SCROLL_POSITION_KEY = 'vaiDevScrollPosition';
-    const LIVE_RELOAD_FLAG_KEY = 'vaiLiveReloadFlag';
-    const mainScroller = document.querySelector('.main-area-wrapper');
 
     window.addEventListener('beforeunload', () => {
         if (mainScroller) {
-            const scrollPosition = {
+            sessionStorage.setItem(SCROLL_POSITION_KEY, JSON.stringify({
                 pathname: window.location.pathname,
                 scrollTop: mainScroller.scrollTop
-            };
-            try {
-                sessionStorage.setItem(SCROLL_POSITION_KEY, JSON.stringify(scrollPosition));
-                sessionStorage.setItem(LIVE_RELOAD_FLAG_KEY, 'true');
-            } catch (e) {
-                console.warn('Vai: Could not save scroll position/flag for live reload:', e);
-            }
+            }));
         }
     });
 
-    function restoreScrollPosition() {
-        if (!mainScroller) return;
-        try {
-            const storedPositionJSON = sessionStorage.getItem(SCROLL_POSITION_KEY);
-            if (!storedPositionJSON) return;
-            const storedPosition = JSON.parse(storedPositionJSON);
-            if (storedPosition.pathname === window.location.pathname) {
-                setTimeout(() => {
-                    mainScroller.scrollTo({ top: storedPosition.scrollTop, behavior: 'instant' });
-                }, 10);
-            }
-        } catch (e) {
-            console.warn('Could not restore scroll position:', e);
-        } finally {
-            sessionStorage.removeItem(SCROLL_POSITION_KEY);
-        }
-    }
-
-    function handleHashScroll() {
-        if (!window.location.hash || !mainScroller) {
+    function scrollToHash(hash) {
+        if (!hash || !mainScroller) {
             return false;
         }
-        
+
         setTimeout(() => {
             try {
-                const targetId = decodeURIComponent(window.location.hash.substring(1));
+                const targetId = decodeURIComponent(hash.substring(1));
                 const targetElement = document.getElementById(targetId);
-                
+
                 if (targetElement) {
-                    const paddingTop = parseFloat(getComputedStyle(targetElement).paddingTop) || 0;
-                    const textVisibleStartingPoint = targetElement.offsetTop + paddingTop;
-                    const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
-                    
-                    mainScroller.scrollTo({
-                        top: Math.max(0, scrollToPosition),
-                        behavior: 'instant'
-                    });
+                    targetElement.scrollIntoView({ behavior: 'instant', block: 'start' });
                 }
             } catch (e) {
                 console.error("Vai: Error handling hash scroll:", e);
             }
-        }, 50);
+        }, 50); 
+
         return true;
     }
 
-    // --- 8b. Immediate Initialization Logic (The Core Fix) ---
-    // This block runs synchronously when the script is loaded, not waiting for an event.
-    // This ensures it catches all navigation types, including the "re-enter" case.
-
-    const isLiveReload = sessionStorage.getItem(LIVE_RELOAD_FLAG_KEY) === 'true';
-    if (isLiveReload) {
-        // For developer workflow, always prioritize restoring the last known editing position.
-        sessionStorage.removeItem(LIVE_RELOAD_FLAG_KEY);
-        restoreScrollPosition();
-    } else {
-        // For normal user navigation, prioritize handling the URL hash.
-        const hashWasHandled = handleHashScroll();
-        // If there was no hash, fall back to restoring scroll position (e.g., on a simple refresh).
-        if (!hashWasHandled) {
-            restoreScrollPosition();
-        }
+    function restoreScrollOnRefresh() {
+        if (!mainScroller) return;
+        try {
+            const storedPosition = JSON.parse(sessionStorage.getItem(SCROLL_POSITION_KEY));
+            if (storedPosition && storedPosition.pathname === window.location.pathname) {
+                mainScroller.scrollTo({ top: storedPosition.scrollTop, behavior: 'instant' });
+            }
+        } catch (e) {}
     }
-    // Always update the TOC marker after a short delay to allow scrolling to finish.
-    setTimeout(updateActiveLinkAndMarker, 200);
+    
+    window.addEventListener('DOMContentLoaded', () => {
+        if (window.location.hash) {
+            scrollToHash(window.location.hash);
+        } else {
+            restoreScrollOnRefresh();
+        }
+        setTimeout(updateActiveLinkAndMarker, 200);
+    });
 
+    window.addEventListener('popstate', () => {
+        if (window.location.hash) {
+            scrollToHash(window.location.hash);
+        }
+    });
 
-    // --- 8c. Event Listeners for Future Actions ---
-
-    // This listener handles subsequent hash changes (e.g., browser back/forward buttons).
-    window.addEventListener('hashchange', handleHashScroll);
-
-    // This listener handles clicks on in-page anchor links.
     document.addEventListener('click', function (e) {
         const link = e.target.closest('a');
         if (!link || !link.getAttribute('href')?.startsWith('#') || link.closest('#toc-links')) {
-             return;
+            return;
         }
 
         e.preventDefault();
-
         const href = link.getAttribute('href');
+        
         const targetId = href.substring(1);
-        const sectionData = tocSections[targetId];
-
-        if (sectionData?.element && mainScroller) {
-            const textVisibleStartingPoint = sectionData.element.offsetTop + sectionData.paddingTop;
-            const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
-
-            mainScroller.scrollTo({
-                top: Math.max(0, scrollToPosition),
-                behavior: 'smooth'
-            });
-
-            if (history.pushState) {
-                history.pushState(null, null, href);
-            } else {
-                window.location.hash = href;
-            }
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.pushState(null, null, href);
         }
     });
 
 })();
-
