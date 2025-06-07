@@ -9,7 +9,7 @@
 - 💅 **Custom Blocks**: Create admonitions for notes, warnings, and tips.
 - ⚙️ **Simple Configuration**: Control your site's navigation from a single `config.yaml` file.
 - 📦 **Zero Dependencies**: The final site is just pure HTML, CSS, and JS. No backend needed.
-- 🐢 **Live Reload Server**: See your changes instantly as you write. However, it is not as robust as other alternative such as VitePress. You may have to manually refersh at times. u can `Ctrl+r` for quick refresh though.
+- 🐢 **Live Reload Server**: See your changes instantly as you write. However, it is not as robust as other SSG such as VitePress. You may have to manually refersh at times. u can `Ctrl+r` for quick refresh though.
 
 ---
 
