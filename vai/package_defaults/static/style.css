@@ -1986,3 +1986,12 @@ li:has(.admonition) .admonition {
     margin-left: 0;
     margin-right: 5rem;
 }
+
+#content-area > ul > li{
+    padding-left: 0.5em;
+}
+
+#content-area ol > li > * {
+  margin-left: 0.5rem;
+}
+
