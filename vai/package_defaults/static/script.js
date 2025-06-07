@@ -983,13 +983,18 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
 
 // --- 8. Page Initialization, Scroll Restoration, and Link Handling ---
 
+// --- 8. Page Initialization, Scroll Restoration, and Link Handling ---
+
 (function() {
+    // Set scroll restoration to manual so we can control it precisely.
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
     }
 
     const SCROLL_POSITION_KEY = 'vaiDevScrollPosition';
 
+    // --- KEY CHANGE 1: Save scroll position before any page unload (like a refresh).
+    // This captures the *actual* scroll position, not just the hash target.
     window.addEventListener('beforeunload', () => {
         if (mainScroller) {
             sessionStorage.setItem(SCROLL_POSITION_KEY, JSON.stringify({
@@ -999,54 +1004,86 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
         }
     });
 
+    // --- KEY CHANGE 2: A robust, centralized function for scrolling to a hash.
+    // It correctly calculates the offset for the sticky header.
+    // It's used on initial load (for new visitors) and for popstate (back/forward).
     function scrollToHash(hash) {
         if (!hash || !mainScroller) {
             return false;
         }
 
+        // Use a tiny timeout to ensure the DOM has fully rendered, especially after a reload.
         setTimeout(() => {
             try {
                 const targetId = decodeURIComponent(hash.substring(1));
                 const targetElement = document.getElementById(targetId);
 
                 if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'instant', block: 'start' });
+                    // This is the same intelligent scrolling logic from your TOC click handler.
+                    // We now use it everywhere for consistency.
+                    const paddingTop = parseFloat(getComputedStyle(targetElement).paddingTop) || 0;
+                    const textVisibleStartingPoint = targetElement.offsetTop + paddingTop;
+                    const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
+
+                    mainScroller.scrollTo({
+                        top: Math.max(0, scrollToPosition),
+                        behavior: 'instant' // On page load, the scroll should be instant.
+                    });
                 }
             } catch (e) {
                 console.error("Vai: Error handling hash scroll:", e);
             }
-        }, 50); 
+        }, 50); // A 50ms delay is usually sufficient.
 
         return true;
     }
-
+    
+    // --- KEY CHANGE 3: An improved function to restore scroll position on refresh.
     function restoreScrollOnRefresh() {
-        if (!mainScroller) return;
+        if (!mainScroller) return false;
         try {
             const storedPosition = JSON.parse(sessionStorage.getItem(SCROLL_POSITION_KEY));
+            // IMPORTANT: Only restore if the path in storage matches the current page.
             if (storedPosition && storedPosition.pathname === window.location.pathname) {
                 mainScroller.scrollTo({ top: storedPosition.scrollTop, behavior: 'instant' });
+                return true; // Return true to indicate success.
             }
-        } catch (e) {}
+        } catch (e) { /* Ignore parsing errors */ }
+        return false; // Return false if no position was restored.
     }
     
+    // --- KEY CHANGE 4: The main page load logic.
     window.addEventListener('DOMContentLoaded', () => {
-        if (window.location.hash) {
+        // PRIORITY 1: Always try to restore the last scroll position first.
+        // This is what fixes the live-reload "snap".
+        const wasRestored = restoreScrollOnRefresh();
+
+        // PRIORITY 2: If restoration didn't happen (i.e., it's a new visit),
+        // THEN check for a hash in the URL and scroll to it.
+        if (!wasRestored && window.location.hash) {
             scrollToHash(window.location.hash);
-        } else {
-            restoreScrollOnRefresh();
         }
+
+        // Finally, update the active TOC link based on the final scroll position.
         setTimeout(updateActiveLinkAndMarker, 200);
     });
 
+    // This handles the browser's back/forward buttons. For these actions,
+    // we DO want to snap to the hash.
     window.addEventListener('popstate', () => {
         if (window.location.hash) {
             scrollToHash(window.location.hash);
         }
     });
 
+    // --- KEY CHANGE 5: A generic click handler for any in-content anchor links.
+    // This ensures that links like <a href="#another-heading">...</a> also get
+    // the smooth, header-aware scrolling treatment.
     document.addEventListener('click', function (e) {
         const link = e.target.closest('a');
+
+        // This handler should NOT interfere with the TOC links (already handled)
+        // or any non-hash links.
         if (!link || !link.getAttribute('href')?.startsWith('#') || link.closest('#toc-links')) {
             return;
         }
@@ -1054,10 +1091,22 @@ function setHighlightJsTheme(currentThemeSetting) { // 'light' or 'dark'
         e.preventDefault();
         const href = link.getAttribute('href');
         
+        // We find the element and scroll to it manually to account for the header offset.
         const targetId = href.substring(1);
-        const targetElement = document.getElementById(targetId);
+        const sectionData = tocSections[targetId]; // Use cached data if available
+        const targetElement = sectionData ? sectionData.element : document.getElementById(targetId);
+
         if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const paddingTop = sectionData ? sectionData.paddingTop : (parseFloat(getComputedStyle(targetElement).paddingTop) || 0);
+            const textVisibleStartingPoint = targetElement.offsetTop + paddingTop;
+            const scrollToPosition = textVisibleStartingPoint - DYNAMIC_HEADER_OFFSET - DESIRED_TEXT_GAP_BELOW_HEADER;
+
+            mainScroller.scrollTo({
+                top: Math.max(0, scrollToPosition),
+                behavior: 'smooth'
+            });
+
+            // Update the URL without reloading the page.
             history.pushState(null, null, href);
         }
     });
