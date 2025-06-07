@@ -578,7 +578,6 @@ stroke: currentColor;
 margin-left: 0.75rem;
 padding: 0.1rem 0.4rem;
 border-radius: 4px;
-font-size: 0.8em;
 background-color: var(--color-search-shortcut-bg);
 border: 1px solid var(--color-search-shortcut-border);
 color: var(--color-search-shortcut-text);

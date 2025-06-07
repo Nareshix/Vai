@@ -1,112 +1,30 @@
-Of course. Based on the structure and functionality of the `vai/main.py` script, here is a simple but comprehensive `CONTRIBUTING.md` file. It's designed to help a new contributor understand how to set up their environment, grasp the project's architecture, and start making meaningful changes.
+# HTML Structure
 
----
+This page is useful if you need to change the html structure for [every page](#every-page) or for [individual pages](#individual-page).
 
-# Contributing to Vai
+## Understanding the `src_html/` and `templates/` directory
 
-First off, thank you for considering contributing to Vai! We're excited to have you. Every contribution, from a small typo fix to a major new feature, is valuable.
+### templates directory
+There will usually be 2 html files and they are `layout_no_header.html` and `layout.html`. Lets take a while to understand what each file do.
 
-This document will guide you through the process of setting up your development environment and understanding the project's structure so you can start contributing.
+when running `vai run` or `vai build`, it populates  `layout_no_header.html` with values from the `config.yaml` file, resulting in a `layout.html` file. Hence, if you want to make layout changes for all pages, you should only make changes in `layout_no_header.html` file. Any changes in `layout.html` will be futile as `vai build` will replace the structural changes with `layout_no_header.html` html structure.
 
-## How You Can Contribute
 
-There are many ways to contribute to the project:
+### src_html directory
+as you are running `vai run`, all the markdown files in `src_md/` gets converted to html in `src_html/`. The structure in `src_html/` is exactly the same as `src_md/` only except the numbers are gone (from the `number-Name` pattern system) and all md are in html.
 
-*   **Reporting Bugs:** If you find a bug, please open an issue on GitHub. Describe the issue clearly, including steps to reproduce it.
-*   **Suggesting Enhancements:** Have an idea for a new feature or an improvement to an existing one? Open an issue to discuss it.
-*   **Improving Documentation:** Our documentation is built with Vai itself! If you see areas for improvement, feel free to submit a pull request.
-*   **Writing Code:** If you're ready to dive into the code, you can fix bugs or implement new features.
+As you make any changes to the HTML structure, you can see each html files and use it to debug as well. Useful if a certain strcuture is not working as intended (or styling and JS logic).
 
-## Setting Up Your Development Environment
+## How to change layout for every page?
+read and understand the `layout_no_header.html` file from `templates/` and apply your desired changes.
 
-To work on the Vai source code, you'll need to set it up locally.
+## Individual page
+Here it gets a bit tricky and **strongly not recommended** due to how tedious and difficult it is. You can techinically change the strucutre for each html page but it is impossible to view it with `vai run` as it will convert all markdown to html following your `layout_no_header.html`. There is almost no way to see that the individual changes is being applied. 
 
-1.  **Fork & Clone the Repository**
-    *   Fork the repository on GitHub.
-    *   Clone your fork locally: `git clone https://github.com/YOUR-USERNAME/vai.git`
+One bypass is to run the `src_html/` folder with [Python's http.server](https://docs.python.org/3/library/http.server.html) 
 
-2.  **Create a Virtual Environment**
-    It's best practice to work in a Python virtual environment.
-    ```bash
-    cd vai
-    python -m venv venv
-    source venv/bin/activate  # On Windows, use `venv\Scripts\activate`
-    ```
+```python
+python -m http.server 8000
+```
 
-3.  **Install Dependencies**
-    Install the necessary Python packages.
-    ```bash
-    pip install markdown pyyaml jinja2 livereload beautifulsoup4 minify-html rcssmin rjsmin
-    ```
-
-4.  **Create a Test Project**
-    The `vai` tool needs a project directory to operate on. The `init` command is perfect for creating a sample project to test your changes against.
-    ```bash
-    # From the root of your cloned repository, create a test directory
-    mkdir test-project
-    cd test-project
-
-    # Run the init command using the local vai script
-    python ../vai/main.py init
-    ```
-    This will populate `test-project/` with the necessary `src_md`, `static`, `templates`, and `config.yaml` files. You can now use this directory to test your code changes.
-
-## Development Workflow
-
-The typical workflow for making a change is:
-
-1.  Navigate into your `test-project` directory.
-2.  Run the development server using your local version of the script:
-    ```bash
-    python ../vai/main.py run
-    ```
-3.  The server will start at `http://localhost:6600`. It will automatically watch for changes in the `src_md`, `templates`, `static`, and `config.yaml` files and rebuild the site.
-4.  Now, go back to the root of the cloned repository and open `vai/main.py` in your editor.
-5.  Make your desired code changes. When you save the file, the `livereload` server **will not** automatically restart the Python process. You will need to **manually stop (Ctrl+C) and restart the `run` command** to see your Python code changes take effect.
-6.  Once you are satisfied with your changes, test the production build:
-    ```bash
-    # In the test-project directory
-    python ../vai/main.py build
-    ```
-7.  Check the generated `dist/` folder to ensure everything is minified and working as expected.
-
-## Project Structure Explained
-
-To contribute effectively, it's helpful to understand how Vai is organized.
-
-*   `vai/main.py`: This is the heart of the application. It contains all the logic for parsing commands, scanning source files, converting Markdown, and building the final site.
-*   `vai/package_defaults/`: This directory holds the default `static/`, `templates/`, and `config.yaml` files that are copied into a user's project when they run `vai init`. If you want to change the default starter template, this is the place to do it.
-
-### The Build Process
-
-Understanding the build flow is key:
-
-1.  **`vai run` or `vai build` is executed.**
-2.  `build()` is called.
-3.  `setup_header_in_layout_html()`: Reads `config.yaml` and `templates/layout_no_header.html` to generate a complete `templates/layout.html` with the navigation bar.
-4.  `scan_src()`: Scans the `src_md/` directory, respecting the `01-` numbering for sorting, and builds a data structure for the sidebar.
-5.  `process_md_files()`:
-    *   Iterates through each Markdown file found by `scan_src()`.
-    *   Parses frontmatter (`+++ ... +++`).
-    *   Converts Markdown to HTML using custom extensions (`AdmonitionProcessorCorrected`, `HeadingIdAdder`).
-    *   Generates a page-specific Table of Contents.
-    *   Builds up a `search_index.json`.
-    *   Renders the final HTML for each page into the `src_html/` directory using the Jinja2 template.
-6.  **For `vai run`**: The `livereload` server serves files directly from the `src_html/` directory.
-7.  **For `vai build`**: The `cli_build()` function takes the contents of `src_html/`, minifies all HTML, CSS, and JS, and places the final, optimized site into the `dist/` folder. The `--github` flag modifies asset paths to work with GitHub Pages.
-
-### Key Concepts
-
-*   **Content Convention:** Content lives in `src_md/`. The structure `##-SectionName/##-PageName.md` is important. The numbers control sorting, and the names are cleaned up for display and URL slugs.
-*   **Admonitions:** Vai supports a custom admonition syntax (`:::note`, `:::warning`, etc.). The logic is in `AdmonitionProcessorCorrected`.
-*   **Templating:** All pages are rendered through `templates/layout.html`. You can see the variables passed to it (like `body_content`, `sidebar_data`, `toc_table_link`) in the `process_md_files` function.
-
-## Submitting Your Contribution
-
-1.  Create a new branch for your feature or bugfix: `git checkout -b my-awesome-feature`.
-2.  Make your changes and commit them with a clear, descriptive message.
-3.  Push your branch to your fork on GitHub: `git push origin my-awesome-feature`.
-4.  Open a Pull Request (PR) from your fork to the main `vai` repository.
-5.  In your PR description, explain the changes you made and link to any relevant issues.
-
-Thank you again for your interest in making Vai better! We look forward to your contributions.
+ to see changes for individual site. But do take note that any changes done in `src_md/` will not be displayed in the corresponding `src_html/` files. This also means your `search_index.json` will not be updated (affects searching in your webiste as certain changes are not indexed) You can then do `vai build` as it only takes files from `src_html/` and minimise all of it.

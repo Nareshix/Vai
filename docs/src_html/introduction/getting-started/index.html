@@ -67,9 +67,9 @@
                          
                         <li><a href="/further-customisation/html-structure/" class="sidebar-link">HTML Structure</a></li>
                          
-                        <li><a href="/further-customisation/stylecss/" class="sidebar-link">Style.css</a></li>
+                        <li><a href="/further-customisation/styling/" class="sidebar-link">Styling</a></li>
                          
-                        <li><a href="/further-customisation/scriptjs/" class="sidebar-link">Script.js</a></li>
+                        <li><a href="/further-customisation/javascript-logic/" class="sidebar-link">Javascript Logic</a></li>
                         
                     </ul>
                 </div>
@@ -104,6 +104,10 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <span class="search-trigger-text">Search</span>
+                    <span class="search-shortcut-hint">
+                        <kbd>/</kbd>
+                    </span>
+
             </button>
             
             <button class="icon-button mobile-toc-toggle" id="mobileTocToggle" aria-label="Open Table of Contents" aria-expanded="false" aria-controls="toc-container">
@@ -119,14 +123,14 @@
 
             <div class="header-actions-right">
                 
-                <a href=# class="header-nav-link">Placeholder</a>
+                <a href=/introduction class="header-nav-link">Introduction</a>
                 
 
                 
                     
 
-                <a href=https://example.com/ target="_blank" class="header-nav-link">
-                    example.com
+                <a href=/further-customisation target="_blank" class="header-nav-link">
+                    Further Customisation
                     <svg style="margin-left: 0.3rem; color: grey;" class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                 </a>
                     
@@ -137,21 +141,21 @@
                     
                 <div class="header-dropdown-container" id="dropdownContainer_1">
                     <button class="header-dropdown-trigger" id="dropdownTrigger_1" aria-haspopup="true" aria-expanded="false" aria-controls="dropdownMenu_1">
-                        <span>Placeholder Menu</span>
+                        <span>Menu</span>
                         <svg class="dropdown-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </button>
                     <div class="header-dropdown-menu" id="dropdownMenu_1" role="menu" aria-labelledby="dropdownTrigger_1">
                         
                             
-                        <a href="#" role="menuitem" class="header-dropdown-item">
-                            <span>Another Placeholder</span>
+                        <a href="https://example.com/" role="menuitem" class="header-dropdown-item" target="_blank">
+                            <span>example.com</span>
+                            <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         </a>
                             
                         
                             
-                        <a href="https://example.com/" role="menuitem" class="header-dropdown-item" target="_blank">
-                            <span>example.com</span>
-                            <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        <a href="/further-customisation" role="menuitem" class="header-dropdown-item">
+                            <span>Further Customisation</span>
                         </a>
                             
                         
@@ -282,60 +286,62 @@ In this Getting started section, we wil only go through the <code>config.yaml</c
 <p>For linking images, you must add the image inside of the <code>static</code> directory.</p>
 <h2 id="config-file-configyaml">Config File (config.yaml)</h2>
 <hr />
-<p>The <code>config.yaml</code> file is responsible for seeting your site's header, navigation, and other global links (more info below).</p>
+<p>The <code>config.yaml</code> file is responsible for seeting your site's header, navigation, and other global links. Below is the <strong>default config.yaml</strong> file you will see after running <code>vai init</code></p>
 <div class="codehilite"><pre><span></span><code><span class="nt">github_link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://github.com/Nareshix/vai&quot;</span>
-<span class="nt">edit_this_page_on_github_link</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;https://github.com/Nareshix/vai/tree/main/src_md&#39;</span>
-<span class="nt">github_repo_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vai&quot;</span><span class="w"> </span><span class="c1"># required for github pages. Case-sensitive.</span>
+<span class="nt">edit_this_page_on_github_link</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;https://github.com/Nareshix/vai/tree/main/docs/src_md&#39;</span>
+<span class="nt">github_repo_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vai&quot;</span><span class="w"> </span><span class="c1"># CASE SENSITIVE</span>
 
 <span class="nt">internals</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Home&quot;</span>
-<span class="w">    </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/&quot;</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;About&quot;</span>
-<span class="w">    </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/about-us/&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Placeholder&quot;</span>
+<span class="w">    </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#&quot;</span>
+
 
 <span class="nt">externals</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;My</span><span class="nv"> </span><span class="s">Company&quot;</span>
-<span class="w">    </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://example.com/&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Documentation&quot;</span>
+<span class="w">    </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://vai-docs.pages.dev/&quot;</span>
+
 
 <span class="nt">dropdowns</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">main_title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Resources&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">main_title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Menu&quot;</span>
 <span class="w">    </span><span class="nt">items</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Blog&quot;</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external</span><span class="w"> </span><span class="c1"># Opens in new tab</span>
-<span class="w">        </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://example.com/blog&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Getting</span><span class="nv"> </span><span class="s">Started&quot;</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal</span><span class="w"> </span><span class="c1"># Opens in same tab</span>
-<span class="w">        </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/introduction/getting-started/&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Placeholder&quot;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal</span>
+<span class="w">        </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;#&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Documentation&quot;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external</span>
+<span class="w">        </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://vai-docs.pages.dev/&quot;</span>
 </code></pre></div>
 
-<p><em>Lets talk more about the key value pairs below</em></p>
+<p><em>Lets discuss more about the key value pairs below</em></p>
 <h3 id="header-navigation-links">Header Navigation Links</h3>
 <p>These settings control the links that appear in the top navigation bar of your site.</p>
 <h4 id="1-internals">1. <code>internals</code></h4>
-<p>Use this for links to pages within your own site. They will open in the same browser tab.</p>
+<p>They will open in the same browser tab.  </p>
 <div class="codehilite"><pre><span></span><code><span class="nt">internals</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Home&quot;</span>
-<span class="w">    </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Introduction&quot;</span>
+<span class="w">    </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/introduction/&quot;</span>
 </code></pre></div>
 
 <h4 id="2-externals">2. <code>externals</code></h4>
-<p>Use this for links to other websites. They will open in a new browser tab and display an "external link" icon.</p>
+<p>They will open in a new browser tab and display an "external link" icon.  </p>
 <div class="codehilite"><pre><span></span><code><span class="nt">externals</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;My</span><span class="nv"> </span><span class="s">Company&quot;</span>
-<span class="w">    </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://example.com/&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Further</span><span class="nv"> </span><span class="s">Customisation&quot;</span>
+<span class="w">    </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/further-customisation/&quot;</span>
 </code></pre></div>
 
 <h4 id="3-dropdowns">3. <code>dropdowns</code></h4>
 <p>Use this to group multiple links under a single menu item. Each item in the dropdown can be specified as internal or external.</p>
 <div class="codehilite"><pre><span></span><code><span class="nt">dropdowns</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">main_title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Resources&quot;</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">main_title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Menu&quot;</span>
 <span class="w">    </span><span class="nt">items</span><span class="p">:</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Blog&quot;</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external</span><span class="w"> </span><span class="c1"># Opens in new tab</span>
-<span class="w">        </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://example.com/blog&quot;</span>
-<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Getting</span><span class="nv"> </span><span class="s">Started&quot;</span>
-<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal</span><span class="w"> </span><span class="c1"># Opens in same tab</span>
-<span class="w">        </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/introduction/getting-started/&quot;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example.com&quot;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;external&quot;</span>
+<span class="w">        </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;https://example.com/&quot;</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Further</span><span class="nv"> </span><span class="s">Customisation&quot;</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;internal&quot;</span>
+<span class="w">        </span><span class="nt">link</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/further-customisation&quot;</span>
 </code></pre></div>
 
 <hr />

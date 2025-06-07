@@ -67,9 +67,9 @@
                          
                         <li><a href="/further-customisation/html-structure/" class="sidebar-link">HTML Structure</a></li>
                          
-                        <li><a href="/further-customisation/stylecss/" class="sidebar-link">Style.css</a></li>
+                        <li><a href="/further-customisation/styling/" class="sidebar-link">Styling</a></li>
                          
-                        <li><a href="/further-customisation/scriptjs/" class="sidebar-link">Script.js</a></li>
+                        <li><a href="/further-customisation/javascript-logic/" class="sidebar-link">Javascript Logic</a></li>
                         
                     </ul>
                 </div>
@@ -104,6 +104,10 @@
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <span class="search-trigger-text">Search</span>
+                    <span class="search-shortcut-hint">
+                        <kbd>/</kbd>
+                    </span>
+
             </button>
             
             <button class="icon-button mobile-toc-toggle" id="mobileTocToggle" aria-label="Open Table of Contents" aria-expanded="false" aria-controls="toc-container">
@@ -119,14 +123,14 @@
 
             <div class="header-actions-right">
                 
-                <a href=# class="header-nav-link">Placeholder</a>
+                <a href=/introduction class="header-nav-link">Introduction</a>
                 
 
                 
                     
 
-                <a href=https://example.com/ target="_blank" class="header-nav-link">
-                    example.com
+                <a href=/further-customisation target="_blank" class="header-nav-link">
+                    Further Customisation
                     <svg style="margin-left: 0.3rem; color: grey;" class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                 </a>
                     
@@ -137,21 +141,21 @@
                     
                 <div class="header-dropdown-container" id="dropdownContainer_1">
                     <button class="header-dropdown-trigger" id="dropdownTrigger_1" aria-haspopup="true" aria-expanded="false" aria-controls="dropdownMenu_1">
-                        <span>Placeholder Menu</span>
+                        <span>Menu</span>
                         <svg class="dropdown-arrow-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </button>
                     <div class="header-dropdown-menu" id="dropdownMenu_1" role="menu" aria-labelledby="dropdownTrigger_1">
                         
                             
-                        <a href="#" role="menuitem" class="header-dropdown-item">
-                            <span>Another Placeholder</span>
+                        <a href="https://example.com/" role="menuitem" class="header-dropdown-item" target="_blank">
+                            <span>example.com</span>
+                            <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                         </a>
                             
                         
                             
-                        <a href="https://example.com/" role="menuitem" class="header-dropdown-item" target="_blank">
-                            <span>example.com</span>
-                            <svg class="external-link-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                        <a href="/further-customisation" role="menuitem" class="header-dropdown-item">
+                            <span>Further Customisation</span>
                         </a>
                             
                         
@@ -183,7 +187,24 @@
         <div id="content-area" tabindex="0">
             
 
-            
+            <h1 id="html-structure">HTML Structure</h1>
+<p>This page is useful if you need to change the html structure for <a href="#every-page">every page</a> or for <a href="#individual-page">individual pages</a>.</p>
+<h2 id="understanding-the-src_html-and-templates-directory">Understanding the <code>src_html/</code> and <code>templates/</code> directory</h2>
+<h3 id="templates-directory">templates directory</h3>
+<p>There will usually be 2 html files and they are <code>layout_no_header.html</code> and <code>layout.html</code>. Lets take a while to understand what each file do.</p>
+<p>when running <code>vai run</code> or <code>vai build</code>, it populates  <code>layout_no_header.html</code> with values from the <code>config.yaml</code> file, resulting in a <code>layout.html</code> file. Hence, if you want to make layout changes for all pages, you should only make changes in <code>layout_no_header.html</code> file. Any changes in <code>layout.html</code> will be futile as <code>vai build</code> will replace the structural changes with <code>layout_no_header.html</code> html structure.</p>
+<h3 id="src_html-directory">src_html directory</h3>
+<p>as you are running <code>vai run</code>, all the markdown files in <code>src_md/</code> gets converted to html in <code>src_html/</code>. The structure in <code>src_html/</code> is exactly the same as <code>src_md/</code> only except the numbers are gone (from the <code>number-Name</code> pattern system) and all md are in html.</p>
+<p>As you make any changes to the HTML structure, you can see each html files and use it to debug as well. Useful if a certain strcuture is not working as intended (or styling and JS logic).</p>
+<h2 id="how-to-change-layout-for-every-page">How to change layout for every page?</h2>
+<p>read and understand the <code>layout_no_header.html</code> file from <code>templates/</code> and apply your desired changes.</p>
+<h2 id="individual-page">Individual page</h2>
+<p>Here it gets a bit tricky and <strong>strongly not recommended</strong> due to how tedious and difficult it is. You can techinically change the strucutre for each html page but it is impossible to view it with <code>vai run</code> as it will convert all markdown to html following your <code>layout_no_header.html</code>. There is almost no way to see that the individual changes is being applied. </p>
+<p>One bypass is to run the <code>src_html/</code> folder with <a href="https://docs.python.org/3/library/http.server.html">Python's http.server</a> </p>
+<div class="codehilite"><pre><span></span><code><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">http</span><span class="o">.</span><span class="n">server</span> <span class="mi">8000</span>
+</code></pre></div>
+
+<p>to see changes for individual site. But do take note that any changes done in <code>src_md/</code> will not be displayed in the corresponding <code>src_html/</code> files. This also means your <code>search_index.json</code> will not be updated (affects searching in your webiste as certain changes are not indexed) You can then do <code>vai build</code> as it only takes files from <code>src_html/</code> and minimise all of it.</p>
 
             
             <div class="page-footer-container">
@@ -211,7 +232,7 @@
                     
                     <button class="nav-box next-page-box">
                         <span class="nav-box-label">Next page</span>
-                        <a href="/further-customisation/stylecss/" class="nav-box-link">Style.css</a>
+                        <a href="/further-customisation/styling/" class="nav-box-link">Styling</a>
                     </button>
                     
 
@@ -233,7 +254,12 @@
             <div id="toc-active-marker"></div>
             
 
-            
+            <a href="#html-structure">HTML Structure</a>
+<a href="#understanding-the-src_html-and-templates-directory">Understanding the src_html/ and templates/ directory</a>
+<a href="#templates-directory" style="padding-left:2rem">templates directory</a>
+<a href="#src_html-directory" style="padding-left:2rem">src_html directory</a>
+<a href="#how-to-change-layout-for-every-page">How to change layout for every page?</a>
+<a href="#individual-page">Individual page</a>
             
             
         </nav>
