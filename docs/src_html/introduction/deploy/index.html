@@ -227,29 +227,24 @@
 <li>Sign up or log in to Vercel.</li>
 <li>Click Add New... &gt; Project.</li>
 <li>Import the Git repository containing your <code>vai</code> project.</li>
-<li>Click Deploy. Vercel will build and deploy your site.
-Netlify
-Netlify is another popular and powerful platform for deploying static sites.
-Create a New Site:
-Sign up or log in to Netlify.
-From your dashboard, click Add new site &gt; Import an existing project.
-Connect to your Git provider and select your project's repository.
-Configure Build Settings:
-Netlify will ask for your build settings. Enter the following:
-Setting Value
-Build command   vai build
-Publish directory   dist
-Deploy Site:
-Click Deploy site. Netlify will handle the rest.
-Cloudflare Pages
-Cloudflare Pages leverages its massive global network for incredible speed.
-Create a Pages Project:
-Sign up or log in to your Cloudflare dashboard.
-In the sidebar, navigate to Workers &amp; Pages.
-Click Create application &gt; select the Pages tab &gt; Connect to Git.
-Select Your Repository:
-Choose the repository for your vai project and click Begin setup.
-Configure Build Settings:
+<li>edit the root directory and pick <code>dist</code></li>
+<li>Click Deploy.</li>
+</ol>
+<h2 id="netlify-1">Netlify</h2>
+<ol>
+<li>Sign up or log in to Netlify.</li>
+<li>From your dashboard, click Add new project &gt; Import an existing project.</li>
+<li>Connect to your Git provider and select your project's repository.</li>
+<li>In Build Settings, go to publish directory and write the path to the <code>dist/</code> folder</li>
+</ol>
+<h2 id="cloudflare-pages">Cloudflare Pages</h2>
+<ol>
+<li>Sign up or log in to your Cloudflare dashboard.</li>
+<li>In the sidebar, navigate to Workers &amp; Pages.</li>
+<li>Click Create application &gt; select the Pages tab &gt; Connect to Git.</li>
+<li>Select Your Repository:</li>
+<li>Choose the repository for your vai project and click Begin setup.</li>
+<li>Configure Build Settings:
 This is the most important step. In the "Build settings" section, enter the following:
 Setting Value
 Build command   vai build
@@ -312,6 +307,8 @@ Click Save and Deploy. Your site will be live in minutes</li>
 <a href="#cloudfare-pages">Cloudfare Pages</a>
 <a href="#github-pages">Github Pages</a>
 <a href="#vercel-1">Vercel</a>
+<a href="#netlify-1">Netlify</a>
+<a href="#cloudflare-pages">Cloudflare Pages</a>
             
             
         </nav>

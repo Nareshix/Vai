@@ -50,29 +50,22 @@ If you pick `import a existing git repository`, just follow the onsite instructi
 1. Sign up or log in to Vercel.
 2. Click Add New... > Project.
 3. Import the Git repository containing your `vai` project.
-4.  Click Deploy. Vercel will build and deploy your site.
-Netlify
-Netlify is another popular and powerful platform for deploying static sites.
-Create a New Site:
-Sign up or log in to Netlify.
-From your dashboard, click Add new site > Import an existing project.
-Connect to your Git provider and select your project's repository.
-Configure Build Settings:
-Netlify will ask for your build settings. Enter the following:
-Setting	Value
-Build command	vai build
-Publish directory	dist
-Deploy Site:
-Click Deploy site. Netlify will handle the rest.
-Cloudflare Pages
-Cloudflare Pages leverages its massive global network for incredible speed.
-Create a Pages Project:
-Sign up or log in to your Cloudflare dashboard.
-In the sidebar, navigate to Workers & Pages.
-Click Create application > select the Pages tab > Connect to Git.
-Select Your Repository:
-Choose the repository for your vai project and click Begin setup.
-Configure Build Settings:
+4. edit the root directory and pick `dist`
+5. Click Deploy.
+
+## Netlify
+1. Sign up or log in to Netlify.
+2. From your dashboard, click Add new project > Import an existing project.
+3. Connect to your Git provider and select your project's repository.
+4. In Build Settings, go to publish directory and write the path to the `dist/` folder
+
+## Cloudflare Pages
+1. Sign up or log in to your Cloudflare dashboard.
+2. In the sidebar, navigate to Workers & Pages.
+3. Click Create application > select the Pages tab > Connect to Git.
+4. Select Your Repository:
+5. Choose the repository for your vai project and click Begin setup.
+6. Configure Build Settings:
 This is the most important step. In the "Build settings" section, enter the following:
 Setting	Value
 Build command	vai build
