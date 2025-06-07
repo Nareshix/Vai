@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "vai-ssg"
-version = "1.1.0" # this is for Pypi
+version = "1.1.1" # this is for Pypi
 description = "An Opinonated But Customisable Static Site Generator Made In Python"
 readme = "README.md"
 requires-python = ">=3.9"
