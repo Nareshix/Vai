@@ -8,17 +8,17 @@ internals:
 
 
 externals:
-  - title: "example.com"
-    link: "https://example.com/"
+  - title: "Documentation"
+    link: "https://vai-docs.pages.dev/"
 
 
 dropdowns:
-  - main_title: "Placeholder Menu"
+  - main_title: "Menu"
     items:
-      - title: "Another Placeholder"
+      - title: "Placeholder"
         type: internal
         link: "#"
 
-      - title: "example.com"
+      - title: "Documentation"
         type: external
-        link: "https://example.com/"
+        link: "https://vai-docs.pages.dev/"
