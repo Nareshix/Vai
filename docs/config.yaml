@@ -1,0 +1,24 @@
+github_link: "https://github.com/Nareshix/vai"
+edit_this_page_on_github_link: 'https://github.com/Nareshix/vai/tree/main/docs/src_md'
+github_repo_name: "vai" # CASE SENSITIVE
+
+internals:
+  - title: "Placeholder"
+    link: "#"
+
+
+externals:
+  - title: "example.com"
+    link: "https://example.com/"
+
+
+dropdowns:
+  - main_title: "Placeholder Menu"
+    items:
+      - title: "Another Placeholder"
+        type: internal
+        link: "#"
+
+      - title: "example.com"
+        type: external
+        link: "https://example.com/"
