@@ -52,7 +52,7 @@ Nonetheless,  it should work for **most** other hosting provider as well as you 
 
 
 ## Github Pages
-- [Official guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
+[Official guide](https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site)
 
 *Some key things to take note of* :
 
