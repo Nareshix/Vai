@@ -13,5 +13,5 @@ Vai is a Static Site Generator (SSG) that takes your source content written in M
 - 🐢 **Live Reload Server**: See your changes instantly as you write. However, it is not as robust as other SSG such as VitePress. You may have to manually refersh at times. u can `Ctrl+r` for quick refresh though.
 
 ---
-## Documentation
+# Documentation
 https://vai-ssg.pages.dev/
