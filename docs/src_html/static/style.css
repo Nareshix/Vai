@@ -1991,5 +1991,7 @@ li:has(.admonition) .admonition {
     padding-left: 0.5em;
 }
 
-
+#content-area ol > li {
+  padding-left: 0.5rem;
+}
 
