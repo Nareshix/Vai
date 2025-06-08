@@ -1,5 +1,8 @@
 
 # vai
+<div align="center">
+  <img src="docs/static/logo.png" alt="vai" width="200">
+</div>
 
 Vai is a Static Site Generator (SSG) that takes your source content written in Markdown, applies a theme to it, and generates static HTML pages that can be easily deployed anywhere. Optionally, It also allows easy modification of css styling, javascript logic and html strucutre layout as well! This is a hobby project made in my free time 🤗
 
