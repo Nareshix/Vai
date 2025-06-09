@@ -339,79 +339,81 @@ def copy_static_assets(static_src_dir='static', dst_dir='dist'):
         return
     shutil.copytree(static_src_path, dst_path, dirs_exist_ok=True)
 
+
+def natural_sort_key(s):
+    """
+    Key for sorting of strings with leading numbers.
+    e.g., "1-item", "10-item", "2-item" -> "1-item", "2-item", "10-item"
+    """
+    s = s.name if isinstance(s, Path) else str(s)
+    match = re.match(r'^(\d+)', s)
+    if match:
+        return (int(match.group(1)), s)
+    return (float('inf'), s)
 def scan_src(src_dir_path='src'):
     """
-    Scans the source content directory (docs/src/) to discover all Markdown files and organise them.
+    Scans the source content directory (e.g., src_md) to discover all Markdown files
+    and organize them numerically.
     
-    It returns "all_files_to_process" where it contains info about each md file
-    it also returns "sidebar_data_for_template" which  contains data needed for  the sidebar of the page
+    It returns "all_files_to_process" which contains info about each md file,
+    and "sidebar_data_for_template" which contains data needed for the page sidebar.
+    This function correctly sorts folders and files with numerical prefixes like
+    "9-Item.md" and "10-Item.md".
 
     Return:
         all_files_to_process: {original_path, output_folder_name, output_file_slug, display_title}
         sidebar_data_for_template: {title, output_folder_name, files}
     """
     src_path = Path(src_dir_path)
-    temp_sections_by_cleaned_title = {}
-    original_top_level_dir_paths = sorted([p for p in src_path.iterdir() if p.is_dir()])
+    all_files_to_process = []
+    sidebar_data_for_template = []
 
-    for dir_path in original_top_level_dir_paths:
+    if not src_path.exists():
+        return all_files_to_process, sidebar_data_for_template
+
+    # Get and sort directories naturally based on their leading numbers
+    sorted_dirs = sorted(
+        [p for p in src_path.iterdir() if p.is_dir()],
+        key=natural_sort_key
+    )
+
+    for dir_path in sorted_dirs:
         original_folder_name = dir_path.name
         cleaned_section_display_title = clean_display_name(original_folder_name)
         section_output_folder_slug = generate_slug(cleaned_section_display_title)
 
-        if cleaned_section_display_title not in temp_sections_by_cleaned_title:
-            temp_sections_by_cleaned_title[cleaned_section_display_title] = {
-                "original_sort_key": original_folder_name,
-                "output_folder_name": section_output_folder_slug,
-                "files": []
-            }
+        current_sidebar_section_files = []
 
-        md_files_in_dir = sorted(dir_path.glob("*.md"))
-        for md_file_path in md_files_in_dir:
+        # Get and sort MD files within the directory naturally
+        sorted_md_files = sorted(dir_path.glob("*.md"), key=natural_sort_key)
+
+        for md_file_path in sorted_md_files:
             original_file_name_with_ext = md_file_path.name
             cleaned_file_display_title = clean_display_name(original_file_name_with_ext)
             file_output_slug = generate_slug(cleaned_file_display_title)
-            
-            temp_sections_by_cleaned_title[cleaned_section_display_title]["files"].append({
-                "original_path": md_file_path,
-                "original_folder_name_for_sort": original_folder_name, 
-                "original_file_name_for_sort": original_file_name_with_ext,
-                "display_title": cleaned_file_display_title,
-                "output_file_slug": file_output_slug
-            })
 
-    # Sort sections based on original folder names (e.g., "01-Introduction", "02-Setup")
-    sorted_cleaned_section_titles = sorted(
-        temp_sections_by_cleaned_title.keys(),
-        key=lambda title: temp_sections_by_cleaned_title[title]["original_sort_key"]
-    )
-
-    sidebar_data_for_template = []
-    all_files_to_process = []
-
-    for cleaned_folder_title in sorted_cleaned_section_titles:
-        section_build_data = temp_sections_by_cleaned_title[cleaned_folder_title]
-        # Sort files within each section based on original file names
-        section_build_data["files"].sort(key=lambda f: f["original_file_name_for_sort"])
-        
-        current_sidebar_section_files = []
-        for file_info in section_build_data["files"]:
-            current_sidebar_section_files.append({
-                "title": file_info["display_title"], "slug": file_info["output_file_slug"]
-            })
+            # Add to the flat list for processing
             all_files_to_process.append({
-                "original_path": file_info["original_path"],
-                "output_folder_name": section_build_data["output_folder_name"],
-                "output_file_slug": file_info["output_file_slug"],
-                "display_title": file_info["display_title"]
+                "original_path": md_file_path,
+                "output_folder_name": section_output_folder_slug,
+                "output_file_slug": file_output_slug,
+                "display_title": cleaned_file_display_title
+            })
+            
+            # Add to the list for the current sidebar section
+            current_sidebar_section_files.append({
+                "title": cleaned_file_display_title, 
+                "slug": file_output_slug
             })
         
-        if current_sidebar_section_files: 
+        # Add the completed section to the sidebar data
+        if current_sidebar_section_files:
             sidebar_data_for_template.append({
-                "title": cleaned_folder_title,
-                "output_folder_name": section_build_data["output_folder_name"],
+                "title": cleaned_section_display_title,
+                "output_folder_name": section_output_folder_slug,
                 "files": current_sidebar_section_files
             })
+
     return all_files_to_process, sidebar_data_for_template
 
 def process_md_files(all_files_to_process, dist_base_path, sidebar_data_for_template, jinja_env):
